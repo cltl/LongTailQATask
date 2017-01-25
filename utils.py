@@ -19,6 +19,8 @@ def whats_behind_a_uri(my_uri):
 	q = {'url': my_uri, 'token': TOKEN, 'paging': 'false'}
 	req_url = API + '?' + urllib.parse.urlencode(q)
 	r = requests.get(url=req_url)
+	if r.status_code!=200:
+		return None
 	try:
 		page = r.json()
 		if 'objects' in page:
