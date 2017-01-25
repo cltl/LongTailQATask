@@ -6,6 +6,8 @@ import shutil
 API="https://api.diffbot.com/v3/article"
 TOKEN="1f5fcfe62127906ba56274d11c019ac8"
 CORPUSDIR="the_violent_corpus/"
+NODATE_FILE="nodate.txt"
+ERRORS_FILE='errors.txt'
 
 def hash_uri(u):
 	import hashlib
@@ -25,7 +27,8 @@ def whats_behind_a_uri(my_uri):
 				dct=my_object['estimatedDate']
 			else:
 				dct='NODATE'
-				
+				with open(NODATE_FILE, 'a+') as nodate:
+					nodate.write(my_uri + '\n')
 			article= {'uri': my_uri, 'title': my_object['title'], 'dct': dct, 'content': my_object['text'], 'id': hash_uri(my_uri)}
 		else:
 			article=None
@@ -33,6 +36,12 @@ def whats_behind_a_uri(my_uri):
 		print("Error with the article %s" % my_uri)
 		article=None
 	return article
+
+def reset_files():
+	if os.path.exists(NODATE_FILE):
+		os.remove(NODATE_FILE)
+	if os.path.exists(ERRORS_FILE):
+		os.remove(ERRORS_FILE)
 
 def reset_dir(index):
 	directory="%s%s/" % (CORPUSDIR, str(index))
