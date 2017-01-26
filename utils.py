@@ -2,6 +2,7 @@ import urllib.parse
 import requests
 import os
 import shutil
+import json
 
 API="https://api.diffbot.com/v3/article"
 TOKEN="1f5fcfe62127906ba56274d11c019ac8"
@@ -54,8 +55,8 @@ def reset_dir(index):
 
 def dump_to_file(article, targetdir):
 #	try:
-	with open("%s%s" % (targetdir, article['id']), 'w') as w:
-		w.write("%s\n%s\n%s" % (article['title'], article['dct'], article['content']))
+	with open("%s%s.json" % (targetdir, article['id']), 'w') as w:
+		json.dump(article, w)
 	print("Article %s written!" % article['uri'])
 #	except:
 #		print("Error when writting to article")
