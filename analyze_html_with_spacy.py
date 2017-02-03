@@ -7,6 +7,7 @@ from lxml import etree
 from spacy.en import English
 nlp = English()
 from multiprocessing.dummy import Pool as ThreadPool
+from datetime import datetime
 
 def json2spacy2naf(json_path):
     """
@@ -39,7 +40,8 @@ def json2spacy2naf(json_path):
                            xml_declaration=True,
                            encoding='utf-8')
 
+print('start', datetime.now())
 iterable = glob.glob('the_violent_corpus/**/*.json', recursive=True)
-
-pool = ThreadPool(1)
+pool = ThreadPool(5)
 results = pool.map(json2spacy2naf, iterable)
+print('end', len(results), datetime.now())
