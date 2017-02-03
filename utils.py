@@ -3,12 +3,32 @@ import requests
 import os
 import shutil
 import json
+import glob
 
 API="https://api.diffbot.com/v3/article"
 TOKEN="1f5fcfe62127906ba56274d11c019ac8"
 CORPUSDIR="the_violent_corpus/"
 NODATE_FILE="nodate.txt"
 ERRORS_FILE='errors.txt'
+
+def check_overlap(keys):
+	results=set()
+	for c in glob.glob('el_corpora/*.tsv'):
+		with open(c, 'r') as rc:
+			for line in rc:
+				splits=line.split('\t')
+				if splits[0] in keys:
+					results.add(tuple([c, splits[0], splits[1]]))
+	return results
+
+def concat_all_sources(incident_uri):
+	text=''
+	files_location="%s%s/*.json" % (CORPUSDIR, incident_uri)
+	for f in glob.glob(files_location):
+		with open(f, 'r') as r:
+			a_json=json.load(r)
+			text+=a_json['title'] + '\n' + a_json['content'] + '\n'
+	return text
 
 def hash_uri(u):
 	import hashlib
