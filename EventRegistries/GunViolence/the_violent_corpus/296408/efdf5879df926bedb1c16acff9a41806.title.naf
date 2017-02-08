@@ -1,0 +1,84 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<NAF>
+  <nafHeader>
+    <linguisticProcessors layer="text">
+      <lp name="SpaCy" timestamp="2017-02-01T13:08:00UTC"/>
+    </linguisticProcessors>
+    <linguisticProcessors layer="terms">
+      <lp name="SpaCy" timestamp="2017-02-01T13:08:00UTC"/>
+    </linguisticProcessors>
+  </nafHeader>
+  <text>
+    <wf sent="1" id="w0" length="6" offset="0">Laurel</wf>
+    <wf sent="1" id="w1" length="6" offset="7">5-year</wf>
+    <wf sent="1" id="w2" length="1" offset="13">-</wf>
+    <wf sent="1" id="w3" length="3" offset="14">old</wf>
+    <wf sent="1" id="w4" length="9" offset="18">allegedly</wf>
+    <wf sent="1" id="w5" length="6" offset="28">shoots</wf>
+    <wf sent="1" id="w6" length="5" offset="35">child</wf>
+  </text>
+  <terms>
+    <term id="t0" lemma="laurel" pos="PROPN" morphofeat="NNP">
+      <span>
+        <target id="w0"/>
+      </span>
+    </term>
+    <term id="t1" lemma="5-year" pos="NUM" morphofeat="CD">
+      <span>
+        <target id="w1"/>
+      </span>
+    </term>
+    <term id="t2" lemma="-" pos="PUNCT" morphofeat="HYPH">
+      <span>
+        <target id="w2"/>
+      </span>
+    </term>
+    <term id="t3" lemma="old" pos="ADJ" morphofeat="JJ">
+      <span>
+        <target id="w3"/>
+      </span>
+    </term>
+    <term id="t4" lemma="allegedly" pos="ADV" morphofeat="RB">
+      <span>
+        <target id="w4"/>
+      </span>
+    </term>
+    <term id="t5" lemma="shoot" pos="VERB" morphofeat="VBZ">
+      <span>
+        <target id="w5"/>
+      </span>
+    </term>
+    <term id="t6" lemma="child" pos="NOUN" morphofeat="NN">
+      <span>
+        <target id="w6"/>
+      </span>
+    </term>
+  </terms>
+  <entities>
+    <entity id="e0" type="PERSON">
+      <references>
+        <span>
+          <target id="t0"/>
+          <target id="t1"/>
+          <target id="t2"/>
+          <target id="t3"/>
+        </span>
+      </references>
+    </entity>
+  </entities>
+  <deps>
+    <dep from="t5" to="t0" rfunc="npadvmod"/>
+    <dep from="t3" to="t1" rfunc="nummod"/>
+    <dep from="t5" to="t3" rfunc="nsubj"/>
+    <dep from="t3" to="t2" rfunc="punct"/>
+    <dep from="t5" to="t4" rfunc="advmod"/>
+    <dep from="t5" to="t6" rfunc="dobj"/>
+  </deps>
+  <chunks>
+    <chunk id="c0" head="t6" phrase="NP">
+      <span>
+        <target id="t6"/>
+      </span>
+    </chunk>
+  </chunks>
+</NAF>

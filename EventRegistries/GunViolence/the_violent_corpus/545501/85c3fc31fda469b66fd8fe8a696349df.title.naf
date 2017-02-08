@@ -1,0 +1,137 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<NAF>
+  <nafHeader>
+    <linguisticProcessors layer="text">
+      <lp name="SpaCy" timestamp="2017-02-01T13:07:34UTC"/>
+    </linguisticProcessors>
+    <linguisticProcessors layer="terms">
+      <lp name="SpaCy" timestamp="2017-02-01T13:07:34UTC"/>
+    </linguisticProcessors>
+  </nafHeader>
+  <text>
+    <wf sent="1" id="w0" length="10" offset="0">Detectives</wf>
+    <wf sent="1" id="w1" length="1" offset="10">:</wf>
+    <wf sent="1" id="w2" length="9" offset="12">Quadruple</wf>
+    <wf sent="1" id="w3" length="8" offset="22">shooting</wf>
+    <wf sent="1" id="w4" length="3" offset="31">was</wf>
+    <wf sent="1" id="w5" length="1" offset="35">'</wf>
+    <wf sent="1" id="w6" length="6" offset="36">direct</wf>
+    <wf sent="1" id="w7" length="6" offset="43">result</wf>
+    <wf sent="1" id="w8" length="1" offset="49">'</wf>
+    <wf sent="1" id="w9" length="2" offset="51">of</wf>
+    <wf sent="1" id="w10" length="7" offset="54">ongoing</wf>
+    <wf sent="1" id="w11" length="12" offset="62">neighborhood</wf>
+    <wf sent="1" id="w12" length="7" offset="75">dispute</wf>
+  </text>
+  <terms>
+    <term id="t0" lemma="detective" pos="NOUN" morphofeat="NNS">
+      <span>
+        <target id="w0"/>
+      </span>
+    </term>
+    <term id="t1" lemma=":" pos="PUNCT" morphofeat=":">
+      <span>
+        <target id="w1"/>
+      </span>
+    </term>
+    <term id="t2" lemma="quadruple" pos="PROPN" morphofeat="NNP">
+      <span>
+        <target id="w2"/>
+      </span>
+    </term>
+    <term id="t3" lemma="shoot" pos="VERB" morphofeat="VBG">
+      <span>
+        <target id="w3"/>
+      </span>
+    </term>
+    <term id="t4" lemma="be" pos="VERB" morphofeat="VBD">
+      <span>
+        <target id="w4"/>
+      </span>
+    </term>
+    <term id="t5" lemma="'" pos="PUNCT" morphofeat="``">
+      <span>
+        <target id="w5"/>
+      </span>
+    </term>
+    <term id="t6" lemma="direct" pos="ADJ" morphofeat="JJ">
+      <span>
+        <target id="w6"/>
+      </span>
+    </term>
+    <term id="t7" lemma="result" pos="NOUN" morphofeat="NN">
+      <span>
+        <target id="w7"/>
+      </span>
+    </term>
+    <term id="t8" lemma="'" pos="PUNCT" morphofeat="''">
+      <span>
+        <target id="w8"/>
+      </span>
+    </term>
+    <term id="t9" lemma="of" pos="ADP" morphofeat="IN">
+      <span>
+        <target id="w9"/>
+      </span>
+    </term>
+    <term id="t10" lemma="ongoing" pos="ADJ" morphofeat="JJ">
+      <span>
+        <target id="w10"/>
+      </span>
+    </term>
+    <term id="t11" lemma="neighborhood" pos="NOUN" morphofeat="NN">
+      <span>
+        <target id="w11"/>
+      </span>
+    </term>
+    <term id="t12" lemma="dispute" pos="NOUN" morphofeat="NN">
+      <span>
+        <target id="w12"/>
+      </span>
+    </term>
+  </terms>
+  <entities/>
+  <deps>
+    <dep from="t0" to="t1" rfunc="punct"/>
+    <dep from="t3" to="t2" rfunc="amod"/>
+    <dep from="t4" to="t3" rfunc="nsubj"/>
+    <dep from="t0" to="t4" rfunc="dep"/>
+    <dep from="t7" to="t5" rfunc="punct"/>
+    <dep from="t4" to="t7" rfunc="attr"/>
+    <dep from="t7" to="t6" rfunc="amod"/>
+    <dep from="t7" to="t8" rfunc="punct"/>
+    <dep from="t7" to="t9" rfunc="prep"/>
+    <dep from="t12" to="t10" rfunc="amod"/>
+    <dep from="t9" to="t12" rfunc="pobj"/>
+    <dep from="t12" to="t11" rfunc="compound"/>
+  </deps>
+  <chunks>
+    <chunk id="c0" head="t0" phrase="NP">
+      <span>
+        <target id="t0"/>
+      </span>
+    </chunk>
+    <chunk id="c1" head="t7" phrase="NP">
+      <span>
+        <target id="t5"/>
+        <target id="t6"/>
+        <target id="t7"/>
+      </span>
+    </chunk>
+    <chunk id="c2" head="t9" phrase="PP">
+      <span>
+        <target id="t9"/>
+        <target id="t10"/>
+        <target id="t11"/>
+        <target id="t12"/>
+      </span>
+    </chunk>
+    <chunk id="c3" head="t12" phrase="NP">
+      <span>
+        <target id="t10"/>
+        <target id="t11"/>
+        <target id="t12"/>
+      </span>
+    </chunk>
+  </chunks>
+</NAF>

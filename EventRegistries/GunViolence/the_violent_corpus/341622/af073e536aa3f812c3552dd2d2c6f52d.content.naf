@@ -1,0 +1,191 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<NAF>
+  <nafHeader>
+    <linguisticProcessors layer="text">
+      <lp name="SpaCy" timestamp="2017-02-01T13:07:24UTC"/>
+    </linguisticProcessors>
+    <linguisticProcessors layer="terms">
+      <lp name="SpaCy" timestamp="2017-02-01T13:07:24UTC"/>
+    </linguisticProcessors>
+  </nafHeader>
+  <text>
+    <wf sent="1" id="w0" length="3" offset="0">You</wf>
+    <wf sent="1" id="w1" length="3" offset="3">'re</wf>
+    <wf sent="1" id="w2" length="2" offset="7">In</wf>
+    <wf sent="1" id="w3" length="3" offset="10">For</wf>
+    <wf sent="1" id="w4" length="1" offset="14">A</wf>
+    <wf sent="1" id="w5" length="3" offset="16">Big</wf>
+    <wf sent="1" id="w6" length="8" offset="20">Surprise</wf>
+    <wf sent="1" id="w7" length="2" offset="29">in</wf>
+    <wf sent="1" id="w8" length="4" offset="32">2016</wf>
+    <wf sent="2" id="w9" length="2" offset="37">If</wf>
+    <wf sent="2" id="w10" length="3" offset="40">You</wf>
+    <wf sent="2" id="w11" length="3" offset="44">Own</wf>
+    <wf sent="2" id="w12" length="1" offset="48">A</wf>
+    <wf sent="2" id="w13" length="4" offset="50">Home</wf>
+    <wf sent="2" id="w14" length="2" offset="55">in</wf>
+    <wf sent="2" id="w15" length="10" offset="58">California</wf>
+  </text>
+  <terms>
+    <term id="t0" lemma="you" pos="PRON" morphofeat="PRP">
+      <span>
+        <target id="w0"/>
+      </span>
+    </term>
+    <term id="t1" lemma="'re" pos="VERB" morphofeat="VBP">
+      <span>
+        <target id="w1"/>
+      </span>
+    </term>
+    <term id="t2" lemma="in" pos="ADP" morphofeat="IN">
+      <span>
+        <target id="w2"/>
+      </span>
+    </term>
+    <term id="t3" lemma="for" pos="ADP" morphofeat="IN">
+      <span>
+        <target id="w3"/>
+      </span>
+    </term>
+    <term id="t4" lemma="a" pos="DET" morphofeat="DT">
+      <span>
+        <target id="w4"/>
+      </span>
+    </term>
+    <term id="t5" lemma="big" pos="ADJ" morphofeat="JJ">
+      <span>
+        <target id="w5"/>
+      </span>
+    </term>
+    <term id="t6" lemma="surprise" pos="NOUN" morphofeat="NN">
+      <span>
+        <target id="w6"/>
+      </span>
+    </term>
+    <term id="t7" lemma="in" pos="ADP" morphofeat="IN">
+      <span>
+        <target id="w7"/>
+      </span>
+    </term>
+    <term id="t8" lemma="2016" pos="NUM" morphofeat="CD">
+      <span>
+        <target id="w8"/>
+      </span>
+    </term>
+    <term id="t9" lemma="if" pos="ADP" morphofeat="IN">
+      <span>
+        <target id="w9"/>
+      </span>
+    </term>
+    <term id="t10" lemma="you" pos="PRON" morphofeat="PRP">
+      <span>
+        <target id="w10"/>
+      </span>
+    </term>
+    <term id="t11" lemma="own" pos="VERB" morphofeat="VBP">
+      <span>
+        <target id="w11"/>
+      </span>
+    </term>
+    <term id="t12" lemma="a" pos="DET" morphofeat="DT">
+      <span>
+        <target id="w12"/>
+      </span>
+    </term>
+    <term id="t13" lemma="home" pos="NOUN" morphofeat="NN">
+      <span>
+        <target id="w13"/>
+      </span>
+    </term>
+    <term id="t14" lemma="in" pos="ADP" morphofeat="IN">
+      <span>
+        <target id="w14"/>
+      </span>
+    </term>
+    <term id="t15" lemma="california" pos="PROPN" morphofeat="NNP">
+      <span>
+        <target id="w15"/>
+      </span>
+    </term>
+  </terms>
+  <entities>
+    <entity id="e0" type="WORK_OF_ART">
+      <references>
+        <span>
+          <target id="t4"/>
+          <target id="t5"/>
+          <target id="t6"/>
+          <target id="t7"/>
+          <target id="t8"/>
+        </span>
+      </references>
+    </entity>
+    <entity id="e1" type="GPE">
+      <references>
+        <span>
+          <target id="t15"/>
+        </span>
+      </references>
+    </entity>
+  </entities>
+  <deps>
+    <dep from="t1" to="t0" rfunc="nsubj"/>
+    <dep from="t1" to="t2" rfunc="prep"/>
+    <dep from="t2" to="t3" rfunc="prep"/>
+    <dep from="t6" to="t4" rfunc="det"/>
+    <dep from="t3" to="t6" rfunc="pobj"/>
+    <dep from="t6" to="t5" rfunc="amod"/>
+    <dep from="t6" to="t7" rfunc="prep"/>
+    <dep from="t7" to="t8" rfunc="pobj"/>
+    <dep from="t11" to="t9" rfunc="mark"/>
+    <dep from="t11" to="t10" rfunc="nsubj"/>
+    <dep from="t13" to="t12" rfunc="det"/>
+    <dep from="t11" to="t13" rfunc="dobj"/>
+    <dep from="t13" to="t14" rfunc="prep"/>
+    <dep from="t14" to="t15" rfunc="pobj"/>
+  </deps>
+  <chunks>
+    <chunk id="c0" head="t0" phrase="NP">
+      <span>
+        <target id="t0"/>
+      </span>
+    </chunk>
+    <chunk id="c1" head="t3" phrase="PP">
+      <span>
+        <target id="t3"/>
+        <target id="t4"/>
+        <target id="t5"/>
+        <target id="t6"/>
+      </span>
+    </chunk>
+    <chunk id="c2" head="t6" phrase="NP">
+      <span>
+        <target id="t4"/>
+        <target id="t5"/>
+        <target id="t6"/>
+      </span>
+    </chunk>
+    <chunk id="c3" head="t10" phrase="NP">
+      <span>
+        <target id="t10"/>
+      </span>
+    </chunk>
+    <chunk id="c4" head="t13" phrase="NP">
+      <span>
+        <target id="t12"/>
+        <target id="t13"/>
+      </span>
+    </chunk>
+    <chunk id="c5" head="t14" phrase="PP">
+      <span>
+        <target id="t14"/>
+        <target id="t15"/>
+      </span>
+    </chunk>
+    <chunk id="c6" head="t15" phrase="NP">
+      <span>
+        <target id="t15"/>
+      </span>
+    </chunk>
+  </chunks>
+</NAF>

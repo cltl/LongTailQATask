@@ -1,0 +1,238 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<NAF>
+  <nafHeader>
+    <linguisticProcessors layer="text">
+      <lp name="SpaCy" timestamp="2017-02-01T13:14:02UTC"/>
+    </linguisticProcessors>
+    <linguisticProcessors layer="terms">
+      <lp name="SpaCy" timestamp="2017-02-01T13:14:02UTC"/>
+    </linguisticProcessors>
+  </nafHeader>
+  <text>
+    <wf sent="1" id="w0" length="4" offset="0">news</wf>
+    <wf sent="1" id="w1" length="1" offset="4">NEWLINE</wf>
+    <wf sent="1" id="w2" length="6" offset="5">Sports</wf>
+    <wf sent="1" id="w3" length="1" offset="11">NEWLINE</wf>
+    <wf sent="2" id="w4" length="13" offset="12">entertainment</wf>
+    <wf sent="2" id="w5" length="1" offset="25">NEWLINE</wf>
+    <wf sent="2" id="w6" length="2" offset="26">MN</wf>
+    <wf sent="2" id="w7" length="4" offset="29">life</wf>
+    <wf sent="2" id="w8" length="1" offset="33">NEWLINE</wf>
+    <wf sent="2" id="w9" length="2" offset="34">MN</wf>
+    <wf sent="2" id="w10" length="8" offset="37">consumer</wf>
+    <wf sent="2" id="w11" length="1" offset="45">NEWLINE</wf>
+    <wf sent="2" id="w12" length="4" offset="46">best</wf>
+    <wf sent="2" id="w13" length="2" offset="51">of</wf>
+    <wf sent="2" id="w14" length="3" offset="54">the</wf>
+    <wf sent="2" id="w15" length="3" offset="58">web</wf>
+    <wf sent="2" id="w16" length="1" offset="61">NEWLINE</wf>
+    <wf sent="2" id="w17" length="9" offset="62">SPONSORED</wf>
+    <wf sent="2" id="w18" length="1" offset="71">NEWLINE</wf>
+    <wf sent="2" id="w19" length="9" offset="72">SPONSORED</wf>
+    <wf sent="2" id="w20" length="1" offset="81">NEWLINE</wf>
+    <wf sent="2" id="w21" length="9" offset="82">SPONSORED</wf>
+    <wf sent="2" id="w22" length="1" offset="91">NEWLINE</wf>
+    <wf sent="2" id="w23" length="9" offset="92">SPONSORED</wf>
+    <wf sent="2" id="w24" length="1" offset="101">NEWLINE</wf>
+    <wf sent="2" id="w25" length="9" offset="102">SPONSORED</wf>
+    <wf sent="2" id="w26" length="1" offset="111">NEWLINE</wf>
+    <wf sent="3" id="w27" length="9" offset="112">SPONSORED</wf>
+  </text>
+  <terms>
+    <term id="t0" lemma="news" pos="NOUN" morphofeat="NN">
+      <span>
+        <target id="w0"/>
+      </span>
+    </term>
+    <term id="t1" lemma="&#10;" pos="SPACE" morphofeat="SP">
+      <span>
+        <target id="w1"/>
+      </span>
+    </term>
+    <term id="t2" lemma="sport" pos="NOUN" morphofeat="NNS">
+      <span>
+        <target id="w2"/>
+      </span>
+    </term>
+    <term id="t3" lemma="&#10;" pos="SPACE" morphofeat="SP">
+      <span>
+        <target id="w3"/>
+      </span>
+    </term>
+    <term id="t4" lemma="entertainment" pos="NOUN" morphofeat="NN">
+      <span>
+        <target id="w4"/>
+      </span>
+    </term>
+    <term id="t5" lemma="&#10;" pos="SPACE" morphofeat="SP">
+      <span>
+        <target id="w5"/>
+      </span>
+    </term>
+    <term id="t6" lemma="mn" pos="NOUN" morphofeat="NN">
+      <span>
+        <target id="w6"/>
+      </span>
+    </term>
+    <term id="t7" lemma="life" pos="NOUN" morphofeat="NN">
+      <span>
+        <target id="w7"/>
+      </span>
+    </term>
+    <term id="t8" lemma="&#10;" pos="SPACE" morphofeat="SP">
+      <span>
+        <target id="w8"/>
+      </span>
+    </term>
+    <term id="t9" lemma="mn" pos="NOUN" morphofeat="NN">
+      <span>
+        <target id="w9"/>
+      </span>
+    </term>
+    <term id="t10" lemma="consumer" pos="NOUN" morphofeat="NN">
+      <span>
+        <target id="w10"/>
+      </span>
+    </term>
+    <term id="t11" lemma="&#10;" pos="SPACE" morphofeat="SP">
+      <span>
+        <target id="w11"/>
+      </span>
+    </term>
+    <term id="t12" lemma="good" pos="ADJ" morphofeat="JJS">
+      <span>
+        <target id="w12"/>
+      </span>
+    </term>
+    <term id="t13" lemma="of" pos="ADP" morphofeat="IN">
+      <span>
+        <target id="w13"/>
+      </span>
+    </term>
+    <term id="t14" lemma="the" pos="DET" morphofeat="DT">
+      <span>
+        <target id="w14"/>
+      </span>
+    </term>
+    <term id="t15" lemma="web" pos="NOUN" morphofeat="NN">
+      <span>
+        <target id="w15"/>
+      </span>
+    </term>
+    <term id="t16" lemma="&#10;" pos="SPACE" morphofeat="SP">
+      <span>
+        <target id="w16"/>
+      </span>
+    </term>
+    <term id="t17" lemma="sponsored" pos="NOUN" morphofeat="NN">
+      <span>
+        <target id="w17"/>
+      </span>
+    </term>
+    <term id="t18" lemma="&#10;" pos="SPACE" morphofeat="SP">
+      <span>
+        <target id="w18"/>
+      </span>
+    </term>
+    <term id="t19" lemma="sponsor" pos="VERB" morphofeat="VBN">
+      <span>
+        <target id="w19"/>
+      </span>
+    </term>
+    <term id="t20" lemma="&#10;" pos="SPACE" morphofeat="SP">
+      <span>
+        <target id="w20"/>
+      </span>
+    </term>
+    <term id="t21" lemma="sponsor" pos="VERB" morphofeat="VBN">
+      <span>
+        <target id="w21"/>
+      </span>
+    </term>
+    <term id="t22" lemma="&#10;" pos="SPACE" morphofeat="SP">
+      <span>
+        <target id="w22"/>
+      </span>
+    </term>
+    <term id="t23" lemma="sponsor" pos="VERB" morphofeat="VBN">
+      <span>
+        <target id="w23"/>
+      </span>
+    </term>
+    <term id="t24" lemma="&#10;" pos="SPACE" morphofeat="SP">
+      <span>
+        <target id="w24"/>
+      </span>
+    </term>
+    <term id="t25" lemma="sponsor" pos="VERB" morphofeat="VBN">
+      <span>
+        <target id="w25"/>
+      </span>
+    </term>
+    <term id="t26" lemma="&#10;" pos="SPACE" morphofeat="SP">
+      <span>
+        <target id="w26"/>
+      </span>
+    </term>
+    <term id="t27" lemma="sponsored" pos="NOUN" morphofeat="NNS">
+      <span>
+        <target id="w27"/>
+      </span>
+    </term>
+  </terms>
+  <entities/>
+  <deps>
+    <dep from="t2" to="t0" rfunc="compound"/>
+    <dep from="t0" to="t1" rfunc=""/>
+    <dep from="t2" to="t3" rfunc=""/>
+    <dep from="t7" to="t4" rfunc="compound"/>
+    <dep from="t23" to="t7" rfunc="dep"/>
+    <dep from="t4" to="t5" rfunc=""/>
+    <dep from="t7" to="t6" rfunc="compound"/>
+    <dep from="t7" to="t8" rfunc=""/>
+    <dep from="t10" to="t9" rfunc="compound"/>
+    <dep from="t12" to="t10" rfunc="compound"/>
+    <dep from="t7" to="t12" rfunc="advmod"/>
+    <dep from="t10" to="t11" rfunc=""/>
+    <dep from="t12" to="t13" rfunc="prep"/>
+    <dep from="t15" to="t14" rfunc="det"/>
+    <dep from="t13" to="t15" rfunc="pobj"/>
+    <dep from="t15" to="t16" rfunc=""/>
+    <dep from="t19" to="t17" rfunc="advmod"/>
+    <dep from="t21" to="t19" rfunc="dep"/>
+    <dep from="t23" to="t21" rfunc="dep"/>
+    <dep from="t17" to="t18" rfunc=""/>
+    <dep from="t19" to="t20" rfunc=""/>
+    <dep from="t21" to="t22" rfunc=""/>
+    <dep from="t23" to="t24" rfunc=""/>
+    <dep from="t23" to="t25" rfunc="dep"/>
+    <dep from="t25" to="t26" rfunc=""/>
+  </deps>
+  <chunks>
+    <chunk id="c0" head="t2" phrase="NP">
+      <span>
+        <target id="t0"/>
+        <target id="t1"/>
+        <target id="t2"/>
+      </span>
+    </chunk>
+    <chunk id="c1" head="t13" phrase="PP">
+      <span>
+        <target id="t13"/>
+        <target id="t14"/>
+        <target id="t15"/>
+      </span>
+    </chunk>
+    <chunk id="c2" head="t15" phrase="NP">
+      <span>
+        <target id="t14"/>
+        <target id="t15"/>
+      </span>
+    </chunk>
+    <chunk id="c3" head="t27" phrase="NP">
+      <span>
+        <target id="t27"/>
+      </span>
+    </chunk>
+  </chunks>
+</NAF>

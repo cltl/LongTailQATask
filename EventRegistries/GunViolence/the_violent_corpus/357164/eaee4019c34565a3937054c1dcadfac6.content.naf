@@ -1,0 +1,24 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<NAF>
+  <nafHeader>
+    <linguisticProcessors layer="text">
+      <lp name="SpaCy" timestamp="2017-02-01T13:14:45UTC"/>
+    </linguisticProcessors>
+    <linguisticProcessors layer="terms">
+      <lp name="SpaCy" timestamp="2017-02-01T13:14:45UTC"/>
+    </linguisticProcessors>
+  </nafHeader>
+  <text>
+    <wf sent="1" id="w0" length="8" offset="0">Loading…</wf>
+  </text>
+  <terms>
+    <term id="t0" lemma="loading…" pos="X" morphofeat="XX">
+      <span>
+        <target id="w0"/>
+      </span>
+    </term>
+  </terms>
+  <entities/>
+  <deps/>
+  <chunks/>
+</NAF>

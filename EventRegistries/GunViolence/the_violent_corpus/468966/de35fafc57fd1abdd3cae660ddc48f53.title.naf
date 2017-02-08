@@ -1,0 +1,53 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<NAF>
+  <nafHeader>
+    <linguisticProcessors layer="text">
+      <lp name="SpaCy" timestamp="2017-02-01T13:11:25UTC"/>
+    </linguisticProcessors>
+    <linguisticProcessors layer="terms">
+      <lp name="SpaCy" timestamp="2017-02-01T13:11:25UTC"/>
+    </linguisticProcessors>
+  </nafHeader>
+  <text>
+    <wf sent="1" id="w0" length="5" offset="0">Hotel</wf>
+    <wf sent="1" id="w1" length="8" offset="6">shooting</wf>
+    <wf sent="1" id="w2" length="6" offset="15">leaves</wf>
+    <wf sent="1" id="w3" length="4" offset="22">teen</wf>
+    <wf sent="1" id="w4" length="12" offset="27">hospitalized</wf>
+  </text>
+  <terms>
+    <term id="t0" lemma="hotel" pos="NOUN" morphofeat="NN">
+      <span>
+        <target id="w0"/>
+      </span>
+    </term>
+    <term id="t1" lemma="shoot" pos="VERB" morphofeat="VBG">
+      <span>
+        <target id="w1"/>
+      </span>
+    </term>
+    <term id="t2" lemma="leave" pos="VERB" morphofeat="VBZ">
+      <span>
+        <target id="w2"/>
+      </span>
+    </term>
+    <term id="t3" lemma="teen" pos="NOUN" morphofeat="NN">
+      <span>
+        <target id="w3"/>
+      </span>
+    </term>
+    <term id="t4" lemma="hospitalize" pos="VERB" morphofeat="VBN">
+      <span>
+        <target id="w4"/>
+      </span>
+    </term>
+  </terms>
+  <entities/>
+  <deps>
+    <dep from="t1" to="t0" rfunc="compound"/>
+    <dep from="t2" to="t1" rfunc="nsubj"/>
+    <dep from="t4" to="t3" rfunc="npadvmod"/>
+    <dep from="t2" to="t4" rfunc="oprd"/>
+  </deps>
+  <chunks/>
+</NAF>

@@ -1,0 +1,119 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<NAF>
+  <nafHeader>
+    <linguisticProcessors layer="text">
+      <lp name="SpaCy" timestamp="2017-02-01T13:11:24UTC"/>
+    </linguisticProcessors>
+    <linguisticProcessors layer="terms">
+      <lp name="SpaCy" timestamp="2017-02-01T13:11:24UTC"/>
+    </linguisticProcessors>
+  </nafHeader>
+  <text>
+    <wf sent="1" id="w0" length="2" offset="0">ND</wf>
+    <wf sent="1" id="w1" length="3" offset="3">man</wf>
+    <wf sent="1" id="w2" length="3" offset="7">who</wf>
+    <wf sent="1" id="w3" length="12" offset="11">accidentally</wf>
+    <wf sent="1" id="w4" length="4" offset="24">shot</wf>
+    <wf sent="1" id="w5" length="4" offset="29">baby</wf>
+    <wf sent="1" id="w6" length="5" offset="34">won’t</wf>
+    <wf sent="1" id="w7" length="3" offset="40">get</wf>
+    <wf sent="1" id="w8" length="4" offset="44">jail</wf>
+    <wf sent="1" id="w9" length="4" offset="49">time</wf>
+  </text>
+  <terms>
+    <term id="t0" lemma="nd" pos="PROPN" morphofeat="NNP">
+      <span>
+        <target id="w0"/>
+      </span>
+    </term>
+    <term id="t1" lemma="man" pos="NOUN" morphofeat="NN">
+      <span>
+        <target id="w1"/>
+      </span>
+    </term>
+    <term id="t2" lemma="who" pos="NOUN" morphofeat="WP">
+      <span>
+        <target id="w2"/>
+      </span>
+    </term>
+    <term id="t3" lemma="accidentally" pos="ADV" morphofeat="RB">
+      <span>
+        <target id="w3"/>
+      </span>
+    </term>
+    <term id="t4" lemma="shoot" pos="VERB" morphofeat="VBD">
+      <span>
+        <target id="w4"/>
+      </span>
+    </term>
+    <term id="t5" lemma="baby" pos="NOUN" morphofeat="NN">
+      <span>
+        <target id="w5"/>
+      </span>
+    </term>
+    <term id="t6" lemma="won’t" pos="VERB" morphofeat="MD">
+      <span>
+        <target id="w6"/>
+      </span>
+    </term>
+    <term id="t7" lemma="get" pos="VERB" morphofeat="VB">
+      <span>
+        <target id="w7"/>
+      </span>
+    </term>
+    <term id="t8" lemma="jail" pos="NOUN" morphofeat="NN">
+      <span>
+        <target id="w8"/>
+      </span>
+    </term>
+    <term id="t9" lemma="time" pos="NOUN" morphofeat="NN">
+      <span>
+        <target id="w9"/>
+      </span>
+    </term>
+  </terms>
+  <entities>
+    <entity id="e0" type="ORG">
+      <references>
+        <span>
+          <target id="t0"/>
+        </span>
+      </references>
+    </entity>
+  </entities>
+  <deps>
+    <dep from="t1" to="t0" rfunc="compound"/>
+    <dep from="t7" to="t1" rfunc="nsubj"/>
+    <dep from="t4" to="t2" rfunc="nsubj"/>
+    <dep from="t1" to="t4" rfunc="relcl"/>
+    <dep from="t4" to="t3" rfunc="advmod"/>
+    <dep from="t4" to="t5" rfunc="dobj"/>
+    <dep from="t7" to="t6" rfunc="aux"/>
+    <dep from="t9" to="t8" rfunc="compound"/>
+    <dep from="t7" to="t9" rfunc="dobj"/>
+  </deps>
+  <chunks>
+    <chunk id="c0" head="t1" phrase="NP">
+      <span>
+        <target id="t0"/>
+        <target id="t1"/>
+      </span>
+    </chunk>
+    <chunk id="c1" head="t2" phrase="NP">
+      <span>
+        <target id="t2"/>
+      </span>
+    </chunk>
+    <chunk id="c2" head="t5" phrase="NP">
+      <span>
+        <target id="t5"/>
+      </span>
+    </chunk>
+    <chunk id="c3" head="t9" phrase="NP">
+      <span>
+        <target id="t8"/>
+        <target id="t9"/>
+      </span>
+    </chunk>
+  </chunks>
+</NAF>

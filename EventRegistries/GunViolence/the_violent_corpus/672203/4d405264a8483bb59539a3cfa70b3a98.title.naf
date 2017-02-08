@@ -1,0 +1,145 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<NAF>
+  <nafHeader>
+    <linguisticProcessors layer="text">
+      <lp name="SpaCy" timestamp="2017-02-01T13:10:44UTC"/>
+    </linguisticProcessors>
+    <linguisticProcessors layer="terms">
+      <lp name="SpaCy" timestamp="2017-02-01T13:10:44UTC"/>
+    </linguisticProcessors>
+  </nafHeader>
+  <text>
+    <wf sent="1" id="w0" length="5" offset="0">Woman</wf>
+    <wf sent="1" id="w1" length="4" offset="6">shot</wf>
+    <wf sent="1" id="w2" length="7" offset="11">outside</wf>
+    <wf sent="1" id="w3" length="5" offset="19">after</wf>
+    <wf sent="1" id="w4" length="1" offset="24">-</wf>
+    <wf sent="1" id="w5" length="7" offset="25">funeral</wf>
+    <wf sent="1" id="w6" length="9" offset="33">gathering</wf>
+    <wf sent="1" id="w7" length="3" offset="43">for</wf>
+    <wf sent="1" id="w8" length="4" offset="47">28th</wf>
+    <wf sent="1" id="w9" length="6" offset="52">Street</wf>
+    <wf sent="1" id="w10" length="8" offset="59">homicide</wf>
+    <wf sent="1" id="w11" length="6" offset="68">victim</wf>
+  </text>
+  <terms>
+    <term id="t0" lemma="woman" pos="PROPN" morphofeat="NNP">
+      <span>
+        <target id="w0"/>
+      </span>
+    </term>
+    <term id="t1" lemma="shoot" pos="VERB" morphofeat="VBD">
+      <span>
+        <target id="w1"/>
+      </span>
+    </term>
+    <term id="t2" lemma="outside" pos="ADV" morphofeat="RB">
+      <span>
+        <target id="w2"/>
+      </span>
+    </term>
+    <term id="t3" lemma="after" pos="ADP" morphofeat="IN">
+      <span>
+        <target id="w3"/>
+      </span>
+    </term>
+    <term id="t4" lemma="-" pos="PUNCT" morphofeat="HYPH">
+      <span>
+        <target id="w4"/>
+      </span>
+    </term>
+    <term id="t5" lemma="funeral" pos="NOUN" morphofeat="NN">
+      <span>
+        <target id="w5"/>
+      </span>
+    </term>
+    <term id="t6" lemma="gathering" pos="NOUN" morphofeat="NN">
+      <span>
+        <target id="w6"/>
+      </span>
+    </term>
+    <term id="t7" lemma="for" pos="ADP" morphofeat="IN">
+      <span>
+        <target id="w7"/>
+      </span>
+    </term>
+    <term id="t8" lemma="28th" pos="ADJ" morphofeat="JJ">
+      <span>
+        <target id="w8"/>
+      </span>
+    </term>
+    <term id="t9" lemma="street" pos="PROPN" morphofeat="NNP">
+      <span>
+        <target id="w9"/>
+      </span>
+    </term>
+    <term id="t10" lemma="homicide" pos="NOUN" morphofeat="NN">
+      <span>
+        <target id="w10"/>
+      </span>
+    </term>
+    <term id="t11" lemma="victim" pos="NOUN" morphofeat="NN">
+      <span>
+        <target id="w11"/>
+      </span>
+    </term>
+  </terms>
+  <entities>
+    <entity id="e0" type="FAC">
+      <references>
+        <span>
+          <target id="t8"/>
+          <target id="t9"/>
+        </span>
+      </references>
+    </entity>
+  </entities>
+  <deps>
+    <dep from="t1" to="t0" rfunc="nsubj"/>
+    <dep from="t1" to="t2" rfunc="advmod"/>
+    <dep from="t6" to="t3" rfunc="nmod"/>
+    <dep from="t1" to="t6" rfunc="advcl"/>
+    <dep from="t3" to="t4" rfunc="punct"/>
+    <dep from="t3" to="t5" rfunc="pobj"/>
+    <dep from="t6" to="t7" rfunc="prep"/>
+    <dep from="t11" to="t8" rfunc="amod"/>
+    <dep from="t7" to="t11" rfunc="pobj"/>
+    <dep from="t11" to="t9" rfunc="compound"/>
+    <dep from="t11" to="t10" rfunc="compound"/>
+  </deps>
+  <chunks>
+    <chunk id="c0" head="t0" phrase="NP">
+      <span>
+        <target id="t0"/>
+      </span>
+    </chunk>
+    <chunk id="c1" head="t5" phrase="PP">
+      <span>
+        <target id="t4"/>
+        <target id="t5"/>
+      </span>
+    </chunk>
+    <chunk id="c2" head="t5" phrase="NP">
+      <span>
+        <target id="t5"/>
+      </span>
+    </chunk>
+    <chunk id="c3" head="t7" phrase="PP">
+      <span>
+        <target id="t7"/>
+        <target id="t8"/>
+        <target id="t9"/>
+        <target id="t10"/>
+        <target id="t11"/>
+      </span>
+    </chunk>
+    <chunk id="c4" head="t11" phrase="NP">
+      <span>
+        <target id="t8"/>
+        <target id="t9"/>
+        <target id="t10"/>
+        <target id="t11"/>
+      </span>
+    </chunk>
+  </chunks>
+</NAF>

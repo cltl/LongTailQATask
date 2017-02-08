@@ -1,0 +1,69 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<NAF>
+  <nafHeader>
+    <linguisticProcessors layer="text">
+      <lp name="SpaCy" timestamp="2017-02-01T13:15:22UTC"/>
+    </linguisticProcessors>
+    <linguisticProcessors layer="terms">
+      <lp name="SpaCy" timestamp="2017-02-01T13:15:22UTC"/>
+    </linguisticProcessors>
+  </nafHeader>
+  <text>
+    <wf sent="1" id="w0" length="7" offset="0">Toddler</wf>
+    <wf sent="1" id="w1" length="2" offset="7">'s</wf>
+    <wf sent="1" id="w2" length="8" offset="10">shooting</wf>
+    <wf sent="1" id="w3" length="5" offset="19">death</wf>
+    <wf sent="1" id="w4" length="5" offset="25">ruled</wf>
+    <wf sent="1" id="w5" length="10" offset="31">accidental</wf>
+  </text>
+  <terms>
+    <term id="t0" lemma="toddler" pos="NOUN" morphofeat="NN">
+      <span>
+        <target id="w0"/>
+      </span>
+    </term>
+    <term id="t1" lemma="'s" pos="PART" morphofeat="POS">
+      <span>
+        <target id="w1"/>
+      </span>
+    </term>
+    <term id="t2" lemma="shooting" pos="NOUN" morphofeat="NN">
+      <span>
+        <target id="w2"/>
+      </span>
+    </term>
+    <term id="t3" lemma="death" pos="NOUN" morphofeat="NN">
+      <span>
+        <target id="w3"/>
+      </span>
+    </term>
+    <term id="t4" lemma="rule" pos="VERB" morphofeat="VBD">
+      <span>
+        <target id="w4"/>
+      </span>
+    </term>
+    <term id="t5" lemma="accidental" pos="ADJ" morphofeat="JJ">
+      <span>
+        <target id="w5"/>
+      </span>
+    </term>
+  </terms>
+  <entities/>
+  <deps>
+    <dep from="t3" to="t0" rfunc="poss"/>
+    <dep from="t4" to="t3" rfunc="nsubj"/>
+    <dep from="t0" to="t1" rfunc="case"/>
+    <dep from="t3" to="t2" rfunc="compound"/>
+    <dep from="t4" to="t5" rfunc="acomp"/>
+  </deps>
+  <chunks>
+    <chunk id="c0" head="t3" phrase="NP">
+      <span>
+        <target id="t0"/>
+        <target id="t1"/>
+        <target id="t2"/>
+        <target id="t3"/>
+      </span>
+    </chunk>
+  </chunks>
+</NAF>

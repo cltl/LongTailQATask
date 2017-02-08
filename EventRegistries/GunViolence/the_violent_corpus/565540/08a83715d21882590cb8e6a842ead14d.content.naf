@@ -1,0 +1,1254 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<NAF>
+  <nafHeader>
+    <linguisticProcessors layer="text">
+      <lp name="SpaCy" timestamp="2017-02-01T13:15:41UTC"/>
+    </linguisticProcessors>
+    <linguisticProcessors layer="terms">
+      <lp name="SpaCy" timestamp="2017-02-01T13:15:41UTC"/>
+    </linguisticProcessors>
+  </nafHeader>
+  <text>
+    <wf sent="1" id="w0" length="6" offset="0">Police</wf>
+    <wf sent="1" id="w1" length="3" offset="7">are</wf>
+    <wf sent="1" id="w2" length="13" offset="11">investigating</wf>
+    <wf sent="1" id="w3" length="1" offset="25">a</wf>
+    <wf sent="1" id="w4" length="8" offset="27">shooting</wf>
+    <wf sent="1" id="w5" length="5" offset="36">death</wf>
+    <wf sent="1" id="w6" length="2" offset="42">in</wf>
+    <wf sent="1" id="w7" length="3" offset="45">the</wf>
+    <wf sent="1" id="w8" length="5" offset="49">Ennis</wf>
+    <wf sent="1" id="w9" length="7" offset="55">Housing</wf>
+    <wf sent="1" id="w10" length="9" offset="63">Authority</wf>
+    <wf sent="1" id="w11" length="12" offset="73">neighborhood</wf>
+    <wf sent="1" id="w12" length="4" offset="86">near</wf>
+    <wf sent="1" id="w13" length="3" offset="91">the</wf>
+    <wf sent="1" id="w14" length="3" offset="95">200</wf>
+    <wf sent="1" id="w15" length="1" offset="98">NEWLINE</wf>
+    <wf sent="1" id="w16" length="5" offset="99">block</wf>
+    <wf sent="1" id="w17" length="2" offset="105">of</wf>
+    <wf sent="1" id="w18" length="6" offset="108">Arnold</wf>
+    <wf sent="1" id="w19" length="6" offset="115">Street</wf>
+    <wf sent="1" id="w20" length="8" offset="122">Thursday</wf>
+    <wf sent="1" id="w21" length="1" offset="130">.</wf>
+    <wf sent="2" id="w22" length="2" offset="132">As</wf>
+    <wf sent="2" id="w23" length="2" offset="135">of</wf>
+    <wf sent="2" id="w24" length="6" offset="138">Friday</wf>
+    <wf sent="2" id="w25" length="7" offset="145">morning</wf>
+    <wf sent="2" id="w26" length="1" offset="152">,</wf>
+    <wf sent="2" id="w27" length="5" offset="154">Ennis</wf>
+    <wf sent="2" id="w28" length="6" offset="160">police</wf>
+    <wf sent="2" id="w29" length="4" offset="167">were</wf>
+    <wf sent="2" id="w30" length="8" offset="172">handling</wf>
+    <wf sent="2" id="w31" length="3" offset="181">the</wf>
+    <wf sent="2" id="w32" length="13" offset="185">investigation</wf>
+    <wf sent="2" id="w33" length="2" offset="199">as</wf>
+    <wf sent="2" id="w34" length="1" offset="201">NEWLINE</wf>
+    <wf sent="2" id="w35" length="2" offset="202">an</wf>
+    <wf sent="2" id="w36" length="10" offset="205">accidental</wf>
+    <wf sent="2" id="w37" length="9" offset="216">discharge</wf>
+    <wf sent="2" id="w38" length="2" offset="226">of</wf>
+    <wf sent="2" id="w39" length="1" offset="229">a</wf>
+    <wf sent="2" id="w40" length="7" offset="231">handgun</wf>
+    <wf sent="2" id="w41" length="1" offset="238">.</wf>
+    <wf sent="2" id="w42" length="1" offset="239">NEWLINE</wf>
+    <wf sent="3" id="w43" length="9" offset="240">According</wf>
+    <wf sent="3" id="w44" length="2" offset="250">to</wf>
+    <wf sent="3" id="w45" length="5" offset="253">Ennis</wf>
+    <wf sent="3" id="w46" length="2" offset="259">PD</wf>
+    <wf sent="3" id="w47" length="9" offset="262">spokesman</wf>
+    <wf sent="3" id="w48" length="2" offset="272">Lt</wf>
+    <wf sent="3" id="w49" length="1" offset="274">.</wf>
+    <wf sent="4" id="w50" length="4" offset="276">Mike</wf>
+    <wf sent="4" id="w51" length="6" offset="281">Hopson</wf>
+    <wf sent="4" id="w52" length="1" offset="287">,</wf>
+    <wf sent="4" id="w53" length="7" offset="289">Justice</wf>
+    <wf sent="4" id="w54" length="2" offset="297">of</wf>
+    <wf sent="4" id="w55" length="3" offset="300">the</wf>
+    <wf sent="4" id="w56" length="5" offset="304">Peace</wf>
+    <wf sent="4" id="w57" length="4" offset="310">Bill</wf>
+    <wf sent="4" id="w58" length="5" offset="315">Woody</wf>
+    <wf sent="4" id="w59" length="10" offset="321">identified</wf>
+    <wf sent="4" id="w60" length="3" offset="332">the</wf>
+    <wf sent="4" id="w61" length="1" offset="335">NEWLINE</wf>
+    <wf sent="4" id="w62" length="6" offset="336">victim</wf>
+    <wf sent="4" id="w63" length="2" offset="343">as</wf>
+    <wf sent="4" id="w64" length="5" offset="346">Doyle</wf>
+    <wf sent="4" id="w65" length="4" offset="352">Cook</wf>
+    <wf sent="4" id="w66" length="1" offset="356">,</wf>
+    <wf sent="4" id="w67" length="4" offset="358">born</wf>
+    <wf sent="4" id="w68" length="2" offset="363">in</wf>
+    <wf sent="4" id="w69" length="4" offset="366">1941</wf>
+    <wf sent="4" id="w70" length="1" offset="370">,</wf>
+    <wf sent="4" id="w71" length="3" offset="372">and</wf>
+    <wf sent="4" id="w72" length="10" offset="376">pronounced</wf>
+    <wf sent="4" id="w73" length="3" offset="387">him</wf>
+    <wf sent="4" id="w74" length="4" offset="391">dead</wf>
+    <wf sent="4" id="w75" length="2" offset="396">at</wf>
+    <wf sent="4" id="w76" length="3" offset="399">the</wf>
+    <wf sent="4" id="w77" length="5" offset="403">scene</wf>
+    <wf sent="4" id="w78" length="1" offset="408">.</wf>
+    <wf sent="4" id="w79" length="1" offset="409">NEWLINE</wf>
+    <wf sent="5" id="w80" length="13" offset="410">Investigators</wf>
+    <wf sent="5" id="w81" length="4" offset="424">said</wf>
+    <wf sent="5" id="w82" length="3" offset="429">the</wf>
+    <wf sent="5" id="w83" length="7" offset="433">handgun</wf>
+    <wf sent="5" id="w84" length="3" offset="441">was</wf>
+    <wf sent="5" id="w85" length="5" offset="445">found</wf>
+    <wf sent="5" id="w86" length="2" offset="451">at</wf>
+    <wf sent="5" id="w87" length="3" offset="454">the</wf>
+    <wf sent="5" id="w88" length="5" offset="458">scene</wf>
+    <wf sent="5" id="w89" length="1" offset="463">.</wf>
+    <wf sent="6" id="w90" length="2" offset="465">As</wf>
+    <wf sent="6" id="w91" length="2" offset="468">of</wf>
+    <wf sent="6" id="w92" length="4" offset="471">late</wf>
+    <wf sent="6" id="w93" length="8" offset="476">Thursday</wf>
+    <wf sent="6" id="w94" length="1" offset="484">,</wf>
+    <wf sent="6" id="w95" length="3" offset="486">the</wf>
+    <wf sent="6" id="w96" length="3" offset="490">gun</wf>
+    <wf sent="6" id="w97" length="3" offset="494">was</wf>
+    <wf sent="6" id="w98" length="10" offset="498">undergoing</wf>
+    <wf sent="6" id="w99" length="1" offset="508">NEWLINE</wf>
+    <wf sent="6" id="w100" length="8" offset="509">forensic</wf>
+    <wf sent="6" id="w101" length="7" offset="518">testing</wf>
+    <wf sent="6" id="w102" length="1" offset="525">.</wf>
+    <wf sent="6" id="w103" length="1" offset="526">NEWLINE</wf>
+    <wf sent="7" id="w104" length="5" offset="527">Click</wf>
+    <wf sent="7" id="w105" length="4" offset="533">here</wf>
+    <wf sent="7" id="w106" length="2" offset="538">to</wf>
+    <wf sent="7" id="w107" length="4" offset="541">sign</wf>
+    <wf sent="7" id="w108" length="2" offset="546">up</wf>
+    <wf sent="7" id="w109" length="3" offset="549">for</wf>
+    <wf sent="7" id="w110" length="3" offset="553">our</wf>
+    <wf sent="7" id="w111" length="1" offset="557">E</wf>
+    <wf sent="7" id="w112" length="1" offset="558">-</wf>
+    <wf sent="7" id="w113" length="7" offset="559">Edition</wf>
+    <wf sent="7" id="w114" length="3" offset="567">and</wf>
+    <wf sent="7" id="w115" length="4" offset="571">read</wf>
+    <wf sent="7" id="w116" length="3" offset="576">the</wf>
+    <wf sent="7" id="w117" length="4" offset="580">rest</wf>
+    <wf sent="7" id="w118" length="2" offset="585">of</wf>
+    <wf sent="7" id="w119" length="3" offset="588">the</wf>
+    <wf sent="7" id="w120" length="5" offset="592">story</wf>
+    <wf sent="7" id="w121" length="1" offset="597">!</wf>
+    <wf sent="7" id="w122" length="1" offset="598">NEWLINE</wf>
+    <wf sent="8" id="w123" length="8" offset="599">Comments</wf>
+  </text>
+  <terms>
+    <term id="t0" lemma="police" pos="NOUN" morphofeat="NNS">
+      <span>
+        <target id="w0"/>
+      </span>
+    </term>
+    <term id="t1" lemma="be" pos="VERB" morphofeat="VBP">
+      <span>
+        <target id="w1"/>
+      </span>
+    </term>
+    <term id="t2" lemma="investigate" pos="VERB" morphofeat="VBG">
+      <span>
+        <target id="w2"/>
+      </span>
+    </term>
+    <term id="t3" lemma="a" pos="DET" morphofeat="DT">
+      <span>
+        <target id="w3"/>
+      </span>
+    </term>
+    <term id="t4" lemma="shoot" pos="VERB" morphofeat="VBG">
+      <span>
+        <target id="w4"/>
+      </span>
+    </term>
+    <term id="t5" lemma="death" pos="NOUN" morphofeat="NN">
+      <span>
+        <target id="w5"/>
+      </span>
+    </term>
+    <term id="t6" lemma="in" pos="ADP" morphofeat="IN">
+      <span>
+        <target id="w6"/>
+      </span>
+    </term>
+    <term id="t7" lemma="the" pos="DET" morphofeat="DT">
+      <span>
+        <target id="w7"/>
+      </span>
+    </term>
+    <term id="t8" lemma="ennis" pos="PROPN" morphofeat="NNP">
+      <span>
+        <target id="w8"/>
+      </span>
+    </term>
+    <term id="t9" lemma="housing" pos="PROPN" morphofeat="NNP">
+      <span>
+        <target id="w9"/>
+      </span>
+    </term>
+    <term id="t10" lemma="authority" pos="PROPN" morphofeat="NNP">
+      <span>
+        <target id="w10"/>
+      </span>
+    </term>
+    <term id="t11" lemma="neighborhood" pos="NOUN" morphofeat="NN">
+      <span>
+        <target id="w11"/>
+      </span>
+    </term>
+    <term id="t12" lemma="near" pos="ADP" morphofeat="IN">
+      <span>
+        <target id="w12"/>
+      </span>
+    </term>
+    <term id="t13" lemma="the" pos="DET" morphofeat="DT">
+      <span>
+        <target id="w13"/>
+      </span>
+    </term>
+    <term id="t14" lemma="200" pos="NUM" morphofeat="CD">
+      <span>
+        <target id="w14"/>
+      </span>
+    </term>
+    <term id="t15" lemma="&#10;" pos="SPACE" morphofeat="SP">
+      <span>
+        <target id="w15"/>
+      </span>
+    </term>
+    <term id="t16" lemma="block" pos="NOUN" morphofeat="NN">
+      <span>
+        <target id="w16"/>
+      </span>
+    </term>
+    <term id="t17" lemma="of" pos="ADP" morphofeat="IN">
+      <span>
+        <target id="w17"/>
+      </span>
+    </term>
+    <term id="t18" lemma="arnold" pos="PROPN" morphofeat="NNP">
+      <span>
+        <target id="w18"/>
+      </span>
+    </term>
+    <term id="t19" lemma="street" pos="PROPN" morphofeat="NNP">
+      <span>
+        <target id="w19"/>
+      </span>
+    </term>
+    <term id="t20" lemma="thursday" pos="PROPN" morphofeat="NNP">
+      <span>
+        <target id="w20"/>
+      </span>
+    </term>
+    <term id="t21" lemma="." pos="PUNCT" morphofeat=".">
+      <span>
+        <target id="w21"/>
+      </span>
+    </term>
+    <term id="t22" lemma="as" pos="ADP" morphofeat="IN">
+      <span>
+        <target id="w22"/>
+      </span>
+    </term>
+    <term id="t23" lemma="of" pos="ADP" morphofeat="IN">
+      <span>
+        <target id="w23"/>
+      </span>
+    </term>
+    <term id="t24" lemma="friday" pos="PROPN" morphofeat="NNP">
+      <span>
+        <target id="w24"/>
+      </span>
+    </term>
+    <term id="t25" lemma="morning" pos="NOUN" morphofeat="NN">
+      <span>
+        <target id="w25"/>
+      </span>
+    </term>
+    <term id="t26" lemma="," pos="PUNCT" morphofeat=",">
+      <span>
+        <target id="w26"/>
+      </span>
+    </term>
+    <term id="t27" lemma="ennis" pos="PROPN" morphofeat="NNP">
+      <span>
+        <target id="w27"/>
+      </span>
+    </term>
+    <term id="t28" lemma="police" pos="NOUN" morphofeat="NNS">
+      <span>
+        <target id="w28"/>
+      </span>
+    </term>
+    <term id="t29" lemma="be" pos="VERB" morphofeat="VBD">
+      <span>
+        <target id="w29"/>
+      </span>
+    </term>
+    <term id="t30" lemma="handle" pos="VERB" morphofeat="VBG">
+      <span>
+        <target id="w30"/>
+      </span>
+    </term>
+    <term id="t31" lemma="the" pos="DET" morphofeat="DT">
+      <span>
+        <target id="w31"/>
+      </span>
+    </term>
+    <term id="t32" lemma="investigation" pos="NOUN" morphofeat="NN">
+      <span>
+        <target id="w32"/>
+      </span>
+    </term>
+    <term id="t33" lemma="as" pos="ADP" morphofeat="IN">
+      <span>
+        <target id="w33"/>
+      </span>
+    </term>
+    <term id="t34" lemma="&#10;" pos="SPACE" morphofeat="SP">
+      <span>
+        <target id="w34"/>
+      </span>
+    </term>
+    <term id="t35" lemma="an" pos="DET" morphofeat="DT">
+      <span>
+        <target id="w35"/>
+      </span>
+    </term>
+    <term id="t36" lemma="accidental" pos="ADJ" morphofeat="JJ">
+      <span>
+        <target id="w36"/>
+      </span>
+    </term>
+    <term id="t37" lemma="discharge" pos="NOUN" morphofeat="NN">
+      <span>
+        <target id="w37"/>
+      </span>
+    </term>
+    <term id="t38" lemma="of" pos="ADP" morphofeat="IN">
+      <span>
+        <target id="w38"/>
+      </span>
+    </term>
+    <term id="t39" lemma="a" pos="DET" morphofeat="DT">
+      <span>
+        <target id="w39"/>
+      </span>
+    </term>
+    <term id="t40" lemma="handgun" pos="NOUN" morphofeat="NN">
+      <span>
+        <target id="w40"/>
+      </span>
+    </term>
+    <term id="t41" lemma="." pos="PUNCT" morphofeat=".">
+      <span>
+        <target id="w41"/>
+      </span>
+    </term>
+    <term id="t42" lemma="&#10;" pos="SPACE" morphofeat="SP">
+      <span>
+        <target id="w42"/>
+      </span>
+    </term>
+    <term id="t43" lemma="accord" pos="VERB" morphofeat="VBG">
+      <span>
+        <target id="w43"/>
+      </span>
+    </term>
+    <term id="t44" lemma="to" pos="ADP" morphofeat="IN">
+      <span>
+        <target id="w44"/>
+      </span>
+    </term>
+    <term id="t45" lemma="ennis" pos="PROPN" morphofeat="NNP">
+      <span>
+        <target id="w45"/>
+      </span>
+    </term>
+    <term id="t46" lemma="pd" pos="PROPN" morphofeat="NNP">
+      <span>
+        <target id="w46"/>
+      </span>
+    </term>
+    <term id="t47" lemma="spokesman" pos="NOUN" morphofeat="NN">
+      <span>
+        <target id="w47"/>
+      </span>
+    </term>
+    <term id="t48" lemma="lt" pos="PROPN" morphofeat="NNP">
+      <span>
+        <target id="w48"/>
+      </span>
+    </term>
+    <term id="t49" lemma="." pos="PUNCT" morphofeat=".">
+      <span>
+        <target id="w49"/>
+      </span>
+    </term>
+    <term id="t50" lemma="mike" pos="PROPN" morphofeat="NNP">
+      <span>
+        <target id="w50"/>
+      </span>
+    </term>
+    <term id="t51" lemma="hopson" pos="PROPN" morphofeat="NNP">
+      <span>
+        <target id="w51"/>
+      </span>
+    </term>
+    <term id="t52" lemma="," pos="PUNCT" morphofeat=",">
+      <span>
+        <target id="w52"/>
+      </span>
+    </term>
+    <term id="t53" lemma="justice" pos="PROPN" morphofeat="NNP">
+      <span>
+        <target id="w53"/>
+      </span>
+    </term>
+    <term id="t54" lemma="of" pos="ADP" morphofeat="IN">
+      <span>
+        <target id="w54"/>
+      </span>
+    </term>
+    <term id="t55" lemma="the" pos="DET" morphofeat="DT">
+      <span>
+        <target id="w55"/>
+      </span>
+    </term>
+    <term id="t56" lemma="peace" pos="PROPN" morphofeat="NNP">
+      <span>
+        <target id="w56"/>
+      </span>
+    </term>
+    <term id="t57" lemma="bill" pos="PROPN" morphofeat="NNP">
+      <span>
+        <target id="w57"/>
+      </span>
+    </term>
+    <term id="t58" lemma="woody" pos="PROPN" morphofeat="NNP">
+      <span>
+        <target id="w58"/>
+      </span>
+    </term>
+    <term id="t59" lemma="identify" pos="VERB" morphofeat="VBD">
+      <span>
+        <target id="w59"/>
+      </span>
+    </term>
+    <term id="t60" lemma="the" pos="DET" morphofeat="DT">
+      <span>
+        <target id="w60"/>
+      </span>
+    </term>
+    <term id="t61" lemma="&#10;" pos="SPACE" morphofeat="SP">
+      <span>
+        <target id="w61"/>
+      </span>
+    </term>
+    <term id="t62" lemma="victim" pos="NOUN" morphofeat="NN">
+      <span>
+        <target id="w62"/>
+      </span>
+    </term>
+    <term id="t63" lemma="as" pos="ADP" morphofeat="IN">
+      <span>
+        <target id="w63"/>
+      </span>
+    </term>
+    <term id="t64" lemma="doyle" pos="PROPN" morphofeat="NNP">
+      <span>
+        <target id="w64"/>
+      </span>
+    </term>
+    <term id="t65" lemma="cook" pos="PROPN" morphofeat="NNP">
+      <span>
+        <target id="w65"/>
+      </span>
+    </term>
+    <term id="t66" lemma="," pos="PUNCT" morphofeat=",">
+      <span>
+        <target id="w66"/>
+      </span>
+    </term>
+    <term id="t67" lemma="bear" pos="VERB" morphofeat="VBN">
+      <span>
+        <target id="w67"/>
+      </span>
+    </term>
+    <term id="t68" lemma="in" pos="ADP" morphofeat="IN">
+      <span>
+        <target id="w68"/>
+      </span>
+    </term>
+    <term id="t69" lemma="1941" pos="NUM" morphofeat="CD">
+      <span>
+        <target id="w69"/>
+      </span>
+    </term>
+    <term id="t70" lemma="," pos="PUNCT" morphofeat=",">
+      <span>
+        <target id="w70"/>
+      </span>
+    </term>
+    <term id="t71" lemma="and" pos="CONJ" morphofeat="CC">
+      <span>
+        <target id="w71"/>
+      </span>
+    </term>
+    <term id="t72" lemma="pronounce" pos="VERB" morphofeat="VBD">
+      <span>
+        <target id="w72"/>
+      </span>
+    </term>
+    <term id="t73" lemma="him" pos="PRON" morphofeat="PRP">
+      <span>
+        <target id="w73"/>
+      </span>
+    </term>
+    <term id="t74" lemma="dead" pos="VERB" morphofeat="VBN">
+      <span>
+        <target id="w74"/>
+      </span>
+    </term>
+    <term id="t75" lemma="at" pos="ADP" morphofeat="IN">
+      <span>
+        <target id="w75"/>
+      </span>
+    </term>
+    <term id="t76" lemma="the" pos="DET" morphofeat="DT">
+      <span>
+        <target id="w76"/>
+      </span>
+    </term>
+    <term id="t77" lemma="scene" pos="NOUN" morphofeat="NN">
+      <span>
+        <target id="w77"/>
+      </span>
+    </term>
+    <term id="t78" lemma="." pos="PUNCT" morphofeat=".">
+      <span>
+        <target id="w78"/>
+      </span>
+    </term>
+    <term id="t79" lemma="&#10;" pos="SPACE" morphofeat="SP">
+      <span>
+        <target id="w79"/>
+      </span>
+    </term>
+    <term id="t80" lemma="investigator" pos="NOUN" morphofeat="NNS">
+      <span>
+        <target id="w80"/>
+      </span>
+    </term>
+    <term id="t81" lemma="say" pos="VERB" morphofeat="VBD">
+      <span>
+        <target id="w81"/>
+      </span>
+    </term>
+    <term id="t82" lemma="the" pos="DET" morphofeat="DT">
+      <span>
+        <target id="w82"/>
+      </span>
+    </term>
+    <term id="t83" lemma="handgun" pos="NOUN" morphofeat="NN">
+      <span>
+        <target id="w83"/>
+      </span>
+    </term>
+    <term id="t84" lemma="be" pos="VERB" morphofeat="VBD">
+      <span>
+        <target id="w84"/>
+      </span>
+    </term>
+    <term id="t85" lemma="find" pos="VERB" morphofeat="VBN">
+      <span>
+        <target id="w85"/>
+      </span>
+    </term>
+    <term id="t86" lemma="at" pos="ADP" morphofeat="IN">
+      <span>
+        <target id="w86"/>
+      </span>
+    </term>
+    <term id="t87" lemma="the" pos="DET" morphofeat="DT">
+      <span>
+        <target id="w87"/>
+      </span>
+    </term>
+    <term id="t88" lemma="scene" pos="NOUN" morphofeat="NN">
+      <span>
+        <target id="w88"/>
+      </span>
+    </term>
+    <term id="t89" lemma="." pos="PUNCT" morphofeat=".">
+      <span>
+        <target id="w89"/>
+      </span>
+    </term>
+    <term id="t90" lemma="as" pos="ADP" morphofeat="IN">
+      <span>
+        <target id="w90"/>
+      </span>
+    </term>
+    <term id="t91" lemma="of" pos="ADP" morphofeat="IN">
+      <span>
+        <target id="w91"/>
+      </span>
+    </term>
+    <term id="t92" lemma="late" pos="ADJ" morphofeat="JJ">
+      <span>
+        <target id="w92"/>
+      </span>
+    </term>
+    <term id="t93" lemma="thursday" pos="PROPN" morphofeat="NNP">
+      <span>
+        <target id="w93"/>
+      </span>
+    </term>
+    <term id="t94" lemma="," pos="PUNCT" morphofeat=",">
+      <span>
+        <target id="w94"/>
+      </span>
+    </term>
+    <term id="t95" lemma="the" pos="DET" morphofeat="DT">
+      <span>
+        <target id="w95"/>
+      </span>
+    </term>
+    <term id="t96" lemma="gun" pos="NOUN" morphofeat="NN">
+      <span>
+        <target id="w96"/>
+      </span>
+    </term>
+    <term id="t97" lemma="be" pos="VERB" morphofeat="VBD">
+      <span>
+        <target id="w97"/>
+      </span>
+    </term>
+    <term id="t98" lemma="undergo" pos="VERB" morphofeat="VBG">
+      <span>
+        <target id="w98"/>
+      </span>
+    </term>
+    <term id="t99" lemma="&#10;" pos="SPACE" morphofeat="SP">
+      <span>
+        <target id="w99"/>
+      </span>
+    </term>
+    <term id="t100" lemma="forensic" pos="ADJ" morphofeat="JJ">
+      <span>
+        <target id="w100"/>
+      </span>
+    </term>
+    <term id="t101" lemma="testing" pos="NOUN" morphofeat="NN">
+      <span>
+        <target id="w101"/>
+      </span>
+    </term>
+    <term id="t102" lemma="." pos="PUNCT" morphofeat=".">
+      <span>
+        <target id="w102"/>
+      </span>
+    </term>
+    <term id="t103" lemma="&#10;" pos="SPACE" morphofeat="SP">
+      <span>
+        <target id="w103"/>
+      </span>
+    </term>
+    <term id="t104" lemma="click" pos="VERB" morphofeat="VB">
+      <span>
+        <target id="w104"/>
+      </span>
+    </term>
+    <term id="t105" lemma="here" pos="ADV" morphofeat="RB">
+      <span>
+        <target id="w105"/>
+      </span>
+    </term>
+    <term id="t106" lemma="to" pos="PART" morphofeat="TO">
+      <span>
+        <target id="w106"/>
+      </span>
+    </term>
+    <term id="t107" lemma="sign" pos="VERB" morphofeat="VB">
+      <span>
+        <target id="w107"/>
+      </span>
+    </term>
+    <term id="t108" lemma="up" pos="PART" morphofeat="RP">
+      <span>
+        <target id="w108"/>
+      </span>
+    </term>
+    <term id="t109" lemma="for" pos="ADP" morphofeat="IN">
+      <span>
+        <target id="w109"/>
+      </span>
+    </term>
+    <term id="t110" lemma="our" pos="ADJ" morphofeat="PRP$">
+      <span>
+        <target id="w110"/>
+      </span>
+    </term>
+    <term id="t111" lemma="e" pos="NOUN" morphofeat="NN">
+      <span>
+        <target id="w111"/>
+      </span>
+    </term>
+    <term id="t112" lemma="-" pos="PUNCT" morphofeat="HYPH">
+      <span>
+        <target id="w112"/>
+      </span>
+    </term>
+    <term id="t113" lemma="edition" pos="PROPN" morphofeat="NNP">
+      <span>
+        <target id="w113"/>
+      </span>
+    </term>
+    <term id="t114" lemma="and" pos="CONJ" morphofeat="CC">
+      <span>
+        <target id="w114"/>
+      </span>
+    </term>
+    <term id="t115" lemma="read" pos="VERB" morphofeat="VBD">
+      <span>
+        <target id="w115"/>
+      </span>
+    </term>
+    <term id="t116" lemma="the" pos="DET" morphofeat="DT">
+      <span>
+        <target id="w116"/>
+      </span>
+    </term>
+    <term id="t117" lemma="rest" pos="NOUN" morphofeat="NN">
+      <span>
+        <target id="w117"/>
+      </span>
+    </term>
+    <term id="t118" lemma="of" pos="ADP" morphofeat="IN">
+      <span>
+        <target id="w118"/>
+      </span>
+    </term>
+    <term id="t119" lemma="the" pos="DET" morphofeat="DT">
+      <span>
+        <target id="w119"/>
+      </span>
+    </term>
+    <term id="t120" lemma="story" pos="NOUN" morphofeat="NN">
+      <span>
+        <target id="w120"/>
+      </span>
+    </term>
+    <term id="t121" lemma="!" pos="PUNCT" morphofeat=".">
+      <span>
+        <target id="w121"/>
+      </span>
+    </term>
+    <term id="t122" lemma="&#10;" pos="SPACE" morphofeat="SP">
+      <span>
+        <target id="w122"/>
+      </span>
+    </term>
+    <term id="t123" lemma="comment" pos="NOUN" morphofeat="NNS">
+      <span>
+        <target id="w123"/>
+      </span>
+    </term>
+  </terms>
+  <entities>
+    <entity id="e0" type="CARDINAL">
+      <references>
+        <span>
+          <target id="t14"/>
+        </span>
+      </references>
+    </entity>
+    <entity id="e1" type="FAC">
+      <references>
+        <span>
+          <target id="t18"/>
+          <target id="t19"/>
+          <target id="t20"/>
+        </span>
+      </references>
+    </entity>
+    <entity id="e2" type="DATE">
+      <references>
+        <span>
+          <target id="t24"/>
+        </span>
+      </references>
+    </entity>
+    <entity id="e3" type="TIME">
+      <references>
+        <span>
+          <target id="t25"/>
+        </span>
+      </references>
+    </entity>
+    <entity id="e4" type="PERSON">
+      <references>
+        <span>
+          <target id="t27"/>
+        </span>
+      </references>
+    </entity>
+    <entity id="e5" type="ORG">
+      <references>
+        <span>
+          <target id="t45"/>
+          <target id="t46"/>
+        </span>
+      </references>
+    </entity>
+    <entity id="e6" type="PERSON">
+      <references>
+        <span>
+          <target id="t50"/>
+          <target id="t51"/>
+        </span>
+      </references>
+    </entity>
+    <entity id="e7" type="ORG">
+      <references>
+        <span>
+          <target id="t55"/>
+          <target id="t56"/>
+          <target id="t57"/>
+          <target id="t58"/>
+        </span>
+      </references>
+    </entity>
+    <entity id="e8" type="PERSON">
+      <references>
+        <span>
+          <target id="t64"/>
+          <target id="t65"/>
+        </span>
+      </references>
+    </entity>
+    <entity id="e9" type="DATE">
+      <references>
+        <span>
+          <target id="t69"/>
+        </span>
+      </references>
+    </entity>
+    <entity id="e10" type="DATE">
+      <references>
+        <span>
+          <target id="t92"/>
+          <target id="t93"/>
+        </span>
+      </references>
+    </entity>
+  </entities>
+  <deps>
+    <dep from="t2" to="t0" rfunc="nsubj"/>
+    <dep from="t2" to="t1" rfunc="aux"/>
+    <dep from="t5" to="t3" rfunc="det"/>
+    <dep from="t2" to="t5" rfunc="dobj"/>
+    <dep from="t5" to="t4" rfunc="amod"/>
+    <dep from="t5" to="t6" rfunc="prep"/>
+    <dep from="t11" to="t7" rfunc="det"/>
+    <dep from="t6" to="t11" rfunc="pobj"/>
+    <dep from="t10" to="t8" rfunc="compound"/>
+    <dep from="t11" to="t10" rfunc="compound"/>
+    <dep from="t10" to="t9" rfunc="compound"/>
+    <dep from="t5" to="t12" rfunc="prep"/>
+    <dep from="t16" to="t13" rfunc="det"/>
+    <dep from="t12" to="t16" rfunc="pobj"/>
+    <dep from="t16" to="t14" rfunc="nummod"/>
+    <dep from="t14" to="t15" rfunc=""/>
+    <dep from="t16" to="t17" rfunc="prep"/>
+    <dep from="t19" to="t18" rfunc="compound"/>
+    <dep from="t17" to="t19" rfunc="pobj"/>
+    <dep from="t2" to="t20" rfunc="npadvmod"/>
+    <dep from="t2" to="t21" rfunc="punct"/>
+    <dep from="t30" to="t22" rfunc="prep"/>
+    <dep from="t22" to="t23" rfunc="prep"/>
+    <dep from="t25" to="t24" rfunc="compound"/>
+    <dep from="t23" to="t25" rfunc="pobj"/>
+    <dep from="t30" to="t26" rfunc="punct"/>
+    <dep from="t28" to="t27" rfunc="compound"/>
+    <dep from="t30" to="t28" rfunc="nsubj"/>
+    <dep from="t30" to="t29" rfunc="aux"/>
+    <dep from="t32" to="t31" rfunc="det"/>
+    <dep from="t30" to="t32" rfunc="dobj"/>
+    <dep from="t32" to="t33" rfunc="prep"/>
+    <dep from="t33" to="t34" rfunc=""/>
+    <dep from="t37" to="t35" rfunc="det"/>
+    <dep from="t33" to="t37" rfunc="pobj"/>
+    <dep from="t37" to="t36" rfunc="amod"/>
+    <dep from="t37" to="t38" rfunc="prep"/>
+    <dep from="t40" to="t39" rfunc="det"/>
+    <dep from="t38" to="t40" rfunc="pobj"/>
+    <dep from="t30" to="t41" rfunc="punct"/>
+    <dep from="t41" to="t42" rfunc=""/>
+    <dep from="t43" to="t44" rfunc="prep"/>
+    <dep from="t46" to="t45" rfunc="compound"/>
+    <dep from="t47" to="t46" rfunc="compound"/>
+    <dep from="t48" to="t47" rfunc="compound"/>
+    <dep from="t44" to="t48" rfunc="pobj"/>
+    <dep from="t43" to="t49" rfunc="punct"/>
+    <dep from="t51" to="t50" rfunc="compound"/>
+    <dep from="t59" to="t51" rfunc="nsubj"/>
+    <dep from="t51" to="t52" rfunc="punct"/>
+    <dep from="t59" to="t53" rfunc="nsubj"/>
+    <dep from="t53" to="t54" rfunc="prep"/>
+    <dep from="t58" to="t55" rfunc="det"/>
+    <dep from="t54" to="t58" rfunc="pobj"/>
+    <dep from="t57" to="t56" rfunc="compound"/>
+    <dep from="t58" to="t57" rfunc="compound"/>
+    <dep from="t62" to="t60" rfunc="det"/>
+    <dep from="t59" to="t62" rfunc="dobj"/>
+    <dep from="t60" to="t61" rfunc=""/>
+    <dep from="t59" to="t63" rfunc="prep"/>
+    <dep from="t65" to="t64" rfunc="compound"/>
+    <dep from="t63" to="t65" rfunc="pobj"/>
+    <dep from="t65" to="t66" rfunc="punct"/>
+    <dep from="t65" to="t67" rfunc="acl"/>
+    <dep from="t67" to="t68" rfunc="prep"/>
+    <dep from="t68" to="t69" rfunc="pobj"/>
+    <dep from="t65" to="t70" rfunc="punct"/>
+    <dep from="t59" to="t71" rfunc="cc"/>
+    <dep from="t59" to="t72" rfunc="conj"/>
+    <dep from="t72" to="t73" rfunc="dobj"/>
+    <dep from="t72" to="t74" rfunc="conj"/>
+    <dep from="t74" to="t75" rfunc="prep"/>
+    <dep from="t77" to="t76" rfunc="det"/>
+    <dep from="t75" to="t77" rfunc="pobj"/>
+    <dep from="t59" to="t78" rfunc="punct"/>
+    <dep from="t78" to="t79" rfunc=""/>
+    <dep from="t81" to="t80" rfunc="nsubj"/>
+    <dep from="t83" to="t82" rfunc="det"/>
+    <dep from="t85" to="t83" rfunc="nsubjpass"/>
+    <dep from="t81" to="t85" rfunc="ccomp"/>
+    <dep from="t85" to="t84" rfunc="auxpass"/>
+    <dep from="t85" to="t86" rfunc="prep"/>
+    <dep from="t88" to="t87" rfunc="det"/>
+    <dep from="t86" to="t88" rfunc="pobj"/>
+    <dep from="t81" to="t89" rfunc="punct"/>
+    <dep from="t98" to="t90" rfunc="prep"/>
+    <dep from="t90" to="t91" rfunc="prep"/>
+    <dep from="t93" to="t92" rfunc="amod"/>
+    <dep from="t91" to="t93" rfunc="pobj"/>
+    <dep from="t98" to="t94" rfunc="punct"/>
+    <dep from="t96" to="t95" rfunc="det"/>
+    <dep from="t98" to="t96" rfunc="nsubj"/>
+    <dep from="t98" to="t97" rfunc="aux"/>
+    <dep from="t98" to="t99" rfunc=""/>
+    <dep from="t101" to="t100" rfunc="amod"/>
+    <dep from="t98" to="t101" rfunc="dobj"/>
+    <dep from="t98" to="t102" rfunc="punct"/>
+    <dep from="t102" to="t103" rfunc=""/>
+    <dep from="t104" to="t105" rfunc="advmod"/>
+    <dep from="t107" to="t106" rfunc="aux"/>
+    <dep from="t104" to="t107" rfunc="xcomp"/>
+    <dep from="t107" to="t108" rfunc="prt"/>
+    <dep from="t107" to="t109" rfunc="prep"/>
+    <dep from="t113" to="t110" rfunc="poss"/>
+    <dep from="t109" to="t113" rfunc="pobj"/>
+    <dep from="t113" to="t111" rfunc="compound"/>
+    <dep from="t113" to="t112" rfunc="punct"/>
+    <dep from="t104" to="t114" rfunc="cc"/>
+    <dep from="t104" to="t115" rfunc="conj"/>
+    <dep from="t117" to="t116" rfunc="det"/>
+    <dep from="t115" to="t117" rfunc="dobj"/>
+    <dep from="t117" to="t118" rfunc="prep"/>
+    <dep from="t120" to="t119" rfunc="det"/>
+    <dep from="t118" to="t120" rfunc="pobj"/>
+    <dep from="t115" to="t121" rfunc="punct"/>
+    <dep from="t121" to="t122" rfunc=""/>
+  </deps>
+  <chunks>
+    <chunk id="c0" head="t0" phrase="NP">
+      <span>
+        <target id="t0"/>
+      </span>
+    </chunk>
+    <chunk id="c1" head="t5" phrase="NP">
+      <span>
+        <target id="t3"/>
+        <target id="t4"/>
+        <target id="t5"/>
+      </span>
+    </chunk>
+    <chunk id="c2" head="t6" phrase="PP">
+      <span>
+        <target id="t6"/>
+        <target id="t7"/>
+        <target id="t8"/>
+        <target id="t9"/>
+        <target id="t10"/>
+        <target id="t11"/>
+      </span>
+    </chunk>
+    <chunk id="c3" head="t11" phrase="NP">
+      <span>
+        <target id="t7"/>
+        <target id="t8"/>
+        <target id="t9"/>
+        <target id="t10"/>
+        <target id="t11"/>
+      </span>
+    </chunk>
+    <chunk id="c4" head="t12" phrase="PP">
+      <span>
+        <target id="t12"/>
+        <target id="t13"/>
+        <target id="t14"/>
+        <target id="t15"/>
+        <target id="t16"/>
+      </span>
+    </chunk>
+    <chunk id="c5" head="t16" phrase="NP">
+      <span>
+        <target id="t13"/>
+        <target id="t14"/>
+        <target id="t15"/>
+        <target id="t16"/>
+      </span>
+    </chunk>
+    <chunk id="c6" head="t17" phrase="PP">
+      <span>
+        <target id="t17"/>
+        <target id="t18"/>
+        <target id="t19"/>
+      </span>
+    </chunk>
+    <chunk id="c7" head="t19" phrase="NP">
+      <span>
+        <target id="t18"/>
+        <target id="t19"/>
+      </span>
+    </chunk>
+    <chunk id="c8" head="t23" phrase="PP">
+      <span>
+        <target id="t23"/>
+        <target id="t24"/>
+        <target id="t25"/>
+      </span>
+    </chunk>
+    <chunk id="c9" head="t25" phrase="NP">
+      <span>
+        <target id="t24"/>
+        <target id="t25"/>
+      </span>
+    </chunk>
+    <chunk id="c10" head="t28" phrase="NP">
+      <span>
+        <target id="t27"/>
+        <target id="t28"/>
+      </span>
+    </chunk>
+    <chunk id="c11" head="t32" phrase="NP">
+      <span>
+        <target id="t31"/>
+        <target id="t32"/>
+      </span>
+    </chunk>
+    <chunk id="c12" head="t37" phrase="PP">
+      <span>
+        <target id="t34"/>
+        <target id="t35"/>
+        <target id="t36"/>
+        <target id="t37"/>
+      </span>
+    </chunk>
+    <chunk id="c13" head="t37" phrase="NP">
+      <span>
+        <target id="t35"/>
+        <target id="t36"/>
+        <target id="t37"/>
+      </span>
+    </chunk>
+    <chunk id="c14" head="t38" phrase="PP">
+      <span>
+        <target id="t38"/>
+        <target id="t39"/>
+        <target id="t40"/>
+      </span>
+    </chunk>
+    <chunk id="c15" head="t40" phrase="NP">
+      <span>
+        <target id="t39"/>
+        <target id="t40"/>
+      </span>
+    </chunk>
+    <chunk id="c16" head="t44" phrase="PP">
+      <span>
+        <target id="t44"/>
+        <target id="t45"/>
+        <target id="t46"/>
+        <target id="t47"/>
+        <target id="t48"/>
+      </span>
+    </chunk>
+    <chunk id="c17" head="t48" phrase="NP">
+      <span>
+        <target id="t45"/>
+        <target id="t46"/>
+        <target id="t47"/>
+        <target id="t48"/>
+      </span>
+    </chunk>
+    <chunk id="c18" head="t51" phrase="NP">
+      <span>
+        <target id="t50"/>
+        <target id="t51"/>
+      </span>
+    </chunk>
+    <chunk id="c19" head="t53" phrase="NP">
+      <span>
+        <target id="t53"/>
+      </span>
+    </chunk>
+    <chunk id="c20" head="t54" phrase="PP">
+      <span>
+        <target id="t54"/>
+        <target id="t55"/>
+        <target id="t56"/>
+        <target id="t57"/>
+        <target id="t58"/>
+      </span>
+    </chunk>
+    <chunk id="c21" head="t58" phrase="NP">
+      <span>
+        <target id="t55"/>
+        <target id="t56"/>
+        <target id="t57"/>
+        <target id="t58"/>
+      </span>
+    </chunk>
+    <chunk id="c22" head="t62" phrase="NP">
+      <span>
+        <target id="t60"/>
+        <target id="t61"/>
+        <target id="t62"/>
+      </span>
+    </chunk>
+    <chunk id="c23" head="t63" phrase="PP">
+      <span>
+        <target id="t63"/>
+        <target id="t64"/>
+        <target id="t65"/>
+      </span>
+    </chunk>
+    <chunk id="c24" head="t65" phrase="NP">
+      <span>
+        <target id="t64"/>
+        <target id="t65"/>
+      </span>
+    </chunk>
+    <chunk id="c25" head="t73" phrase="NP">
+      <span>
+        <target id="t73"/>
+      </span>
+    </chunk>
+    <chunk id="c26" head="t75" phrase="PP">
+      <span>
+        <target id="t75"/>
+        <target id="t76"/>
+        <target id="t77"/>
+      </span>
+    </chunk>
+    <chunk id="c27" head="t77" phrase="NP">
+      <span>
+        <target id="t76"/>
+        <target id="t77"/>
+      </span>
+    </chunk>
+    <chunk id="c28" head="t80" phrase="NP">
+      <span>
+        <target id="t80"/>
+      </span>
+    </chunk>
+    <chunk id="c29" head="t83" phrase="NP">
+      <span>
+        <target id="t82"/>
+        <target id="t83"/>
+      </span>
+    </chunk>
+    <chunk id="c30" head="t86" phrase="PP">
+      <span>
+        <target id="t86"/>
+        <target id="t87"/>
+        <target id="t88"/>
+      </span>
+    </chunk>
+    <chunk id="c31" head="t88" phrase="NP">
+      <span>
+        <target id="t87"/>
+        <target id="t88"/>
+      </span>
+    </chunk>
+    <chunk id="c32" head="t91" phrase="PP">
+      <span>
+        <target id="t91"/>
+        <target id="t92"/>
+        <target id="t93"/>
+      </span>
+    </chunk>
+    <chunk id="c33" head="t93" phrase="NP">
+      <span>
+        <target id="t92"/>
+        <target id="t93"/>
+      </span>
+    </chunk>
+    <chunk id="c34" head="t96" phrase="NP">
+      <span>
+        <target id="t95"/>
+        <target id="t96"/>
+      </span>
+    </chunk>
+    <chunk id="c35" head="t101" phrase="NP">
+      <span>
+        <target id="t100"/>
+        <target id="t101"/>
+      </span>
+    </chunk>
+    <chunk id="c36" head="t109" phrase="PP">
+      <span>
+        <target id="t109"/>
+        <target id="t110"/>
+        <target id="t111"/>
+        <target id="t112"/>
+        <target id="t113"/>
+      </span>
+    </chunk>
+    <chunk id="c37" head="t113" phrase="NP">
+      <span>
+        <target id="t110"/>
+        <target id="t111"/>
+        <target id="t112"/>
+        <target id="t113"/>
+      </span>
+    </chunk>
+    <chunk id="c38" head="t117" phrase="NP">
+      <span>
+        <target id="t116"/>
+        <target id="t117"/>
+      </span>
+    </chunk>
+    <chunk id="c39" head="t118" phrase="PP">
+      <span>
+        <target id="t118"/>
+        <target id="t119"/>
+        <target id="t120"/>
+      </span>
+    </chunk>
+    <chunk id="c40" head="t120" phrase="NP">
+      <span>
+        <target id="t119"/>
+        <target id="t120"/>
+      </span>
+    </chunk>
+    <chunk id="c41" head="t123" phrase="NP">
+      <span>
+        <target id="t123"/>
+      </span>
+    </chunk>
+  </chunks>
+</NAF>

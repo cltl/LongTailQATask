@@ -1,0 +1,155 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<NAF>
+  <nafHeader>
+    <linguisticProcessors layer="text">
+      <lp name="SpaCy" timestamp="2017-02-01T13:10:33UTC"/>
+    </linguisticProcessors>
+    <linguisticProcessors layer="terms">
+      <lp name="SpaCy" timestamp="2017-02-01T13:10:33UTC"/>
+    </linguisticProcessors>
+  </nafHeader>
+  <text>
+    <wf sent="1" id="w0" length="2" offset="0">To</wf>
+    <wf sent="1" id="w1" length="4" offset="3">view</wf>
+    <wf sent="1" id="w2" length="4" offset="8">this</wf>
+    <wf sent="1" id="w3" length="4" offset="13">page</wf>
+    <wf sent="1" id="w4" length="6" offset="18">ensure</wf>
+    <wf sent="1" id="w5" length="4" offset="25">that</wf>
+    <wf sent="1" id="w6" length="5" offset="30">Adobe</wf>
+    <wf sent="1" id="w7" length="5" offset="36">Flash</wf>
+    <wf sent="1" id="w8" length="6" offset="42">Player</wf>
+    <wf sent="1" id="w9" length="7" offset="49">version</wf>
+    <wf sent="1" id="w10" length="6" offset="57">10.2.0</wf>
+    <wf sent="1" id="w11" length="2" offset="64">or</wf>
+    <wf sent="1" id="w12" length="7" offset="67">greater</wf>
+    <wf sent="1" id="w13" length="2" offset="75">is</wf>
+    <wf sent="1" id="w14" length="9" offset="78">installed</wf>
+    <wf sent="1" id="w15" length="1" offset="87">.</wf>
+  </text>
+  <terms>
+    <term id="t0" lemma="to" pos="PART" morphofeat="TO">
+      <span>
+        <target id="w0"/>
+      </span>
+    </term>
+    <term id="t1" lemma="view" pos="VERB" morphofeat="VB">
+      <span>
+        <target id="w1"/>
+      </span>
+    </term>
+    <term id="t2" lemma="this" pos="DET" morphofeat="DT">
+      <span>
+        <target id="w2"/>
+      </span>
+    </term>
+    <term id="t3" lemma="page" pos="NOUN" morphofeat="NN">
+      <span>
+        <target id="w3"/>
+      </span>
+    </term>
+    <term id="t4" lemma="ensure" pos="VERB" morphofeat="VB">
+      <span>
+        <target id="w4"/>
+      </span>
+    </term>
+    <term id="t5" lemma="that" pos="ADP" morphofeat="IN">
+      <span>
+        <target id="w5"/>
+      </span>
+    </term>
+    <term id="t6" lemma="adobe" pos="PROPN" morphofeat="NNP">
+      <span>
+        <target id="w6"/>
+      </span>
+    </term>
+    <term id="t7" lemma="flash" pos="PROPN" morphofeat="NNP">
+      <span>
+        <target id="w7"/>
+      </span>
+    </term>
+    <term id="t8" lemma="player" pos="PROPN" morphofeat="NNP">
+      <span>
+        <target id="w8"/>
+      </span>
+    </term>
+    <term id="t9" lemma="version" pos="NOUN" morphofeat="NN">
+      <span>
+        <target id="w9"/>
+      </span>
+    </term>
+    <term id="t10" lemma="10.2.0" pos="NUM" morphofeat="CD">
+      <span>
+        <target id="w10"/>
+      </span>
+    </term>
+    <term id="t11" lemma="or" pos="CONJ" morphofeat="CC">
+      <span>
+        <target id="w11"/>
+      </span>
+    </term>
+    <term id="t12" lemma="great" pos="ADJ" morphofeat="JJR">
+      <span>
+        <target id="w12"/>
+      </span>
+    </term>
+    <term id="t13" lemma="be" pos="VERB" morphofeat="VBZ">
+      <span>
+        <target id="w13"/>
+      </span>
+    </term>
+    <term id="t14" lemma="instal" pos="VERB" morphofeat="VBN">
+      <span>
+        <target id="w14"/>
+      </span>
+    </term>
+    <term id="t15" lemma="." pos="PUNCT" morphofeat=".">
+      <span>
+        <target id="w15"/>
+      </span>
+    </term>
+  </terms>
+  <entities>
+    <entity id="e0" type="ORG">
+      <references>
+        <span>
+          <target id="t6"/>
+          <target id="t7"/>
+          <target id="t8"/>
+        </span>
+      </references>
+    </entity>
+  </entities>
+  <deps>
+    <dep from="t1" to="t0" rfunc="aux"/>
+    <dep from="t3" to="t2" rfunc="det"/>
+    <dep from="t4" to="t3" rfunc="nsubj"/>
+    <dep from="t1" to="t4" rfunc="ccomp"/>
+    <dep from="t14" to="t5" rfunc="mark"/>
+    <dep from="t4" to="t14" rfunc="ccomp"/>
+    <dep from="t8" to="t6" rfunc="compound"/>
+    <dep from="t9" to="t8" rfunc="compound"/>
+    <dep from="t14" to="t9" rfunc="nsubjpass"/>
+    <dep from="t8" to="t7" rfunc="compound"/>
+    <dep from="t9" to="t10" rfunc="nummod"/>
+    <dep from="t9" to="t11" rfunc="cc"/>
+    <dep from="t14" to="t12" rfunc="nsubjpass"/>
+    <dep from="t14" to="t13" rfunc="auxpass"/>
+    <dep from="t1" to="t15" rfunc="punct"/>
+  </deps>
+  <chunks>
+    <chunk id="c0" head="t3" phrase="NP">
+      <span>
+        <target id="t2"/>
+        <target id="t3"/>
+      </span>
+    </chunk>
+    <chunk id="c1" head="t9" phrase="NP">
+      <span>
+        <target id="t6"/>
+        <target id="t7"/>
+        <target id="t8"/>
+        <target id="t9"/>
+      </span>
+    </chunk>
+  </chunks>
+</NAF>
