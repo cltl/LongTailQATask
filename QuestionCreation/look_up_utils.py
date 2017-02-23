@@ -195,8 +195,9 @@ def create_look_up(frames):
         # time and location
         for time_level, sf_time, m_time in time_info:
             for loc_level, sf_loc, m_loc in loc_info:
-                look_up[('location', 'time')][(loc_level, time_level)][(sf_loc, sf_time)].setdefault((m_loc, m_time),set()).add(incident_uri)
-                parameters2incident_uris[('location', 'time')][(loc_level, time_level)][(sf_loc, sf_time)].add(incident_uri)
+                if sf_loc != 'N/A':
+                    look_up[('location', 'time')][(loc_level, time_level)][(sf_loc, sf_time)].setdefault((m_loc, m_time),set()).add(incident_uri)
+                    parameters2incident_uris[('location', 'time')][(loc_level, time_level)][(sf_loc, sf_time)].add(incident_uri)
 
 
 #        look_up[('time',)]['day'][dt_day].setdefault(dt_day, set()).add(incident_uri)
