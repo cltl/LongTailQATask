@@ -6,7 +6,7 @@
 
 import pandas
 from collections import defaultdict
-from nameparser import HumanName
+#from nameparser import HumanName
 
 
 def create_look_up(frames):
@@ -24,6 +24,7 @@ def create_look_up(frames):
     df = pandas.concat([pandas.read_pickle('../EventRegistries/GunViolence/frames/' + frame)
                         for frame in frames])
 
+    print(df)
     look_up = {
         ('location',): {
             'state': defaultdict(dict),
@@ -35,6 +36,11 @@ def create_look_up(frames):
             'last' : defaultdict(dict),
             'full_name' : defaultdict(dict)
         },
+	('time',): {
+            'day': defaultdict(dict),
+            'week': defaultdict(dict),
+            'month': defaultdict(dict)
+	},
         ('location', 'participant') : {
             ('state', 'first'): defaultdict(dict),
             ('state', 'last'): defaultdict(dict),
@@ -45,10 +51,30 @@ def create_look_up(frames):
             ('address', 'first'): defaultdict(dict),
             ('address', 'last') : defaultdict(dict),
             ('address', 'full_name') : defaultdict(dict),
-
+        },
+        ('location', 'time'): {
+            ('state', 'day'): defaultdict(dict),
+            ('state', 'week'): defaultdict(dict),
+            ('state', 'month') : defaultdict(dict),
+            ('city', 'day'): defaultdict(dict),
+            ('city', 'week'): defaultdict(dict),
+            ('city', 'month') : defaultdict(dict),
+            ('address', 'day'): defaultdict(dict),
+            ('address', 'week') : defaultdict(dict),
+            ('address', 'month') : defaultdict(dict),
+        },
+        ('time', 'participant'): {
+            ('day', 'first'): defaultdict(dict),
+            ('day', 'last'): defaultdict(dict),
+            ('mday', 'full_name') : defaultdict(dict),
+            ('week', 'first'): defaultdict(dict),
+            ('week', 'last'): defaultdict(dict),
+            ('week', 'full_name') : defaultdict(dict),
+            ('month', 'first'): defaultdict(dict),
+            ('month', 'last') : defaultdict(dict),
+            ('month', 'full_name') : defaultdict(dict),
         }
-
-                }
+    }
 
     parameters2incident_uris = {
         ('location',): {
@@ -61,6 +87,11 @@ def create_look_up(frames):
             'last' : defaultdict(set),
             'full_name' : defaultdict(set)
         },
+        ('time',): {
+            'day': defaultdict(dict),
+            'week': defaultdict(dict),
+            'month': defaultdict(dict)
+        },
         ('location', 'participant') : {
             ('state', 'first'): defaultdict(set),
             ('state', 'last'): defaultdict(set),
@@ -71,10 +102,30 @@ def create_look_up(frames):
             ('address', 'first'): defaultdict(set),
             ('address', 'last') : defaultdict(set),
             ('address', 'full_name') : defaultdict(set),
-
+        },
+        ('location', 'time'): {
+            ('state', 'day'): defaultdict(dict),
+            ('state', 'week'): defaultdict(dict),
+            ('state', 'month') : defaultdict(dict),
+            ('city', 'day'): defaultdict(dict),
+            ('city', 'week'): defaultdict(dict),
+            ('city', 'month') : defaultdict(dict),
+            ('address', 'day'): defaultdict(dict),
+            ('address', 'week') : defaultdict(dict),
+            ('address', 'month') : defaultdict(dict),
+        },
+        ('time', 'participant'): {
+            ('day', 'first'): defaultdict(dict),
+            ('day', 'last'): defaultdict(dict),
+            ('mday', 'full_name') : defaultdict(dict),
+            ('week', 'first'): defaultdict(dict),
+            ('week', 'last'): defaultdict(dict),
+            ('week', 'full_name') : defaultdict(dict),
+            ('month', 'first'): defaultdict(dict),
+            ('month', 'last') : defaultdict(dict),
+            ('month', 'full_name') : defaultdict(dict),
         }
-
-                }
+    }
 
 
     # ### structure of dictionary
@@ -125,6 +176,14 @@ def create_look_up(frames):
             if sf != 'N/A':
                 look_up[('location',)][gran_level][sf].setdefault(m, set()).add(incident_uri)
                 parameters2incident_uris[('location'),][gran_level][sf].add(incident_uri)
+
+        # time
+        incident_date=row['date']
+        dt_day = datetime.strptime(incident_date, '%B %d, %Y') 
+        dt_month=dt.replace(day=1)
+
+        look_up['time']['day'].setdefault()
+        look_up['time']['month'].setdefault()
 
         # participant
         for part_obj in row['participants']:
