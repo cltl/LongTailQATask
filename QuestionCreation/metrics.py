@@ -48,16 +48,16 @@ def get_ratio___noise_e2answer_e(noise_e, answer_e):
     return ratio_noise2answer
 
 
-def get_observed_ambiguity(answer_e):
+def get_observed_ambiguity(meanings):
     """
-    compute number of answer events
+    compute number of answer meanings
 
-    :param set answer_e: set of answer event identifiers
+    :param set meanings: set of answer meanings
 
     :rtype: int
-    :return: number of answer event identifiers
+    :return: number of answer meanings
     """
-    return len(answer_e)
+    return len(meanings)
 
 
 def get_num_docs_per_event(answer_d, answer_e):
