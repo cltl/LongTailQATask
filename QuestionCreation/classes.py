@@ -15,6 +15,7 @@ class Candidate:
                 n_avg_num_sources=-1, 
                 a_sources=[],
                 n_sources=[],
+                dct_spread=-1,
                 qid=-1):
         self.confusion_factors=confusion_factors
         part=confusion_factors.index('participant') if 'participant' in confusion_factors else -1
@@ -35,3 +36,4 @@ class Candidate:
         self.noise_incident_uris=noise_incident_uris
         self.a_sources=a_sources
         self.n_sources=n_sources
+        self.dct_spread=dct_spread
