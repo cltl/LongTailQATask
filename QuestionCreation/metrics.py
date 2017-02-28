@@ -50,12 +50,12 @@ def get_ratio___noise_e2answer_e(noise_e, answer_e):
 
 def get_observed_ambiguity(meanings):
     """
-    compute number of answer meanings
+    compute number of unique answer meanings
 
-    :param set meanings: set of answer meanings
+    :param set sf2meanings: set of answer surface forms with meanings
 
     :rtype: int
-    :return: number of answer meanings
+    :return: number of unique answer meanings
     """
     return len(meanings)
 
