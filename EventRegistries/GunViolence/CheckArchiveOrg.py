@@ -108,23 +108,31 @@ item=download_and_parse_uri(archive_uri)
 
 # In[ ]:
 
+cooldown_time=0.1
+
 sources=get_sources(df)
 has_archive_version=0
 no_archive_version=0
 no_date_articles=0
+extraction_error=0
 for index, source in enumerate(sources):
     print("article no.", index)
     if source!='':
         archive_uri=generate_archive_uri(source)
         if archive_uri:
             has_archive_version+=1
-            item=download_and_parse_uri(archive_uri)
+            try: 
+                item=download_and_parse_uri(archive_uri)
+            except:
+                extraction_error+=1
+                continue
             if not item.dct:
                 print("No date information found!")
                 no_date_articles+=1
-            time.sleep(0.05)
         else:
             no_archive_version+=1
             #print("No archive.org versions found!")
 
-print(has_archive_version, no_archive_version, no_date_articles)
+        time.sleep(cooldown_time)
+
+print(has_archive_version, no_archive_version, no_date_articles, extraction_error)
