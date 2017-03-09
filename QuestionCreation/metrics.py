@@ -52,7 +52,7 @@ def get_observed_ambiguity(meanings):
     """
     compute number of unique answer meanings
 
-    :param set sf2meanings: set of answer surface forms with meanings
+    :param set meanings: set of answer surface forms with meanings
 
     :rtype: int
     :return: number of unique answer meanings
