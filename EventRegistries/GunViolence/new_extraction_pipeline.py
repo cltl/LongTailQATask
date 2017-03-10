@@ -106,6 +106,7 @@ def website_extraction(original_url, max_sec=5, debug=False):
 
     url=generate_archive_uri(original_url)
     if not url:
+        utils.log_no_archive(original_url)
         no_archive_version+=1
         return classes.NewsItem(
                 title='',
@@ -155,7 +156,7 @@ def website_extraction(original_url, max_sec=5, debug=False):
     else:
         for date_option in [dct_cached_api,dct_cached_gvdb,dct_newspaper]:
             if date_option and date_option!=dct:
-                utils.log_different_date(url, dct_cached, dct_newspaper)
+                utils.log_different_date(url, str(dct_cached_api) or "NODATE", str(dct_cached_gvdb) or "NODATE", str(dct_newspaper) or "NODATE")
         all_good+=1
     news_item=classes.NewsItem(
         title=title,

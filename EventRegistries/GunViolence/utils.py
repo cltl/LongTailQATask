@@ -12,14 +12,18 @@ NODATE_FILE="nodate.txt"
 ERRORS_FILE='errors.txt'
 DIFF_DATE_FILE="logs/diff_date.tsv"
 NO_DATE_FILE="logs/no_date.tsv"
+NO_ARCHIVE_FILE="logs/no_archive.tsv"
 
-
-def log_different_date(url, date_cache, date_np):
+def log_different_date(url, date_cache1, date_cache2, date_np):
     with open(DIFF_DATE_FILE, 'a') as w:
-        w.write('%s\t%s\t%s\n' % (url, str(date_cache), str(date_np)))
+        w.write('%s\t%s\t%s\t%s\n' % (url, date_cache1, date_cache2, date_np))
 
 def log_no_date(url):
     with open(NO_DATE_FILE, 'a') as w:
+        w.write('%s\n' % url)
+
+def log_no_archive(url):
+    with open(NO_ARCHIVE_FILE, 'a') as w:
         w.write('%s\n' % url)
 
 def check_overlap(keys):
