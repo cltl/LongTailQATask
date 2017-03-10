@@ -34,8 +34,13 @@ def lookup_and_merge(look_up,
                 meanings = look_up[confusion_tuple][granularity][sf]
 
                 # obtain answers uris
-                answer_incident_uris = parameters2incident_uris[confusion_tuple][granularity][sf]
-
+                # filter out FireRescue incident from answer incident uris
+                answer_incident_uris = {answer_incident_uri
+                                        for answer_incident_uri in
+                                        parameters2incident_uris[confusion_tuple][granularity][sf]
+                                        if not answer_incident_uri.startswith('FR')}
+            
+                
                 # obtain confusion uris
                 total_incident_uris = {0: set(), 1: set()}
                 confusion_incident_uris = {0: set(), 1: set()}

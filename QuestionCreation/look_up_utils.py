@@ -86,7 +86,7 @@ def update_sf_m_dict_with_participant(row, part_obj, sf_dict, m_dict):
             m_dict[gran_level] = (incident_uri, value)
 
 
-def create_look_up(frames):
+def create_look_up(df):
     """
     create look_up for:
     1. location: state | city | address
@@ -94,14 +94,11 @@ def create_look_up(frames):
     3. time: day | month | year
     4. combination of participant, location, and time
 
-    :param frames: categories of gunviolence to consider
+    :param df: dataframe containing possibly frames from Gun Violence | FireRescue
 
     :rtype: tuple
     :return: (look_up, mapping parameters2incident uris)
     """
-    df = pandas.concat([pandas.read_pickle('../EventRegistries/GunViolence/frames/' + frame)
-                        for frame in frames])
-
     main_categories = ['location', 'participant', 'time']
 
     main_category2gran_level = {
