@@ -5,7 +5,7 @@ from classes import Question
 def lookup_and_merge(look_up,
                      parameters2incident_uris,
                      confusion_tuple,
-                     min_confusion,
+                     min_num_answer_incidents,
                      df,
                      debug=False,
                      inspect_one=False):
@@ -15,7 +15,7 @@ def lookup_and_merge(look_up,
     :param dict look_up: see look_up_utils.py
     :param dict parameters2incident_uris: see look_up_utils.py
     :param tuple confusion_tuple: confusion setting, e.g. ('location', 'participant')
-    :param int min_confusion: threshold for minimum number of incidents that 
+    :param int min_num_answer_incidents: threshold for minimum number of incidents that
     match with respect to confusion setting
     :param pandas.core.frame.DataFrame df: gunviolence dataframes
     :param bool debug: set all class properties to debug
@@ -30,15 +30,15 @@ def lookup_and_merge(look_up,
     for granularity in (look_up[confusion_tuple]):
         for sf in look_up[confusion_tuple][granularity]:
             num_answer_e = len(look_up[confusion_tuple][granularity][sf])
-            if num_answer_e >= min_confusion:
+            if num_answer_e >= min_num_answer_incidents:
                 meanings = look_up[confusion_tuple][granularity][sf]
 
                 # obtain answers uris
                 answer_incident_uris = parameters2incident_uris[confusion_tuple][granularity][sf]
 
-                # obtain noise uris
+                # obtain confusion uris
                 total_incident_uris = {0: set(), 1: set()}
-                noise_incident_uris = {0: set(), 1: set()}
+                confusion_incident_uris = {0: set(), 1: set()}
                 oa = {0: set(), 1: set()}
 
                 # total_incident_uris_part=set()
@@ -48,11 +48,11 @@ def lookup_and_merge(look_up,
                     oa[index] = metrics.get_observed_ambiguity(all_meanings)
                     for set_of_m in all_meanings.values():
                         total_incident_uris[index].update(set_of_m)
-                    noise_incident_uris[index] = total_incident_uris[index] - answer_incident_uris
+                    confusion_incident_uris[index] = total_incident_uris[index] - answer_incident_uris
 
-                # create noise df and answer df
-                set_noise_uris = noise_incident_uris[0] | noise_incident_uris[1]
-                noise_df = df.query('incident_uri in @set_noise_uris')
+                # create confusion df and answer df
+                set_confusion_uris = confusion_incident_uris[0] | confusion_incident_uris[1]
+                confusion_df = df.query('incident_uri in @set_confusion_uris')
 
                 answer_df = df.query('incident_uri in @answer_incident_uris')
 
@@ -66,8 +66,8 @@ def lookup_and_merge(look_up,
                     oa_info=oa,
                     answer_df=answer_df,
                     answer_incident_uris=answer_incident_uris,
-                    noise_df=noise_df,
-                    noise_incident_uris=set_noise_uris
+                    confusion_df=confusion_df,
+                    confusion_incident_uris=set_confusion_uris
                 )
                 
                 if debug:
@@ -84,9 +84,9 @@ def lookup_and_merge(look_up,
                         'question',
                         'answer_incident_uris',
                         'a_avg_num_sources',
-                        'n_avg_num_sources',
+                        'c_avg_num_sources',
                         'a_avg_date_spread',
-                        'n_avg_date_spread'
+                        'c_avg_date_spread'
                     ]:
                         print(attr, getattr(q_instance, attr))
                     print(look_up[confusion_tuple][granularity][sf])

@@ -29,7 +29,6 @@ def sources_date_spread(set_of_uris):
 
     return mean_date_spreads
 
-
 def get_sources(dataframe):
     """
 
@@ -59,8 +58,8 @@ class Question:
                  oa_info,
                  answer_df,
                  answer_incident_uris,
-                 noise_df,
-                 noise_incident_uris):
+                 confusion_df,
+                 confusion_incident_uris):
         self.q_id = q_id
         self.confusion_factors = confusion_factors
         self.granularity = granularity
@@ -70,8 +69,8 @@ class Question:
         self.oa_info = oa_info
         self.answer_df = answer_df
         self.answer_incident_uris = answer_incident_uris
-        self.noise_df = noise_df
-        self.noise_incident_uris = noise_incident_uris
+        self.confusion_df = confusion_df
+        self.confusion_incident_uris = confusion_incident_uris
 
     @property
     def participant_confusion(self):
@@ -104,11 +103,11 @@ class Question:
         return the_question
 
     @property
-    def n2s_ratio(self):
-        noise_e = self.noise_incident_uris
+    def c2s_ratio(self):
+        confusion_e = self.confusion_incident_uris
         answer_e = self.answer_incident_uris
-        return metrics.get_ratio___noise_e2answer_e(noise_e,
-                                                    answer_e)
+        return metrics.get_ratio___confusion_e2answer_e(confusion_e,
+                                                        answer_e)
 
     @property
     def a_sources(self):
@@ -119,13 +118,13 @@ class Question:
         return len(self.a_sources) / len(self.answer_incident_uris)
 
     @property
-    def n_sources(self):
-        return get_sources(self.noise_df)
+    def c_sources(self):
+        return get_sources(self.confusion_df)
 
     @property
-    def n_avg_num_sources(self):
-        if self.noise_incident_uris:
-            return len(self.n_sources) / len(self.noise_incident_uris)
+    def c_avg_num_sources(self):
+        if self.confusion_incident_uris:
+            return len(self.c_sources) / len(self.confusion_incident_uris)
         else:
             return 0
 
@@ -134,9 +133,26 @@ class Question:
         return sources_date_spread(self.answer_incident_uris)
 
     @property
-    def n_avg_date_spread(self):
-        return sources_date_spread(self.noise_incident_uris)
-    
+    def c_avg_date_spread(self):
+        return sources_date_spread(self.confusion_incident_uris)
+
+    def oa(self, confusion_factor):
+        try:
+            confusion_index = self.confusion_factors.index(confusion_factor)
+        except ValueError:
+            return 0
+
+        return len({meaning[confusion_index]
+                            for meaning in self.meanings})
+
+    @property
+    def loc_oa(self):
+        return self.oa('location')
+
+    @property
+    def time_oa(self):
+        return self.oa('time')
+
     def debug(self):
         for prop in dir(Question):
             if isinstance(getattr(Question, prop), property):

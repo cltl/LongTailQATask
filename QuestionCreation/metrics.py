@@ -1,10 +1,10 @@
 """
 Definitions:
 1. answer event: event that is part of the answer to a question
-2. noise event: event that is NOT part of the answer to a question
+2. confusion event: event that is NOT part of the answer to a question
 
 Which metrics are relevant for which category:
-1. get_ratio___noise_e2answer_e
+1. get_ratio___confusion_e2answer_e
     * Time
     * Location
     * Participant
@@ -23,29 +23,29 @@ Which metrics are relevant for which category:
 """
 
 
-def get_ratio___noise_e2answer_e(noise_e, answer_e):
+def get_ratio___confusion_e2answer_e(confusion_e, answer_e):
     """
-    compute ratio between noise events and answer events,
-    e.g. noise_e / answer_e
+    compute ratio between confusion events and answer events,
+    e.g. confusion_e / answer_e
 
     if answer_e is an empty set, the function will return 0
-    if there is an overlap between noise_e and answer_e, an Exception will be raise
+    if there is an overlap between confusion_e and answer_e, an Exception will be raise
 
-    :param set noise_e: set of noise event identifiers
+    :param set confusion_e: set of confusion event identifiers
     :param set answer_e: set of answer event identifiers
 
     :rtype: float
-    :return: ratio between noise events and answer events
+    :return: ratio between confusion events and answer events
     """
-    overlap = noise_e & answer_e
+    overlap = confusion_e & answer_e
     if overlap:
-        raise Exception('overlap between noise_e and answer_e: %s' % overlap)
+        raise Exception('overlap between confusion_e and answer_e: %s' % overlap)
 
-    ratio_noise2answer = 0
+    ratio_confusion2answer = 0
     if answer_e:
-        ratio_noise2answer = len(noise_e) / len(answer_e)
+        ratio_confusion2answer = len(confusion_e) / len(answer_e)
 
-    return ratio_noise2answer
+    return ratio_confusion2answer
 
 
 def get_observed_ambiguity(meanings):
