@@ -10,6 +10,17 @@ TOKEN="1f5fcfe62127906ba56274d11c019ac8"
 CORPUSDIR="the_violent_corpus/"
 NODATE_FILE="nodate.txt"
 ERRORS_FILE='errors.txt'
+DIFF_DATE_FILE="logs/diff_date.tsv"
+NO_DATE_FILE="logs/no_date.tsv"
+
+
+def log_different_date(url, date_cache, date_np):
+    with open(DIFF_DATE_FILE, 'a') as w:
+        w.write('%s\t%s\t%s\n' % (url, str(date_cache), str(date_np)))
+
+def log_no_date(url):
+    with open(NO_DATE_FILE, 'a') as w:
+        w.write('%s\n' % url)
 
 def check_overlap(keys):
 	results=set()

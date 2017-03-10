@@ -8,19 +8,35 @@ import pandas
 from multiprocessing.dummy import Pool as ThreadPool
 from collections import Counter, defaultdict
 import operator
-import utils
 from geopy.geocoders import Nominatim
 from newspaper import Article
 import requests
 from urllib.parse import urlencode, quote_plus
 import time
+import sys
+from datetime import datetime
+
+import classes
+import utils
+
 
 cooldown_time=0.05
+DATES_CACHE='date_cache.p'
+dates_api=pickle.load(open(DATES_CACHE, 'rb'))
 
 # In[2]:
 
-import classes
+def get_cached_dct(url):
+    hashed_url=utils.hash_uri(url)
+    if hashed_url in dates_api and dates_api[hashed_url]!='NODATE':
+        return datetime.strptime(dates_api[hashed_url], '%a, %d %b %Y %H:%M:%S GMT').date()
+    else:
+        return None
 
+#test_url='http://www.wdam.com/story/27682998/1-dead-4-injured-in-nightclub-shooting'
+#print(get_cached_dct(test_url))
+#sys.exit()
+    
 def get_sources(dataframe):
     """
 
@@ -108,11 +124,27 @@ def website_extraction(original_url, max_sec=5, debug=False):
     a.parse()
     title=a.title
     content=a.text
-    dct=a.publish_date or a.meta_data['date'] or a.meta_data['published_time']
+    dct_newspaper=None
+    dct_newspaper=a.publish_date or a.meta_data['date'] or a.meta_data['published_time']
+    if a.publish_date:
+        print(a.publish_date)
+        print('case A')
+        dct_newspaper=a.publish_date.date()
+    elif a.meta_data['date']:
+        print(a.meta_data['date'] + 'case B')
+        dct_newspaper=datetime.strptime(a.meta_data['date'], '%Y/%m/%d').date()
+    elif a.meta_data['published_time']:
+        print(a.meta_data['published_time'] + 'case C')
+        datetime.strptime(a.meta_data['published_time'], '%Y-%m-%d %H:%M:%S').date()
+    dct_cached=get_cached_dct(original_url)
+    dct=dct_cached or dct_newspaper
     if not dct:
+        utils.log_no_date(url)
         print("No date found for article %s" % url)
         no_date_articles+=1
     else:
+        if dct_cached and dct_newspaper and dct_cached!=dct_newspaper:
+            utils.log_different_date(url, dct_cached, dct_newspaper)
         all_good+=1
     news_item=classes.NewsItem(
         title=title,
@@ -175,3 +207,4 @@ for index, source in enumerate(sources):
 t2=time.time()
 print("Time elapsed", t2-t1)
 print(all_good, no_archive_version, no_date_articles, extraction_error)
+
