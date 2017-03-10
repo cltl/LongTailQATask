@@ -22,14 +22,23 @@ import utils
 
 cooldown_time=0.05
 DATES_CACHE='date_cache.p'
+GVDB_DATES_CACHE='gvdb_date_cache.p'
+
 dates_api=pickle.load(open(DATES_CACHE, 'rb'))
+dates_gvdb=pickle.load(open(GVDB_DATES_CACHE, 'rb'))
 
 # In[2]:
 
-def get_cached_dct(url):
+def get_cached_dct_api(url):
     hashed_url=utils.hash_uri(url)
     if hashed_url in dates_api and dates_api[hashed_url]!='NODATE':
         return datetime.strptime(dates_api[hashed_url], '%a, %d %b %Y %H:%M:%S GMT').date()
+    else:
+        return None
+
+def get_cached_dct_gvdb(url):
+    if url in dates_gvdb and dates_gvdb[url]:
+        return dates_gvdb[url]
     else:
         return None
 
@@ -135,16 +144,18 @@ def website_extraction(original_url, max_sec=5, debug=False):
         dct_newspaper=datetime.strptime(a.meta_data['date'], '%Y/%m/%d').date()
     elif a.meta_data['published_time']:
         print(a.meta_data['published_time'] + 'case C')
-        datetime.strptime(a.meta_data['published_time'], '%Y-%m-%d %H:%M:%S').date()
-    dct_cached=get_cached_dct(original_url)
-    dct=dct_cached or dct_newspaper
+        dct_newspaper=a.meta_data['published_time'].date()
+    dct_cached_api=get_cached_dct_api(original_url)
+    dct_cached_gvdb=get_cached_dct_gvdb(original_url)
+    dct=dct_cached_api or dct_cached_gvdb or dct_newspaper
     if not dct:
         utils.log_no_date(url)
         print("No date found for article %s" % url)
         no_date_articles+=1
     else:
-        if dct_cached and dct_newspaper and dct_cached!=dct_newspaper:
-            utils.log_different_date(url, dct_cached, dct_newspaper)
+        for date_option in [dct_cached_api,dct_cached_gvdb,dct_newspaper]:
+            if date_option and date_option!=dct:
+                utils.log_different_date(url, dct_cached, dct_newspaper)
         all_good+=1
     news_item=classes.NewsItem(
         title=title,
