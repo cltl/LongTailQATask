@@ -14,6 +14,9 @@ DIFF_DATE_FILE="logs/diff_date.tsv"
 NO_DATE_FILE="logs/no_date.tsv"
 NO_ARCHIVE_FILE="logs/no_archive.tsv"
 
+def is_archive_uri(uri):
+    return uri.startswith('https://web.archive.org/') or uri.startswith('http://web.archive.org/')
+
 def log_different_date(url, date_cache1, date_cache2, date_np):
     with open(DIFF_DATE_FILE, 'a') as w:
         w.write('%s\t%s\t%s\t%s\n' % (url, date_cache1, date_cache2, date_np))

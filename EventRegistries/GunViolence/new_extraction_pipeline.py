@@ -104,15 +104,18 @@ def website_extraction(original_url, max_sec=5, debug=False):
     global extraction_error
     global all_good
 
-    url=generate_archive_uri(original_url)
-    if not url:
-        utils.log_no_archive(original_url)
-        no_archive_version+=1
-        return classes.NewsItem(
-                title='',
-                content='',
-                dct=None
-            )
+    if not utils.is_archive_uri(original_url):
+        url=generate_archive_uri(original_url)
+        if not url:
+            utils.log_no_archive(original_url)
+            no_archive_version+=1
+            return classes.NewsItem(
+                    title='',
+                    content='',
+                    dct=None
+                )
+    else:
+        url=original_url
     language='en'
     a=Article(url, language)
     a.download()
@@ -142,7 +145,11 @@ def website_extraction(original_url, max_sec=5, debug=False):
         dct_newspaper=a.publish_date.date()
     elif a.meta_data['date']:
         print(a.meta_data['date'] + 'case B')
-        dct_newspaper=datetime.strptime(a.meta_data['date'], '%Y/%m/%d').date()
+        format_of_date='%Y/%m/%d'
+        try:
+            dct_newspaper=datetime.strptime(a.meta_data['date'], format_of_date).date()
+        except ValueError:
+            dct_newspaper=datetime.strptime(a.meta_data['date'], format_of_date.replace('/','-')).date()
     elif a.meta_data['published_time']:
         print(a.meta_data['published_time'] + 'case C')
         dct_newspaper=a.meta_data['published_time'].date()
