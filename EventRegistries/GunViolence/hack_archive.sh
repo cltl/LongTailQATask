@@ -1,4 +1,4 @@
-FILE="archive_test_urls.tsv"
+FILE=$1
 
 for line in $(cat $FILE); do
 	echo $line

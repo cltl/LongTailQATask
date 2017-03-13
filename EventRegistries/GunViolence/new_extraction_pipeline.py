@@ -3,6 +3,7 @@
 
 # In[1]:
 
+from dateutil import parser
 import pickle
 import pandas
 from multiprocessing.dummy import Pool as ThreadPool
@@ -93,6 +94,7 @@ def website_extraction(original_url, max_sec=5, debug=False):
     4. [slightly less reliable] 'published_time'
     5. [slightly slightly less reliable] 'date'
     """
+    original_url=original_url.strip()
     if not original_url:
         return classes.NewsItem(
 	    title='',
@@ -145,11 +147,7 @@ def website_extraction(original_url, max_sec=5, debug=False):
         dct_newspaper=a.publish_date.date()
     elif a.meta_data['date']:
         print(a.meta_data['date'] + 'case B')
-        format_of_date='%Y/%m/%d'
-        try:
-            dct_newspaper=datetime.strptime(a.meta_data['date'], format_of_date).date()
-        except ValueError:
-            dct_newspaper=datetime.strptime(a.meta_data['date'], format_of_date.replace('/','-')).date()
+        dct_newspaper=parser.parse(a.meta_data['date']).date()
     elif a.meta_data['published_time']:
         print(a.meta_data['published_time'] + 'case C')
         dct_newspaper=a.meta_data['published_time'].date()
@@ -198,9 +196,9 @@ def article_iterable(sources, num_sources=None):
 t1=time.time()
 
 frames = [
-          #'mass_shootings',
-          #'mass_shootings_2013',
-          #'mass_shootings_2014',
+          'mass_shootings',
+          'mass_shootings_2013',
+          'mass_shootings_2014',
           'mass_shootings_2015']
 df = pandas.concat([pandas.read_pickle('frames/' + frame)
                     for frame in frames])
