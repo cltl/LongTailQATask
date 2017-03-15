@@ -1,0 +1,32 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<NAF>
+  <nafHeader>
+    <linguisticProcessors layer="text">
+      <lp name="SpaCy" timestamp="2017-02-01T13:09:03UTC"/>
+    </linguisticProcessors>
+    <linguisticProcessors layer="terms">
+      <lp name="SpaCy" timestamp="2017-02-01T13:09:03UTC"/>
+    </linguisticProcessors>
+  </nafHeader>
+  <text>
+    <wf sent="1" id="w0" length="8" offset="0">Shooting</wf>
+    <wf sent="1" id="w1" length="10" offset="9">accidental</wf>
+  </text>
+  <terms>
+    <term id="t0" lemma="shoot" pos="VERB" morphofeat="VBG">
+      <span>
+        <target id="w0"/>
+      </span>
+    </term>
+    <term id="t1" lemma="accidental" pos="ADJ" morphofeat="JJ">
+      <span>
+        <target id="w1"/>
+      </span>
+    </term>
+  </terms>
+  <entities/>
+  <deps>
+    <dep from="t0" to="t1" rfunc="advmod"/>
+  </deps>
+  <chunks/>
+</NAF>

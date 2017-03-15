@@ -1,0 +1,82 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<NAF>
+  <nafHeader>
+    <linguisticProcessors layer="text">
+      <lp name="SpaCy" timestamp="2017-02-01T13:12:24UTC"/>
+    </linguisticProcessors>
+    <linguisticProcessors layer="terms">
+      <lp name="SpaCy" timestamp="2017-02-01T13:12:24UTC"/>
+    </linguisticProcessors>
+  </nafHeader>
+  <text>
+    <wf sent="1" id="w0" length="5" offset="0">Three</wf>
+    <wf sent="1" id="w1" length="7" offset="6">charged</wf>
+    <wf sent="1" id="w2" length="5" offset="14">after</wf>
+    <wf sent="1" id="w3" length="4" offset="20">dice</wf>
+    <wf sent="1" id="w4" length="4" offset="25">game</wf>
+    <wf sent="1" id="w5" length="5" offset="30">turns</wf>
+    <wf sent="1" id="w6" length="6" offset="36">deadly</wf>
+  </text>
+  <terms>
+    <term id="t0" lemma="three" pos="NUM" morphofeat="CD">
+      <span>
+        <target id="w0"/>
+      </span>
+    </term>
+    <term id="t1" lemma="charge" pos="VERB" morphofeat="VBD">
+      <span>
+        <target id="w1"/>
+      </span>
+    </term>
+    <term id="t2" lemma="after" pos="ADP" morphofeat="IN">
+      <span>
+        <target id="w2"/>
+      </span>
+    </term>
+    <term id="t3" lemma="dice" pos="NOUN" morphofeat="NN">
+      <span>
+        <target id="w3"/>
+      </span>
+    </term>
+    <term id="t4" lemma="game" pos="NOUN" morphofeat="NN">
+      <span>
+        <target id="w4"/>
+      </span>
+    </term>
+    <term id="t5" lemma="turn" pos="VERB" morphofeat="VBZ">
+      <span>
+        <target id="w5"/>
+      </span>
+    </term>
+    <term id="t6" lemma="deadly" pos="ADJ" morphofeat="JJ">
+      <span>
+        <target id="w6"/>
+      </span>
+    </term>
+  </terms>
+  <entities>
+    <entity id="e0" type="CARDINAL">
+      <references>
+        <span>
+          <target id="t0"/>
+        </span>
+      </references>
+    </entity>
+  </entities>
+  <deps>
+    <dep from="t1" to="t0" rfunc="nsubj"/>
+    <dep from="t5" to="t2" rfunc="mark"/>
+    <dep from="t1" to="t5" rfunc="advcl"/>
+    <dep from="t4" to="t3" rfunc="compound"/>
+    <dep from="t5" to="t4" rfunc="nsubj"/>
+    <dep from="t5" to="t6" rfunc="acomp"/>
+  </deps>
+  <chunks>
+    <chunk id="c0" head="t4" phrase="NP">
+      <span>
+        <target id="t3"/>
+        <target id="t4"/>
+      </span>
+    </chunk>
+  </chunks>
+</NAF>

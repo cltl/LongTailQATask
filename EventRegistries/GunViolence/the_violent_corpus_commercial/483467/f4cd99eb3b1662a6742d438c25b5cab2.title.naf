@@ -1,0 +1,139 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<NAF>
+  <nafHeader>
+    <linguisticProcessors layer="text">
+      <lp name="SpaCy" timestamp="2017-02-01T13:09:59UTC"/>
+    </linguisticProcessors>
+    <linguisticProcessors layer="terms">
+      <lp name="SpaCy" timestamp="2017-02-01T13:09:59UTC"/>
+    </linguisticProcessors>
+  </nafHeader>
+  <text>
+    <wf sent="1" id="w0" length="5" offset="0">Alton</wf>
+    <wf sent="1" id="w1" length="3" offset="6">boy</wf>
+    <wf sent="1" id="w2" length="4" offset="10">dies</wf>
+    <wf sent="1" id="w3" length="5" offset="15">after</wf>
+    <wf sent="1" id="w4" length="1" offset="21">‘</wf>
+    <wf sent="2" id="w5" length="5" offset="22">drive</wf>
+    <wf sent="2" id="w6" length="3" offset="28">by’</wf>
+    <wf sent="2" id="w7" length="8" offset="32">shooting</wf>
+    <wf sent="2" id="w8" length="1" offset="40">,</wf>
+    <wf sent="2" id="w9" length="3" offset="42">APD</wf>
+    <wf sent="2" id="w10" length="4" offset="46">seek</wf>
+    <wf sent="2" id="w11" length="11" offset="51">information</wf>
+  </text>
+  <terms>
+    <term id="t0" lemma="alton" pos="PROPN" morphofeat="NNP">
+      <span>
+        <target id="w0"/>
+      </span>
+    </term>
+    <term id="t1" lemma="boy" pos="NOUN" morphofeat="NN">
+      <span>
+        <target id="w1"/>
+      </span>
+    </term>
+    <term id="t2" lemma="die" pos="VERB" morphofeat="VBZ">
+      <span>
+        <target id="w2"/>
+      </span>
+    </term>
+    <term id="t3" lemma="after" pos="ADP" morphofeat="IN">
+      <span>
+        <target id="w3"/>
+      </span>
+    </term>
+    <term id="t4" lemma="'" pos="PUNCT" morphofeat=".">
+      <span>
+        <target id="w4"/>
+      </span>
+    </term>
+    <term id="t5" lemma="drive" pos="VERB" morphofeat="VB">
+      <span>
+        <target id="w5"/>
+      </span>
+    </term>
+    <term id="t6" lemma="by’" pos="ADV" morphofeat="RB">
+      <span>
+        <target id="w6"/>
+      </span>
+    </term>
+    <term id="t7" lemma="shooting" pos="NOUN" morphofeat="NN">
+      <span>
+        <target id="w7"/>
+      </span>
+    </term>
+    <term id="t8" lemma="," pos="PUNCT" morphofeat=",">
+      <span>
+        <target id="w8"/>
+      </span>
+    </term>
+    <term id="t9" lemma="apd" pos="PROPN" morphofeat="NNP">
+      <span>
+        <target id="w9"/>
+      </span>
+    </term>
+    <term id="t10" lemma="seek" pos="VERB" morphofeat="VBP">
+      <span>
+        <target id="w10"/>
+      </span>
+    </term>
+    <term id="t11" lemma="information" pos="NOUN" morphofeat="NN">
+      <span>
+        <target id="w11"/>
+      </span>
+    </term>
+  </terms>
+  <entities>
+    <entity id="e0" type="PERSON">
+      <references>
+        <span>
+          <target id="t0"/>
+        </span>
+      </references>
+    </entity>
+    <entity id="e1" type="ORG">
+      <references>
+        <span>
+          <target id="t9"/>
+        </span>
+      </references>
+    </entity>
+  </entities>
+  <deps>
+    <dep from="t1" to="t0" rfunc="compound"/>
+    <dep from="t2" to="t1" rfunc="nsubj"/>
+    <dep from="t2" to="t3" rfunc="prep"/>
+    <dep from="t2" to="t4" rfunc="punct"/>
+    <dep from="t7" to="t6" rfunc="amod"/>
+    <dep from="t5" to="t7" rfunc="dobj"/>
+    <dep from="t10" to="t8" rfunc="punct"/>
+    <dep from="t5" to="t10" rfunc="conj"/>
+    <dep from="t10" to="t9" rfunc="nsubj"/>
+    <dep from="t10" to="t11" rfunc="dobj"/>
+  </deps>
+  <chunks>
+    <chunk id="c0" head="t1" phrase="NP">
+      <span>
+        <target id="t0"/>
+        <target id="t1"/>
+      </span>
+    </chunk>
+    <chunk id="c1" head="t7" phrase="NP">
+      <span>
+        <target id="t6"/>
+        <target id="t7"/>
+      </span>
+    </chunk>
+    <chunk id="c2" head="t9" phrase="NP">
+      <span>
+        <target id="t9"/>
+      </span>
+    </chunk>
+    <chunk id="c3" head="t11" phrase="NP">
+      <span>
+        <target id="t11"/>
+      </span>
+    </chunk>
+  </chunks>
+</NAF>

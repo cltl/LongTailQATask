@@ -1,0 +1,66 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<NAF>
+  <nafHeader>
+    <linguisticProcessors layer="text">
+      <lp name="SpaCy" timestamp="2017-02-01T13:11:10UTC"/>
+    </linguisticProcessors>
+    <linguisticProcessors layer="terms">
+      <lp name="SpaCy" timestamp="2017-02-01T13:11:10UTC"/>
+    </linguisticProcessors>
+  </nafHeader>
+  <text>
+    <wf sent="1" id="w0" length="7" offset="0">Coroner</wf>
+    <wf sent="1" id="w1" length="1" offset="7">:</wf>
+    <wf sent="1" id="w2" length="8" offset="9">Shooting</wf>
+    <wf sent="1" id="w3" length="5" offset="18">death</wf>
+    <wf sent="1" id="w4" length="2" offset="24">an</wf>
+    <wf sent="1" id="w5" length="8" offset="27">accident</wf>
+  </text>
+  <terms>
+    <term id="t0" lemma="coroner" pos="NOUN" morphofeat="NN">
+      <span>
+        <target id="w0"/>
+      </span>
+    </term>
+    <term id="t1" lemma=":" pos="PUNCT" morphofeat=":">
+      <span>
+        <target id="w1"/>
+      </span>
+    </term>
+    <term id="t2" lemma="shoot" pos="VERB" morphofeat="VBG">
+      <span>
+        <target id="w2"/>
+      </span>
+    </term>
+    <term id="t3" lemma="death" pos="NOUN" morphofeat="NN">
+      <span>
+        <target id="w3"/>
+      </span>
+    </term>
+    <term id="t4" lemma="an" pos="DET" morphofeat="DT">
+      <span>
+        <target id="w4"/>
+      </span>
+    </term>
+    <term id="t5" lemma="accident" pos="NOUN" morphofeat="NN">
+      <span>
+        <target id="w5"/>
+      </span>
+    </term>
+  </terms>
+  <entities/>
+  <deps>
+    <dep from="t0" to="t1" rfunc="punct"/>
+    <dep from="t3" to="t2" rfunc="compound"/>
+    <dep from="t5" to="t3" rfunc="compound"/>
+    <dep from="t0" to="t5" rfunc="appos"/>
+    <dep from="t5" to="t4" rfunc="det"/>
+  </deps>
+  <chunks>
+    <chunk id="c0" head="t0" phrase="NP">
+      <span>
+        <target id="t0"/>
+      </span>
+    </chunk>
+  </chunks>
+</NAF>

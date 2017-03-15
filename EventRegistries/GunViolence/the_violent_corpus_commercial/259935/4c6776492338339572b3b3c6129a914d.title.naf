@@ -1,0 +1,98 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<NAF>
+  <nafHeader>
+    <linguisticProcessors layer="text">
+      <lp name="SpaCy" timestamp="2017-02-01T13:08:33UTC"/>
+    </linguisticProcessors>
+    <linguisticProcessors layer="terms">
+      <lp name="SpaCy" timestamp="2017-02-01T13:08:33UTC"/>
+    </linguisticProcessors>
+  </nafHeader>
+  <text>
+    <wf sent="1" id="w0" length="4" offset="0">Four</wf>
+    <wf sent="1" id="w1" length="7" offset="5">injured</wf>
+    <wf sent="1" id="w2" length="2" offset="13">in</wf>
+    <wf sent="1" id="w3" length="3" offset="16">St.</wf>
+    <wf sent="1" id="w4" length="6" offset="20">Joseph</wf>
+    <wf sent="1" id="w5" length="6" offset="27">County</wf>
+    <wf sent="1" id="w6" length="7" offset="34">banquet</wf>
+    <wf sent="1" id="w7" length="4" offset="42">hall</wf>
+    <wf sent="1" id="w8" length="8" offset="47">shooting</wf>
+  </text>
+  <terms>
+    <term id="t0" lemma="four" pos="NUM" morphofeat="CD">
+      <span>
+        <target id="w0"/>
+      </span>
+    </term>
+    <term id="t1" lemma="injure" pos="VERB" morphofeat="VBN">
+      <span>
+        <target id="w1"/>
+      </span>
+    </term>
+    <term id="t2" lemma="in" pos="ADP" morphofeat="IN">
+      <span>
+        <target id="w2"/>
+      </span>
+    </term>
+    <term id="t3" lemma="st." pos="PROPN" morphofeat="NNP">
+      <span>
+        <target id="w3"/>
+      </span>
+    </term>
+    <term id="t4" lemma="joseph" pos="PROPN" morphofeat="NNP">
+      <span>
+        <target id="w4"/>
+      </span>
+    </term>
+    <term id="t5" lemma="county" pos="PROPN" morphofeat="NNP">
+      <span>
+        <target id="w5"/>
+      </span>
+    </term>
+    <term id="t6" lemma="banquet" pos="NOUN" morphofeat="NN">
+      <span>
+        <target id="w6"/>
+      </span>
+    </term>
+    <term id="t7" lemma="hall" pos="NOUN" morphofeat="NN">
+      <span>
+        <target id="w7"/>
+      </span>
+    </term>
+    <term id="t8" lemma="shoot" pos="VERB" morphofeat="VBG">
+      <span>
+        <target id="w8"/>
+      </span>
+    </term>
+  </terms>
+  <entities>
+    <entity id="e0" type="CARDINAL">
+      <references>
+        <span>
+          <target id="t0"/>
+        </span>
+      </references>
+    </entity>
+    <entity id="e1" type="GPE">
+      <references>
+        <span>
+          <target id="t3"/>
+          <target id="t4"/>
+          <target id="t5"/>
+        </span>
+      </references>
+    </entity>
+  </entities>
+  <deps>
+    <dep from="t0" to="t1" rfunc="acl"/>
+    <dep from="t1" to="t2" rfunc="prep"/>
+    <dep from="t4" to="t3" rfunc="compound"/>
+    <dep from="t5" to="t4" rfunc="compound"/>
+    <dep from="t7" to="t5" rfunc="compound"/>
+    <dep from="t8" to="t7" rfunc="compound"/>
+    <dep from="t2" to="t8" rfunc="pobj"/>
+    <dep from="t7" to="t6" rfunc="compound"/>
+  </deps>
+  <chunks/>
+</NAF>

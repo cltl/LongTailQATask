@@ -4,15 +4,31 @@ import os
 import shutil
 import json
 import glob
+from urllib.parse import urlencode, quote_plus
+
 
 API="https://api.diffbot.com/v3/article"
 TOKEN="1f5fcfe62127906ba56274d11c019ac8"
 CORPUSDIR="the_violent_corpus/"
-NODATE_FILE="nodate.txt"
-ERRORS_FILE='errors.txt'
+NODATE_FILE="logs/nodate.txt"
+ERRORS_FILE='logs/errors.txt'
 DIFF_DATE_FILE="logs/diff_date.tsv"
 NO_DATE_FILE="logs/no_date.tsv"
 NO_ARCHIVE_FILE="logs/no_archive.tsv"
+
+def generate_archive_uri(article_uri):
+    archive_api='http://archive.org/wayback/available?'
+    params={'url': article_uri}
+    encoded_uri=archive_api + urlencode(params)
+    try:
+        r=requests.get(encoded_uri)
+        j=r.json()
+        closest=j['archived_snapshots']['closest']
+        if all([closest['available'], closest['status']=='200']):
+            return closest['url']
+    except:
+        print("No archive version for %s" % article_uri)
+        return ''
 
 def is_archive_uri(uri):
     return uri.startswith('https://web.archive.org/') or uri.startswith('http://web.archive.org/')
@@ -91,10 +107,3 @@ def reset_dir(index):
 	os.makedirs(directory)
 	return directory
 
-def dump_to_file(article, targetdir):
-#	try:
-	with open("%s%s.json" % (targetdir, article['id']), 'w') as w:
-		json.dump(article, w)
-	print("Article %s written!" % article['uri'])
-#	except:
-#		print("Error when writting to article")

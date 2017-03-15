@@ -1,0 +1,98 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<NAF>
+  <nafHeader>
+    <linguisticProcessors layer="text">
+      <lp name="SpaCy" timestamp="2017-02-01T13:07:40UTC"/>
+    </linguisticProcessors>
+    <linguisticProcessors layer="terms">
+      <lp name="SpaCy" timestamp="2017-02-01T13:07:40UTC"/>
+    </linguisticProcessors>
+  </nafHeader>
+  <text>
+    <wf sent="1" id="w0" length="3" offset="0">Boy</wf>
+    <wf sent="1" id="w1" length="5" offset="4">calls</wf>
+    <wf sent="1" id="w2" length="3" offset="10">911</wf>
+    <wf sent="1" id="w3" length="5" offset="14">after</wf>
+    <wf sent="1" id="w4" length="7" offset="20">brother</wf>
+    <wf sent="1" id="w5" length="12" offset="28">accidentally</wf>
+    <wf sent="1" id="w6" length="6" offset="41">shoots</wf>
+    <wf sent="1" id="w7" length="7" offset="48">himself</wf>
+  </text>
+  <terms>
+    <term id="t0" lemma="boy" pos="NOUN" morphofeat="NN">
+      <span>
+        <target id="w0"/>
+      </span>
+    </term>
+    <term id="t1" lemma="call" pos="VERB" morphofeat="VBZ">
+      <span>
+        <target id="w1"/>
+      </span>
+    </term>
+    <term id="t2" lemma="911" pos="NUM" morphofeat="CD">
+      <span>
+        <target id="w2"/>
+      </span>
+    </term>
+    <term id="t3" lemma="after" pos="ADP" morphofeat="IN">
+      <span>
+        <target id="w3"/>
+      </span>
+    </term>
+    <term id="t4" lemma="brother" pos="NOUN" morphofeat="NN">
+      <span>
+        <target id="w4"/>
+      </span>
+    </term>
+    <term id="t5" lemma="accidentally" pos="ADV" morphofeat="RB">
+      <span>
+        <target id="w5"/>
+      </span>
+    </term>
+    <term id="t6" lemma="shoot" pos="VERB" morphofeat="VBZ">
+      <span>
+        <target id="w6"/>
+      </span>
+    </term>
+    <term id="t7" lemma="himself" pos="PRON" morphofeat="PRP">
+      <span>
+        <target id="w7"/>
+      </span>
+    </term>
+  </terms>
+  <entities>
+    <entity id="e0" type="CARDINAL">
+      <references>
+        <span>
+          <target id="t2"/>
+        </span>
+      </references>
+    </entity>
+  </entities>
+  <deps>
+    <dep from="t1" to="t0" rfunc="nsubj"/>
+    <dep from="t1" to="t2" rfunc="dobj"/>
+    <dep from="t6" to="t3" rfunc="mark"/>
+    <dep from="t1" to="t6" rfunc="advcl"/>
+    <dep from="t6" to="t4" rfunc="nsubj"/>
+    <dep from="t6" to="t5" rfunc="advmod"/>
+    <dep from="t6" to="t7" rfunc="dobj"/>
+  </deps>
+  <chunks>
+    <chunk id="c0" head="t0" phrase="NP">
+      <span>
+        <target id="t0"/>
+      </span>
+    </chunk>
+    <chunk id="c1" head="t4" phrase="NP">
+      <span>
+        <target id="t4"/>
+      </span>
+    </chunk>
+    <chunk id="c2" head="t7" phrase="NP">
+      <span>
+        <target id="t7"/>
+      </span>
+    </chunk>
+  </chunks>
+</NAF>

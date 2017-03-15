@@ -1,0 +1,119 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<NAF>
+  <nafHeader>
+    <linguisticProcessors layer="text">
+      <lp name="SpaCy" timestamp="2017-02-01T13:10:19UTC"/>
+    </linguisticProcessors>
+    <linguisticProcessors layer="terms">
+      <lp name="SpaCy" timestamp="2017-02-01T13:10:19UTC"/>
+    </linguisticProcessors>
+  </nafHeader>
+  <text>
+    <wf sent="1" id="w0" length="1" offset="0">6</wf>
+    <wf sent="1" id="w1" length="8" offset="2">Arrested</wf>
+    <wf sent="1" id="w2" length="5" offset="11">After</wf>
+    <wf sent="1" id="w3" length="4" offset="17">Home</wf>
+    <wf sent="1" id="w4" length="8" offset="22">Invasion</wf>
+    <wf sent="1" id="w5" length="6" offset="31">Leaves</wf>
+    <wf sent="1" id="w6" length="7" offset="38">14-Year</wf>
+    <wf sent="1" id="w7" length="1" offset="45">-</wf>
+    <wf sent="1" id="w8" length="3" offset="46">Old</wf>
+    <wf sent="1" id="w9" length="6" offset="50">Peoria</wf>
+    <wf sent="1" id="w10" length="3" offset="57">Boy</wf>
+    <wf sent="1" id="w11" length="4" offset="61">Dead</wf>
+  </text>
+  <terms>
+    <term id="t0" lemma="6" pos="NUM" morphofeat="CD">
+      <span>
+        <target id="w0"/>
+      </span>
+    </term>
+    <term id="t1" lemma="arrest" pos="VERB" morphofeat="VBN">
+      <span>
+        <target id="w1"/>
+      </span>
+    </term>
+    <term id="t2" lemma="after" pos="ADP" morphofeat="IN">
+      <span>
+        <target id="w2"/>
+      </span>
+    </term>
+    <term id="t3" lemma="home" pos="PROPN" morphofeat="NNP">
+      <span>
+        <target id="w3"/>
+      </span>
+    </term>
+    <term id="t4" lemma="invasion" pos="PROPN" morphofeat="NNP">
+      <span>
+        <target id="w4"/>
+      </span>
+    </term>
+    <term id="t5" lemma="leave" pos="VERB" morphofeat="VBZ">
+      <span>
+        <target id="w5"/>
+      </span>
+    </term>
+    <term id="t6" lemma="14-year" pos="ADJ" morphofeat="JJ">
+      <span>
+        <target id="w6"/>
+      </span>
+    </term>
+    <term id="t7" lemma="-" pos="PUNCT" morphofeat="HYPH">
+      <span>
+        <target id="w7"/>
+      </span>
+    </term>
+    <term id="t8" lemma="old" pos="PROPN" morphofeat="NNP">
+      <span>
+        <target id="w8"/>
+      </span>
+    </term>
+    <term id="t9" lemma="peoria" pos="PROPN" morphofeat="NNP">
+      <span>
+        <target id="w9"/>
+      </span>
+    </term>
+    <term id="t10" lemma="boy" pos="PROPN" morphofeat="NNP">
+      <span>
+        <target id="w10"/>
+      </span>
+    </term>
+    <term id="t11" lemma="dead" pos="PROPN" morphofeat="NNP">
+      <span>
+        <target id="w11"/>
+      </span>
+    </term>
+  </terms>
+  <entities/>
+  <deps>
+    <dep from="t0" to="t1" rfunc="acl"/>
+    <dep from="t5" to="t2" rfunc="mark"/>
+    <dep from="t1" to="t5" rfunc="advcl"/>
+    <dep from="t4" to="t3" rfunc="compound"/>
+    <dep from="t5" to="t4" rfunc="nsubj"/>
+    <dep from="t8" to="t6" rfunc="amod"/>
+    <dep from="t11" to="t8" rfunc="amod"/>
+    <dep from="t5" to="t11" rfunc="dobj"/>
+    <dep from="t8" to="t7" rfunc="punct"/>
+    <dep from="t11" to="t9" rfunc="compound"/>
+    <dep from="t11" to="t10" rfunc="compound"/>
+  </deps>
+  <chunks>
+    <chunk id="c0" head="t4" phrase="NP">
+      <span>
+        <target id="t3"/>
+        <target id="t4"/>
+      </span>
+    </chunk>
+    <chunk id="c1" head="t11" phrase="NP">
+      <span>
+        <target id="t6"/>
+        <target id="t7"/>
+        <target id="t8"/>
+        <target id="t9"/>
+        <target id="t10"/>
+        <target id="t11"/>
+      </span>
+    </chunk>
+  </chunks>
+</NAF>

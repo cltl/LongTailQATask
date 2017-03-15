@@ -1,0 +1,105 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<NAF>
+  <nafHeader>
+    <linguisticProcessors layer="text">
+      <lp name="SpaCy" timestamp="2017-02-01T13:13:41UTC"/>
+    </linguisticProcessors>
+    <linguisticProcessors layer="terms">
+      <lp name="SpaCy" timestamp="2017-02-01T13:13:41UTC"/>
+    </linguisticProcessors>
+  </nafHeader>
+  <text>
+    <wf sent="1" id="w0" length="12" offset="0">Surveillance</wf>
+    <wf sent="1" id="w1" length="5" offset="13">video</wf>
+    <wf sent="1" id="w2" length="8" offset="19">captures</wf>
+    <wf sent="1" id="w3" length="8" offset="28">shooting</wf>
+    <wf sent="1" id="w4" length="4" offset="37">that</wf>
+    <wf sent="1" id="w5" length="7" offset="42">injured</wf>
+    <wf sent="1" id="w6" length="6" offset="50">6-year</wf>
+    <wf sent="1" id="w7" length="1" offset="56">-</wf>
+    <wf sent="1" id="w8" length="3" offset="57">old</wf>
+    <wf sent="1" id="w9" length="4" offset="61">girl</wf>
+  </text>
+  <terms>
+    <term id="t0" lemma="surveillance" pos="NOUN" morphofeat="NN">
+      <span>
+        <target id="w0"/>
+      </span>
+    </term>
+    <term id="t1" lemma="video" pos="NOUN" morphofeat="NN">
+      <span>
+        <target id="w1"/>
+      </span>
+    </term>
+    <term id="t2" lemma="capture" pos="VERB" morphofeat="VBZ">
+      <span>
+        <target id="w2"/>
+      </span>
+    </term>
+    <term id="t3" lemma="shoot" pos="VERB" morphofeat="VBG">
+      <span>
+        <target id="w3"/>
+      </span>
+    </term>
+    <term id="t4" lemma="that" pos="ADJ" morphofeat="WDT">
+      <span>
+        <target id="w4"/>
+      </span>
+    </term>
+    <term id="t5" lemma="injure" pos="VERB" morphofeat="VBN">
+      <span>
+        <target id="w5"/>
+      </span>
+    </term>
+    <term id="t6" lemma="6-year" pos="NUM" morphofeat="CD">
+      <span>
+        <target id="w6"/>
+      </span>
+    </term>
+    <term id="t7" lemma="-" pos="PUNCT" morphofeat="HYPH">
+      <span>
+        <target id="w7"/>
+      </span>
+    </term>
+    <term id="t8" lemma="old" pos="ADJ" morphofeat="JJ">
+      <span>
+        <target id="w8"/>
+      </span>
+    </term>
+    <term id="t9" lemma="girl" pos="NOUN" morphofeat="NN">
+      <span>
+        <target id="w9"/>
+      </span>
+    </term>
+  </terms>
+  <entities/>
+  <deps>
+    <dep from="t1" to="t0" rfunc="compound"/>
+    <dep from="t2" to="t1" rfunc="nsubj"/>
+    <dep from="t2" to="t3" rfunc="xcomp"/>
+    <dep from="t5" to="t4" rfunc="mark"/>
+    <dep from="t9" to="t5" rfunc="amod"/>
+    <dep from="t3" to="t9" rfunc="dobj"/>
+    <dep from="t8" to="t6" rfunc="advmod"/>
+    <dep from="t9" to="t8" rfunc="amod"/>
+    <dep from="t8" to="t7" rfunc="punct"/>
+  </deps>
+  <chunks>
+    <chunk id="c0" head="t1" phrase="NP">
+      <span>
+        <target id="t0"/>
+        <target id="t1"/>
+      </span>
+    </chunk>
+    <chunk id="c1" head="t9" phrase="NP">
+      <span>
+        <target id="t4"/>
+        <target id="t5"/>
+        <target id="t6"/>
+        <target id="t7"/>
+        <target id="t8"/>
+        <target id="t9"/>
+      </span>
+    </chunk>
+  </chunks>
+</NAF>

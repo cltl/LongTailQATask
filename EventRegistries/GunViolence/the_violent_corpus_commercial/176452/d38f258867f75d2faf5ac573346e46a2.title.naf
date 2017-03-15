@@ -1,0 +1,105 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<NAF>
+  <nafHeader>
+    <linguisticProcessors layer="text">
+      <lp name="SpaCy" timestamp="2017-02-01T13:06:38UTC"/>
+    </linguisticProcessors>
+    <linguisticProcessors layer="terms">
+      <lp name="SpaCy" timestamp="2017-02-01T13:06:38UTC"/>
+    </linguisticProcessors>
+  </nafHeader>
+  <text>
+    <wf sent="1" id="w0" length="6" offset="0">Police</wf>
+    <wf sent="1" id="w1" length="8" offset="7">identify</wf>
+    <wf sent="1" id="w2" length="11" offset="16">Clarksville</wf>
+    <wf sent="1" id="w3" length="6" offset="28">4-year</wf>
+    <wf sent="1" id="w4" length="1" offset="34">-</wf>
+    <wf sent="1" id="w5" length="3" offset="35">old</wf>
+    <wf sent="1" id="w6" length="3" offset="39">who</wf>
+    <wf sent="1" id="w7" length="4" offset="43">shot</wf>
+    <wf sent="1" id="w8" length="7" offset="48">himself</wf>
+  </text>
+  <terms>
+    <term id="t0" lemma="police" pos="NOUN" morphofeat="NN">
+      <span>
+        <target id="w0"/>
+      </span>
+    </term>
+    <term id="t1" lemma="identify" pos="VERB" morphofeat="VB">
+      <span>
+        <target id="w1"/>
+      </span>
+    </term>
+    <term id="t2" lemma="clarksville" pos="PROPN" morphofeat="NNP">
+      <span>
+        <target id="w2"/>
+      </span>
+    </term>
+    <term id="t3" lemma="4-year" pos="NUM" morphofeat="CD">
+      <span>
+        <target id="w3"/>
+      </span>
+    </term>
+    <term id="t4" lemma="-" pos="PUNCT" morphofeat="HYPH">
+      <span>
+        <target id="w4"/>
+      </span>
+    </term>
+    <term id="t5" lemma="old" pos="ADJ" morphofeat="JJ">
+      <span>
+        <target id="w5"/>
+      </span>
+    </term>
+    <term id="t6" lemma="who" pos="NOUN" morphofeat="WP">
+      <span>
+        <target id="w6"/>
+      </span>
+    </term>
+    <term id="t7" lemma="shoot" pos="VERB" morphofeat="VBD">
+      <span>
+        <target id="w7"/>
+      </span>
+    </term>
+    <term id="t8" lemma="himself" pos="PRON" morphofeat="PRP">
+      <span>
+        <target id="w8"/>
+      </span>
+    </term>
+  </terms>
+  <entities>
+    <entity id="e0" type="GPE">
+      <references>
+        <span>
+          <target id="t2"/>
+        </span>
+      </references>
+    </entity>
+  </entities>
+  <deps>
+    <dep from="t1" to="t0" rfunc="nsubj"/>
+    <dep from="t5" to="t2" rfunc="compound"/>
+    <dep from="t1" to="t5" rfunc="dobj"/>
+    <dep from="t5" to="t3" rfunc="nummod"/>
+    <dep from="t5" to="t4" rfunc="punct"/>
+    <dep from="t7" to="t6" rfunc="nsubj"/>
+    <dep from="t5" to="t7" rfunc="relcl"/>
+    <dep from="t7" to="t8" rfunc="dobj"/>
+  </deps>
+  <chunks>
+    <chunk id="c0" head="t0" phrase="NP">
+      <span>
+        <target id="t0"/>
+      </span>
+    </chunk>
+    <chunk id="c1" head="t6" phrase="NP">
+      <span>
+        <target id="t6"/>
+      </span>
+    </chunk>
+    <chunk id="c2" head="t8" phrase="NP">
+      <span>
+        <target id="t8"/>
+      </span>
+    </chunk>
+  </chunks>
+</NAF>

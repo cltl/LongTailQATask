@@ -1,0 +1,32 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<NAF>
+  <nafHeader>
+    <linguisticProcessors layer="text">
+      <lp name="SpaCy" timestamp="2017-02-01T13:14:23UTC"/>
+    </linguisticProcessors>
+    <linguisticProcessors layer="terms">
+      <lp name="SpaCy" timestamp="2017-02-01T13:14:23UTC"/>
+    </linguisticProcessors>
+  </nafHeader>
+  <text>
+    <wf sent="1" id="w0" length="7" offset="0">Loading</wf>
+    <wf sent="1" id="w1" length="20" offset="8">SanduskyRegister.com</wf>
+  </text>
+  <terms>
+    <term id="t0" lemma="load" pos="VERB" morphofeat="VBG">
+      <span>
+        <target id="w0"/>
+      </span>
+    </term>
+    <term id="t1" lemma="sanduskyregister.com" pos="X" morphofeat="ADD">
+      <span>
+        <target id="w1"/>
+      </span>
+    </term>
+  </terms>
+  <entities/>
+  <deps>
+    <dep from="t0" to="t1" rfunc="dobj"/>
+  </deps>
+  <chunks/>
+</NAF>

@@ -1,0 +1,150 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<NAF>
+  <nafHeader>
+    <linguisticProcessors layer="text">
+      <lp name="SpaCy" timestamp="2017-02-01T13:15:22UTC"/>
+    </linguisticProcessors>
+    <linguisticProcessors layer="terms">
+      <lp name="SpaCy" timestamp="2017-02-01T13:15:22UTC"/>
+    </linguisticProcessors>
+  </nafHeader>
+  <text>
+    <wf sent="1" id="w0" length="9" offset="0">Cleveland</wf>
+    <wf sent="1" id="w1" length="6" offset="10">police</wf>
+    <wf sent="1" id="w2" length="7" offset="17">officer</wf>
+    <wf sent="1" id="w3" length="10" offset="25">identified</wf>
+    <wf sent="1" id="w4" length="5" offset="36">after</wf>
+    <wf sent="1" id="w5" length="3" offset="42">son</wf>
+    <wf sent="1" id="w6" length="7" offset="46">fatally</wf>
+    <wf sent="1" id="w7" length="6" offset="54">shoots</wf>
+    <wf sent="1" id="w8" length="7" offset="61">himself</wf>
+    <wf sent="1" id="w9" length="4" offset="69">with</wf>
+    <wf sent="1" id="w10" length="7" offset="74">officer</wf>
+    <wf sent="1" id="w11" length="2" offset="81">'s</wf>
+    <wf sent="1" id="w12" length="3" offset="84">gun</wf>
+  </text>
+  <terms>
+    <term id="t0" lemma="cleveland" pos="PROPN" morphofeat="NNP">
+      <span>
+        <target id="w0"/>
+      </span>
+    </term>
+    <term id="t1" lemma="police" pos="NOUN" morphofeat="NNS">
+      <span>
+        <target id="w1"/>
+      </span>
+    </term>
+    <term id="t2" lemma="officer" pos="NOUN" morphofeat="NN">
+      <span>
+        <target id="w2"/>
+      </span>
+    </term>
+    <term id="t3" lemma="identify" pos="VERB" morphofeat="VBD">
+      <span>
+        <target id="w3"/>
+      </span>
+    </term>
+    <term id="t4" lemma="after" pos="ADP" morphofeat="IN">
+      <span>
+        <target id="w4"/>
+      </span>
+    </term>
+    <term id="t5" lemma="son" pos="NOUN" morphofeat="NN">
+      <span>
+        <target id="w5"/>
+      </span>
+    </term>
+    <term id="t6" lemma="fatally" pos="ADV" morphofeat="RB">
+      <span>
+        <target id="w6"/>
+      </span>
+    </term>
+    <term id="t7" lemma="shoot" pos="VERB" morphofeat="VBZ">
+      <span>
+        <target id="w7"/>
+      </span>
+    </term>
+    <term id="t8" lemma="himself" pos="PRON" morphofeat="PRP">
+      <span>
+        <target id="w8"/>
+      </span>
+    </term>
+    <term id="t9" lemma="with" pos="ADP" morphofeat="IN">
+      <span>
+        <target id="w9"/>
+      </span>
+    </term>
+    <term id="t10" lemma="officer" pos="NOUN" morphofeat="NN">
+      <span>
+        <target id="w10"/>
+      </span>
+    </term>
+    <term id="t11" lemma="'s" pos="PART" morphofeat="POS">
+      <span>
+        <target id="w11"/>
+      </span>
+    </term>
+    <term id="t12" lemma="gun" pos="NOUN" morphofeat="NN">
+      <span>
+        <target id="w12"/>
+      </span>
+    </term>
+  </terms>
+  <entities>
+    <entity id="e0" type="GPE">
+      <references>
+        <span>
+          <target id="t0"/>
+        </span>
+      </references>
+    </entity>
+  </entities>
+  <deps>
+    <dep from="t2" to="t0" rfunc="compound"/>
+    <dep from="t3" to="t2" rfunc="nsubj"/>
+    <dep from="t2" to="t1" rfunc="compound"/>
+    <dep from="t7" to="t4" rfunc="mark"/>
+    <dep from="t3" to="t7" rfunc="advcl"/>
+    <dep from="t7" to="t5" rfunc="nsubj"/>
+    <dep from="t7" to="t6" rfunc="advmod"/>
+    <dep from="t7" to="t8" rfunc="dobj"/>
+    <dep from="t7" to="t9" rfunc="prep"/>
+    <dep from="t12" to="t10" rfunc="poss"/>
+    <dep from="t9" to="t12" rfunc="pobj"/>
+    <dep from="t10" to="t11" rfunc="case"/>
+  </deps>
+  <chunks>
+    <chunk id="c0" head="t2" phrase="NP">
+      <span>
+        <target id="t0"/>
+        <target id="t1"/>
+        <target id="t2"/>
+      </span>
+    </chunk>
+    <chunk id="c1" head="t5" phrase="NP">
+      <span>
+        <target id="t5"/>
+      </span>
+    </chunk>
+    <chunk id="c2" head="t8" phrase="NP">
+      <span>
+        <target id="t8"/>
+      </span>
+    </chunk>
+    <chunk id="c3" head="t9" phrase="PP">
+      <span>
+        <target id="t9"/>
+        <target id="t10"/>
+        <target id="t11"/>
+        <target id="t12"/>
+      </span>
+    </chunk>
+    <chunk id="c4" head="t12" phrase="NP">
+      <span>
+        <target id="t10"/>
+        <target id="t11"/>
+        <target id="t12"/>
+      </span>
+    </chunk>
+  </chunks>
+</NAF>

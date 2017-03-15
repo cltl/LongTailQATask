@@ -1,0 +1,133 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<NAF>
+  <nafHeader>
+    <linguisticProcessors layer="text">
+      <lp name="SpaCy" timestamp="2017-02-01T13:12:32UTC"/>
+    </linguisticProcessors>
+    <linguisticProcessors layer="terms">
+      <lp name="SpaCy" timestamp="2017-02-01T13:12:32UTC"/>
+    </linguisticProcessors>
+  </nafHeader>
+  <text>
+    <wf sent="1" id="w0" length="43" offset="0">http://www.wlox.com/story/31161943/shooting</wf>
+    <wf sent="1" id="w1" length="1" offset="43">-</wf>
+    <wf sent="1" id="w2" length="2" offset="44">at</wf>
+    <wf sent="1" id="w3" length="1" offset="46">-</wf>
+    <wf sent="1" id="w4" length="4" offset="47">pass</wf>
+    <wf sent="1" id="w5" length="1" offset="51">-</wf>
+    <wf sent="1" id="w6" length="9" offset="52">christian</wf>
+    <wf sent="1" id="w7" length="1" offset="61">-</wf>
+    <wf sent="1" id="w8" length="5" offset="62">mardi</wf>
+    <wf sent="1" id="w9" length="1" offset="67">-</wf>
+    <wf sent="1" id="w10" length="4" offset="68">gras</wf>
+    <wf sent="1" id="w11" length="1" offset="72">-</wf>
+    <wf sent="1" id="w12" length="7" offset="73">parade-</wf>
+  </text>
+  <terms>
+    <term id="t0" lemma="http://www.wlox.com/story/31161943/shoot" pos="VERB" morphofeat="VBG">
+      <span>
+        <target id="w0"/>
+      </span>
+    </term>
+    <term id="t1" lemma="-" pos="PUNCT" morphofeat="HYPH">
+      <span>
+        <target id="w1"/>
+      </span>
+    </term>
+    <term id="t2" lemma="at" pos="ADP" morphofeat="IN">
+      <span>
+        <target id="w2"/>
+      </span>
+    </term>
+    <term id="t3" lemma="-" pos="PUNCT" morphofeat="HYPH">
+      <span>
+        <target id="w3"/>
+      </span>
+    </term>
+    <term id="t4" lemma="pass" pos="NOUN" morphofeat="NN">
+      <span>
+        <target id="w4"/>
+      </span>
+    </term>
+    <term id="t5" lemma="-" pos="PUNCT" morphofeat="HYPH">
+      <span>
+        <target id="w5"/>
+      </span>
+    </term>
+    <term id="t6" lemma="christian" pos="ADJ" morphofeat="JJ">
+      <span>
+        <target id="w6"/>
+      </span>
+    </term>
+    <term id="t7" lemma="-" pos="PUNCT" morphofeat="HYPH">
+      <span>
+        <target id="w7"/>
+      </span>
+    </term>
+    <term id="t8" lemma="mardi" pos="NOUN" morphofeat="NN">
+      <span>
+        <target id="w8"/>
+      </span>
+    </term>
+    <term id="t9" lemma="-" pos="PUNCT" morphofeat="HYPH">
+      <span>
+        <target id="w9"/>
+      </span>
+    </term>
+    <term id="t10" lemma="gras" pos="NOUN" morphofeat="NN">
+      <span>
+        <target id="w10"/>
+      </span>
+    </term>
+    <term id="t11" lemma="-" pos="PUNCT" morphofeat="HYPH">
+      <span>
+        <target id="w11"/>
+      </span>
+    </term>
+    <term id="t12" lemma="parade-" pos="NOUN" morphofeat="NN">
+      <span>
+        <target id="w12"/>
+      </span>
+    </term>
+  </terms>
+  <entities/>
+  <deps>
+    <dep from="t0" to="t1" rfunc="punct"/>
+    <dep from="t0" to="t2" rfunc="prep"/>
+    <dep from="t2" to="t3" rfunc="punct"/>
+    <dep from="t2" to="t4" rfunc="pobj"/>
+    <dep from="t12" to="t5" rfunc="punct"/>
+    <dep from="t4" to="t12" rfunc="dobj"/>
+    <dep from="t12" to="t6" rfunc="amod"/>
+    <dep from="t12" to="t7" rfunc="punct"/>
+    <dep from="t12" to="t8" rfunc="compound"/>
+    <dep from="t12" to="t9" rfunc="punct"/>
+    <dep from="t12" to="t10" rfunc="compound"/>
+    <dep from="t12" to="t11" rfunc="punct"/>
+  </deps>
+  <chunks>
+    <chunk id="c0" head="t4" phrase="PP">
+      <span>
+        <target id="t3"/>
+        <target id="t4"/>
+      </span>
+    </chunk>
+    <chunk id="c1" head="t4" phrase="NP">
+      <span>
+        <target id="t4"/>
+      </span>
+    </chunk>
+    <chunk id="c2" head="t12" phrase="NP">
+      <span>
+        <target id="t5"/>
+        <target id="t6"/>
+        <target id="t7"/>
+        <target id="t8"/>
+        <target id="t9"/>
+        <target id="t10"/>
+        <target id="t11"/>
+        <target id="t12"/>
+      </span>
+    </chunk>
+  </chunks>
+</NAF>

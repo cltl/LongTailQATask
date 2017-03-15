@@ -1,0 +1,80 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<NAF>
+  <nafHeader>
+    <linguisticProcessors layer="text">
+      <lp name="SpaCy" timestamp="2017-02-01T13:14:17UTC"/>
+    </linguisticProcessors>
+    <linguisticProcessors layer="terms">
+      <lp name="SpaCy" timestamp="2017-02-01T13:14:17UTC"/>
+    </linguisticProcessors>
+  </nafHeader>
+  <text>
+    <wf sent="1" id="w0" length="6" offset="0">Bartle</wf>
+    <wf sent="1" id="w1" length="9" offset="7">sentenced</wf>
+    <wf sent="1" id="w2" length="1" offset="16">,</wf>
+    <wf sent="1" id="w3" length="7" offset="18">granted</wf>
+    <wf sent="1" id="w4" length="8" offset="26">youthful</wf>
+    <wf sent="1" id="w5" length="8" offset="35">offender</wf>
+    <wf sent="1" id="w6" length="6" offset="44">status</wf>
+  </text>
+  <terms>
+    <term id="t0" lemma="bartle" pos="PROPN" morphofeat="NNP">
+      <span>
+        <target id="w0"/>
+      </span>
+    </term>
+    <term id="t1" lemma="sentence" pos="VERB" morphofeat="VBN">
+      <span>
+        <target id="w1"/>
+      </span>
+    </term>
+    <term id="t2" lemma="," pos="PUNCT" morphofeat=",">
+      <span>
+        <target id="w2"/>
+      </span>
+    </term>
+    <term id="t3" lemma="grant" pos="VERB" morphofeat="VBN">
+      <span>
+        <target id="w3"/>
+      </span>
+    </term>
+    <term id="t4" lemma="youthful" pos="ADJ" morphofeat="JJ">
+      <span>
+        <target id="w4"/>
+      </span>
+    </term>
+    <term id="t5" lemma="offender" pos="NOUN" morphofeat="NN">
+      <span>
+        <target id="w5"/>
+      </span>
+    </term>
+    <term id="t6" lemma="status" pos="NOUN" morphofeat="NN">
+      <span>
+        <target id="w6"/>
+      </span>
+    </term>
+  </terms>
+  <entities/>
+  <deps>
+    <dep from="t3" to="t0" rfunc="nsubj"/>
+    <dep from="t3" to="t1" rfunc="advcl"/>
+    <dep from="t3" to="t2" rfunc="punct"/>
+    <dep from="t6" to="t4" rfunc="amod"/>
+    <dep from="t3" to="t6" rfunc="dobj"/>
+    <dep from="t6" to="t5" rfunc="compound"/>
+  </deps>
+  <chunks>
+    <chunk id="c0" head="t0" phrase="NP">
+      <span>
+        <target id="t0"/>
+      </span>
+    </chunk>
+    <chunk id="c1" head="t6" phrase="NP">
+      <span>
+        <target id="t4"/>
+        <target id="t5"/>
+        <target id="t6"/>
+      </span>
+    </chunk>
+  </chunks>
+</NAF>

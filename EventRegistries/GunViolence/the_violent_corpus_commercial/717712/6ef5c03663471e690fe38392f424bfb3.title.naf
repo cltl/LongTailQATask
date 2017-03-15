@@ -1,0 +1,183 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<NAF>
+  <nafHeader>
+    <linguisticProcessors layer="text">
+      <lp name="SpaCy" timestamp="2017-02-01T13:07:12UTC"/>
+    </linguisticProcessors>
+    <linguisticProcessors layer="terms">
+      <lp name="SpaCy" timestamp="2017-02-01T13:07:12UTC"/>
+    </linguisticProcessors>
+  </nafHeader>
+  <text>
+    <wf sent="1" id="w0" length="1" offset="0">'</wf>
+    <wf sent="1" id="w1" length="3" offset="1">His</wf>
+    <wf sent="1" id="w2" length="6" offset="5">murder</wf>
+    <wf sent="1" id="w3" length="3" offset="12">was</wf>
+    <wf sent="1" id="w4" length="3" offset="15">n't</wf>
+    <wf sent="1" id="w5" length="5" offset="19">spoke</wf>
+    <wf sent="1" id="w6" length="5" offset="25">about</wf>
+    <wf sent="1" id="w7" length="1" offset="30">'</wf>
+    <wf sent="1" id="w8" length="1" offset="31">:</wf>
+    <wf sent="1" id="w9" length="5" offset="33">slain</wf>
+    <wf sent="1" id="w10" length="8" offset="39">10-month</wf>
+    <wf sent="1" id="w11" length="1" offset="47">-</wf>
+    <wf sent="1" id="w12" length="3" offset="48">old</wf>
+    <wf sent="1" id="w13" length="2" offset="51">'s</wf>
+    <wf sent="1" id="w14" length="11" offset="54">grandmother</wf>
+    <wf sent="1" id="w15" length="6" offset="66">pleads</wf>
+    <wf sent="1" id="w16" length="3" offset="73">for</wf>
+    <wf sent="1" id="w17" length="7" offset="77">justice</wf>
+  </text>
+  <terms>
+    <term id="t0" lemma="'" pos="PUNCT" morphofeat="``">
+      <span>
+        <target id="w0"/>
+      </span>
+    </term>
+    <term id="t1" lemma="his" pos="ADJ" morphofeat="PRP$">
+      <span>
+        <target id="w1"/>
+      </span>
+    </term>
+    <term id="t2" lemma="murder" pos="NOUN" morphofeat="NN">
+      <span>
+        <target id="w2"/>
+      </span>
+    </term>
+    <term id="t3" lemma="be" pos="VERB" morphofeat="VBD">
+      <span>
+        <target id="w3"/>
+      </span>
+    </term>
+    <term id="t4" lemma="not" pos="ADV" morphofeat="RB">
+      <span>
+        <target id="w4"/>
+      </span>
+    </term>
+    <term id="t5" lemma="speak" pos="VERB" morphofeat="VBD">
+      <span>
+        <target id="w5"/>
+      </span>
+    </term>
+    <term id="t6" lemma="about" pos="ADP" morphofeat="IN">
+      <span>
+        <target id="w6"/>
+      </span>
+    </term>
+    <term id="t7" lemma="'" pos="PUNCT" morphofeat="''">
+      <span>
+        <target id="w7"/>
+      </span>
+    </term>
+    <term id="t8" lemma=":" pos="PUNCT" morphofeat=":">
+      <span>
+        <target id="w8"/>
+      </span>
+    </term>
+    <term id="t9" lemma="slay" pos="VERB" morphofeat="VBN">
+      <span>
+        <target id="w9"/>
+      </span>
+    </term>
+    <term id="t10" lemma="10-month" pos="ADJ" morphofeat="JJ">
+      <span>
+        <target id="w10"/>
+      </span>
+    </term>
+    <term id="t11" lemma="-" pos="PUNCT" morphofeat="HYPH">
+      <span>
+        <target id="w11"/>
+      </span>
+    </term>
+    <term id="t12" lemma="old" pos="ADJ" morphofeat="JJ">
+      <span>
+        <target id="w12"/>
+      </span>
+    </term>
+    <term id="t13" lemma="'s" pos="PART" morphofeat="POS">
+      <span>
+        <target id="w13"/>
+      </span>
+    </term>
+    <term id="t14" lemma="grandmother" pos="NOUN" morphofeat="NN">
+      <span>
+        <target id="w14"/>
+      </span>
+    </term>
+    <term id="t15" lemma="plead" pos="VERB" morphofeat="VBZ">
+      <span>
+        <target id="w15"/>
+      </span>
+    </term>
+    <term id="t16" lemma="for" pos="ADP" morphofeat="IN">
+      <span>
+        <target id="w16"/>
+      </span>
+    </term>
+    <term id="t17" lemma="justice" pos="NOUN" morphofeat="NN">
+      <span>
+        <target id="w17"/>
+      </span>
+    </term>
+  </terms>
+  <entities>
+    <entity id="e0" type="DATE">
+      <references>
+        <span>
+          <target id="t10"/>
+          <target id="t11"/>
+          <target id="t12"/>
+          <target id="t13"/>
+        </span>
+      </references>
+    </entity>
+  </entities>
+  <deps>
+    <dep from="t15" to="t0" rfunc="punct"/>
+    <dep from="t2" to="t1" rfunc="poss"/>
+    <dep from="t5" to="t2" rfunc="nsubjpass"/>
+    <dep from="t15" to="t5" rfunc="ccomp"/>
+    <dep from="t5" to="t3" rfunc="auxpass"/>
+    <dep from="t5" to="t4" rfunc="neg"/>
+    <dep from="t5" to="t6" rfunc="prep"/>
+    <dep from="t6" to="t7" rfunc="punct"/>
+    <dep from="t15" to="t8" rfunc="punct"/>
+    <dep from="t14" to="t9" rfunc="amod"/>
+    <dep from="t15" to="t14" rfunc="nsubj"/>
+    <dep from="t12" to="t10" rfunc="amod"/>
+    <dep from="t14" to="t12" rfunc="poss"/>
+    <dep from="t12" to="t11" rfunc="punct"/>
+    <dep from="t12" to="t13" rfunc="case"/>
+    <dep from="t15" to="t16" rfunc="prep"/>
+    <dep from="t16" to="t17" rfunc="pobj"/>
+  </deps>
+  <chunks>
+    <chunk id="c0" head="t2" phrase="NP">
+      <span>
+        <target id="t1"/>
+        <target id="t2"/>
+      </span>
+    </chunk>
+    <chunk id="c1" head="t14" phrase="NP">
+      <span>
+        <target id="t9"/>
+        <target id="t10"/>
+        <target id="t11"/>
+        <target id="t12"/>
+        <target id="t13"/>
+        <target id="t14"/>
+      </span>
+    </chunk>
+    <chunk id="c2" head="t16" phrase="PP">
+      <span>
+        <target id="t16"/>
+        <target id="t17"/>
+      </span>
+    </chunk>
+    <chunk id="c3" head="t17" phrase="NP">
+      <span>
+        <target id="t17"/>
+      </span>
+    </chunk>
+  </chunks>
+</NAF>
