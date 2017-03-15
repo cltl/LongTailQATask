@@ -6,6 +6,8 @@ import operator
 import time
 from newspaper import Article
 from datetime import datetime
+from dateutil import parser
+
 import classes
 
 def get_cached_dct_api(url):
@@ -98,11 +100,7 @@ def website_extraction(original_url, max_sec=10, debug=False):
         dct_newspaper=a.publish_date.date()
     elif a.meta_data['date']:
         print(a.meta_data['date'] + 'case B')
-        format_of_date='%Y/%m/%d'
-        try:
-            dct_newspaper=datetime.strptime(a.meta_data['date'], format_of_date).date()
-        except ValueError:
-            dct_newspaper=datetime.strptime(a.meta_data['date'], format_of_date.replace('/','-')).date()
+        dct_newspaper=parser.parse(a.meta_data['date']).date()
     elif a.meta_data['published_time']:
         print(a.meta_data['published_time'] + 'case C')
         dct_newspaper=a.meta_data['published_time'].date()
@@ -151,7 +149,7 @@ urls_and_paths = [('frames/children_killed', 'http://www.gunviolencearchive.org/
                   ('frames/mass_shootings_2015', 'http://www.gunviolencearchive.org/reports/mass-shootings/2015'),
                   ('frames/mass_shootings', 'http://www.gunviolencearchive.org/mass-shooting')]
 
-urls_and_paths = [('frames/mass_shootings_2015', 'http://www.gunviolencearchive.org/reports/mass-shootings/2015')]
+#urls_and_paths = [('frames/mass_shootings_2015', 'http://www.gunviolencearchive.org/reports/mass-shootings/2015')]
 
 frames = []
 for df_path, url in urls_and_paths:
