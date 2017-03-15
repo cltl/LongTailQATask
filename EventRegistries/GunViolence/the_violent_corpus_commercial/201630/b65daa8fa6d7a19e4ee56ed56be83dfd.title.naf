@@ -1,0 +1,96 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<NAF>
+  <nafHeader>
+    <linguisticProcessors layer="text">
+      <lp name="SpaCy" timestamp="2017-02-01T13:07:26UTC"/>
+    </linguisticProcessors>
+    <linguisticProcessors layer="terms">
+      <lp name="SpaCy" timestamp="2017-02-01T13:07:26UTC"/>
+    </linguisticProcessors>
+  </nafHeader>
+  <text>
+    <wf sent="1" id="w0" length="1" offset="0">4</wf>
+    <wf sent="1" id="w1" length="4" offset="2">shot</wf>
+    <wf sent="1" id="w2" length="1" offset="6">:</wf>
+    <wf sent="1" id="w3" length="1" offset="8">3</wf>
+    <wf sent="1" id="w4" length="4" offset="10">dead</wf>
+    <wf sent="1" id="w5" length="1" offset="14">,</wf>
+    <wf sent="1" id="w6" length="1" offset="16">2</wf>
+    <wf sent="1" id="w7" length="12" offset="18">hospitalized</wf>
+  </text>
+  <terms>
+    <term id="t0" lemma="4" pos="NUM" morphofeat="CD">
+      <span>
+        <target id="w0"/>
+      </span>
+    </term>
+    <term id="t1" lemma="shoot" pos="VERB" morphofeat="VBD">
+      <span>
+        <target id="w1"/>
+      </span>
+    </term>
+    <term id="t2" lemma=":" pos="PUNCT" morphofeat=":">
+      <span>
+        <target id="w2"/>
+      </span>
+    </term>
+    <term id="t3" lemma="3" pos="NUM" morphofeat="CD">
+      <span>
+        <target id="w3"/>
+      </span>
+    </term>
+    <term id="t4" lemma="dead" pos="ADJ" morphofeat="JJ">
+      <span>
+        <target id="w4"/>
+      </span>
+    </term>
+    <term id="t5" lemma="," pos="PUNCT" morphofeat=",">
+      <span>
+        <target id="w5"/>
+      </span>
+    </term>
+    <term id="t6" lemma="2" pos="NUM" morphofeat="CD">
+      <span>
+        <target id="w6"/>
+      </span>
+    </term>
+    <term id="t7" lemma="hospitalize" pos="VERB" morphofeat="VBN">
+      <span>
+        <target id="w7"/>
+      </span>
+    </term>
+  </terms>
+  <entities>
+    <entity id="e0" type="CARDINAL">
+      <references>
+        <span>
+          <target id="t0"/>
+        </span>
+      </references>
+    </entity>
+    <entity id="e1" type="CARDINAL">
+      <references>
+        <span>
+          <target id="t3"/>
+        </span>
+      </references>
+    </entity>
+    <entity id="e2" type="CARDINAL">
+      <references>
+        <span>
+          <target id="t6"/>
+        </span>
+      </references>
+    </entity>
+  </entities>
+  <deps>
+    <dep from="t1" to="t0" rfunc="nsubj"/>
+    <dep from="t3" to="t2" rfunc="punct"/>
+    <dep from="t1" to="t3" rfunc="dobj"/>
+    <dep from="t3" to="t4" rfunc="amod"/>
+    <dep from="t3" to="t5" rfunc="punct"/>
+    <dep from="t3" to="t6" rfunc="conj"/>
+    <dep from="t6" to="t7" rfunc="amod"/>
+  </deps>
+  <chunks/>
+</NAF>

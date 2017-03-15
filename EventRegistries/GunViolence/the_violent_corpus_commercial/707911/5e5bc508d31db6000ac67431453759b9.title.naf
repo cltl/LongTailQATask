@@ -1,0 +1,54 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<NAF>
+  <nafHeader>
+    <linguisticProcessors layer="text">
+      <lp name="SpaCy" timestamp="2017-02-01T13:15:00UTC"/>
+    </linguisticProcessors>
+    <linguisticProcessors layer="terms">
+      <lp name="SpaCy" timestamp="2017-02-01T13:15:00UTC"/>
+    </linguisticProcessors>
+  </nafHeader>
+  <text>
+    <wf sent="1" id="w0" length="10" offset="0">Accidental</wf>
+    <wf sent="1" id="w1" length="7" offset="11">gunshot</wf>
+    <wf sent="1" id="w2" length="8" offset="19">incident</wf>
+    <wf sent="1" id="w3" length="12" offset="28">investigated</wf>
+  </text>
+  <terms>
+    <term id="t0" lemma="accidental" pos="PROPN" morphofeat="NNP">
+      <span>
+        <target id="w0"/>
+      </span>
+    </term>
+    <term id="t1" lemma="gunshot" pos="NOUN" morphofeat="NN">
+      <span>
+        <target id="w1"/>
+      </span>
+    </term>
+    <term id="t2" lemma="incident" pos="NOUN" morphofeat="NN">
+      <span>
+        <target id="w2"/>
+      </span>
+    </term>
+    <term id="t3" lemma="investigate" pos="VERB" morphofeat="VBN">
+      <span>
+        <target id="w3"/>
+      </span>
+    </term>
+  </terms>
+  <entities/>
+  <deps>
+    <dep from="t2" to="t0" rfunc="compound"/>
+    <dep from="t3" to="t2" rfunc="nsubj"/>
+    <dep from="t2" to="t1" rfunc="compound"/>
+  </deps>
+  <chunks>
+    <chunk id="c0" head="t2" phrase="NP">
+      <span>
+        <target id="t0"/>
+        <target id="t1"/>
+        <target id="t2"/>
+      </span>
+    </chunk>
+  </chunks>
+</NAF>

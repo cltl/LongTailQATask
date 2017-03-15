@@ -1,0 +1,75 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<NAF>
+  <nafHeader>
+    <linguisticProcessors layer="text">
+      <lp name="SpaCy" timestamp="2017-02-01T13:14:30UTC"/>
+    </linguisticProcessors>
+    <linguisticProcessors layer="terms">
+      <lp name="SpaCy" timestamp="2017-02-01T13:14:30UTC"/>
+    </linguisticProcessors>
+  </nafHeader>
+  <text>
+    <wf sent="1" id="w0" length="8" offset="0">Teenaged</wf>
+    <wf sent="1" id="w1" length="4" offset="9">girl</wf>
+    <wf sent="1" id="w2" length="4" offset="14">dead</wf>
+    <wf sent="1" id="w3" length="5" offset="19">after</wf>
+    <wf sent="1" id="w4" length="6" offset="25">Arnold</wf>
+    <wf sent="1" id="w5" length="8" offset="32">shooting</wf>
+  </text>
+  <terms>
+    <term id="t0" lemma="teenaged" pos="ADJ" morphofeat="JJ">
+      <span>
+        <target id="w0"/>
+      </span>
+    </term>
+    <term id="t1" lemma="girl" pos="NOUN" morphofeat="NN">
+      <span>
+        <target id="w1"/>
+      </span>
+    </term>
+    <term id="t2" lemma="dead" pos="ADJ" morphofeat="JJ">
+      <span>
+        <target id="w2"/>
+      </span>
+    </term>
+    <term id="t3" lemma="after" pos="ADP" morphofeat="IN">
+      <span>
+        <target id="w3"/>
+      </span>
+    </term>
+    <term id="t4" lemma="arnold" pos="PROPN" morphofeat="NNP">
+      <span>
+        <target id="w4"/>
+      </span>
+    </term>
+    <term id="t5" lemma="shoot" pos="VERB" morphofeat="VBG">
+      <span>
+        <target id="w5"/>
+      </span>
+    </term>
+  </terms>
+  <entities>
+    <entity id="e0" type="PERSON">
+      <references>
+        <span>
+          <target id="t4"/>
+        </span>
+      </references>
+    </entity>
+  </entities>
+  <deps>
+    <dep from="t1" to="t0" rfunc="amod"/>
+    <dep from="t5" to="t1" rfunc="nsubj"/>
+    <dep from="t1" to="t2" rfunc="amod"/>
+    <dep from="t5" to="t3" rfunc="prep"/>
+    <dep from="t5" to="t4" rfunc="npadvmod"/>
+  </deps>
+  <chunks>
+    <chunk id="c0" head="t1" phrase="NP">
+      <span>
+        <target id="t0"/>
+        <target id="t1"/>
+      </span>
+    </chunk>
+  </chunks>
+</NAF>

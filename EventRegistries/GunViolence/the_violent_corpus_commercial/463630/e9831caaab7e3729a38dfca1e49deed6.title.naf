@@ -1,0 +1,46 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<NAF>
+  <nafHeader>
+    <linguisticProcessors layer="text">
+      <lp name="SpaCy" timestamp="2017-02-01T13:12:52UTC"/>
+    </linguisticProcessors>
+    <linguisticProcessors layer="terms">
+      <lp name="SpaCy" timestamp="2017-02-01T13:12:52UTC"/>
+    </linguisticProcessors>
+  </nafHeader>
+  <text>
+    <wf sent="1" id="w0" length="18" offset="0">LeaderStandard.com</wf>
+    <wf sent="1" id="w1" length="2" offset="19">is</wf>
+    <wf sent="1" id="w2" length="6" offset="22">coming</wf>
+    <wf sent="1" id="w3" length="4" offset="29">soon</wf>
+  </text>
+  <terms>
+    <term id="t0" lemma="leaderstandard.com" pos="X" morphofeat="ADD">
+      <span>
+        <target id="w0"/>
+      </span>
+    </term>
+    <term id="t1" lemma="be" pos="VERB" morphofeat="VBZ">
+      <span>
+        <target id="w1"/>
+      </span>
+    </term>
+    <term id="t2" lemma="come" pos="VERB" morphofeat="VBG">
+      <span>
+        <target id="w2"/>
+      </span>
+    </term>
+    <term id="t3" lemma="soon" pos="ADV" morphofeat="RB">
+      <span>
+        <target id="w3"/>
+      </span>
+    </term>
+  </terms>
+  <entities/>
+  <deps>
+    <dep from="t2" to="t0" rfunc="nsubj"/>
+    <dep from="t2" to="t1" rfunc="aux"/>
+    <dep from="t2" to="t3" rfunc="advmod"/>
+  </deps>
+  <chunks/>
+</NAF>

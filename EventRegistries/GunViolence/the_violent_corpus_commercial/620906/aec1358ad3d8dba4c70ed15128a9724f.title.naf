@@ -1,0 +1,60 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<NAF>
+  <nafHeader>
+    <linguisticProcessors layer="text">
+      <lp name="SpaCy" timestamp="2017-02-01T13:06:00UTC"/>
+    </linguisticProcessors>
+    <linguisticProcessors layer="terms">
+      <lp name="SpaCy" timestamp="2017-02-01T13:06:00UTC"/>
+    </linguisticProcessors>
+  </nafHeader>
+  <text>
+    <wf sent="1" id="w0" length="5" offset="0">Child</wf>
+    <wf sent="1" id="w1" length="7" offset="6">injured</wf>
+    <wf sent="1" id="w2" length="9" offset="14">following</wf>
+    <wf sent="1" id="w3" length="3" offset="24">gun</wf>
+    <wf sent="1" id="w4" length="6" offset="28">mishap</wf>
+  </text>
+  <terms>
+    <term id="t0" lemma="child" pos="NOUN" morphofeat="NN">
+      <span>
+        <target id="w0"/>
+      </span>
+    </term>
+    <term id="t1" lemma="injure" pos="VERB" morphofeat="VBN">
+      <span>
+        <target id="w1"/>
+      </span>
+    </term>
+    <term id="t2" lemma="follow" pos="VERB" morphofeat="VBG">
+      <span>
+        <target id="w2"/>
+      </span>
+    </term>
+    <term id="t3" lemma="gun" pos="NOUN" morphofeat="NN">
+      <span>
+        <target id="w3"/>
+      </span>
+    </term>
+    <term id="t4" lemma="mishap" pos="NOUN" morphofeat="NN">
+      <span>
+        <target id="w4"/>
+      </span>
+    </term>
+  </terms>
+  <entities/>
+  <deps>
+    <dep from="t1" to="t0" rfunc="npadvmod"/>
+    <dep from="t1" to="t2" rfunc="prep"/>
+    <dep from="t4" to="t3" rfunc="compound"/>
+    <dep from="t2" to="t4" rfunc="pobj"/>
+  </deps>
+  <chunks>
+    <chunk id="c0" head="t4" phrase="NP">
+      <span>
+        <target id="t3"/>
+        <target id="t4"/>
+      </span>
+    </chunk>
+  </chunks>
+</NAF>

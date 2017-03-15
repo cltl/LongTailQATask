@@ -1,0 +1,168 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<NAF>
+  <nafHeader>
+    <linguisticProcessors layer="text">
+      <lp name="SpaCy" timestamp="2017-02-01T13:15:16UTC"/>
+    </linguisticProcessors>
+    <linguisticProcessors layer="terms">
+      <lp name="SpaCy" timestamp="2017-02-01T13:15:16UTC"/>
+    </linguisticProcessors>
+  </nafHeader>
+  <text>
+    <wf sent="1" id="w0" length="3" offset="0">Ky.</wf>
+    <wf sent="1" id="w1" length="8" offset="4">Troopers</wf>
+    <wf sent="1" id="w2" length="1" offset="12">:</wf>
+    <wf sent="1" id="w3" length="6" offset="14">7-year</wf>
+    <wf sent="1" id="w4" length="1" offset="20">-</wf>
+    <wf sent="1" id="w5" length="3" offset="21">old</wf>
+    <wf sent="1" id="w6" length="12" offset="25">accidentally</wf>
+    <wf sent="1" id="w7" length="4" offset="38">shot</wf>
+    <wf sent="1" id="w8" length="3" offset="43">and</wf>
+    <wf sent="1" id="w9" length="6" offset="47">killed</wf>
+    <wf sent="1" id="w10" length="2" offset="54">by</wf>
+    <wf sent="1" id="w11" length="7" offset="57">brother</wf>
+    <wf sent="1" id="w12" length="5" offset="65">while</wf>
+    <wf sent="1" id="w13" length="7" offset="71">playing</wf>
+    <wf sent="1" id="w14" length="4" offset="79">with</wf>
+    <wf sent="1" id="w15" length="6" offset="84">loaded</wf>
+    <wf sent="1" id="w16" length="3" offset="91">gun</wf>
+  </text>
+  <terms>
+    <term id="t0" lemma="ky." pos="PROPN" morphofeat="NNP">
+      <span>
+        <target id="w0"/>
+      </span>
+    </term>
+    <term id="t1" lemma="trooper" pos="NOUN" morphofeat="NNS">
+      <span>
+        <target id="w1"/>
+      </span>
+    </term>
+    <term id="t2" lemma=":" pos="PUNCT" morphofeat=":">
+      <span>
+        <target id="w2"/>
+      </span>
+    </term>
+    <term id="t3" lemma="7-year" pos="PUNCT" morphofeat="LS">
+      <span>
+        <target id="w3"/>
+      </span>
+    </term>
+    <term id="t4" lemma="-" pos="PUNCT" morphofeat="HYPH">
+      <span>
+        <target id="w4"/>
+      </span>
+    </term>
+    <term id="t5" lemma="old" pos="ADJ" morphofeat="JJ">
+      <span>
+        <target id="w5"/>
+      </span>
+    </term>
+    <term id="t6" lemma="accidentally" pos="ADV" morphofeat="RB">
+      <span>
+        <target id="w6"/>
+      </span>
+    </term>
+    <term id="t7" lemma="shoot" pos="VERB" morphofeat="VBD">
+      <span>
+        <target id="w7"/>
+      </span>
+    </term>
+    <term id="t8" lemma="and" pos="CONJ" morphofeat="CC">
+      <span>
+        <target id="w8"/>
+      </span>
+    </term>
+    <term id="t9" lemma="kill" pos="VERB" morphofeat="VBN">
+      <span>
+        <target id="w9"/>
+      </span>
+    </term>
+    <term id="t10" lemma="by" pos="ADP" morphofeat="IN">
+      <span>
+        <target id="w10"/>
+      </span>
+    </term>
+    <term id="t11" lemma="brother" pos="NOUN" morphofeat="NN">
+      <span>
+        <target id="w11"/>
+      </span>
+    </term>
+    <term id="t12" lemma="while" pos="ADP" morphofeat="IN">
+      <span>
+        <target id="w12"/>
+      </span>
+    </term>
+    <term id="t13" lemma="play" pos="VERB" morphofeat="VBG">
+      <span>
+        <target id="w13"/>
+      </span>
+    </term>
+    <term id="t14" lemma="with" pos="ADP" morphofeat="IN">
+      <span>
+        <target id="w14"/>
+      </span>
+    </term>
+    <term id="t15" lemma="loaded" pos="ADJ" morphofeat="JJ">
+      <span>
+        <target id="w15"/>
+      </span>
+    </term>
+    <term id="t16" lemma="gun" pos="NOUN" morphofeat="NN">
+      <span>
+        <target id="w16"/>
+      </span>
+    </term>
+  </terms>
+  <entities/>
+  <deps>
+    <dep from="t1" to="t0" rfunc="compound"/>
+    <dep from="t7" to="t1" rfunc="nsubj"/>
+    <dep from="t1" to="t2" rfunc="punct"/>
+    <dep from="t5" to="t3" rfunc="npadvmod"/>
+    <dep from="t7" to="t5" rfunc="amod"/>
+    <dep from="t5" to="t4" rfunc="punct"/>
+    <dep from="t7" to="t6" rfunc="advmod"/>
+    <dep from="t7" to="t8" rfunc="cc"/>
+    <dep from="t7" to="t9" rfunc="conj"/>
+    <dep from="t9" to="t10" rfunc="agent"/>
+    <dep from="t10" to="t11" rfunc="pobj"/>
+    <dep from="t13" to="t12" rfunc="mark"/>
+    <dep from="t9" to="t13" rfunc="advcl"/>
+    <dep from="t13" to="t14" rfunc="prep"/>
+    <dep from="t16" to="t15" rfunc="amod"/>
+    <dep from="t14" to="t16" rfunc="pobj"/>
+  </deps>
+  <chunks>
+    <chunk id="c0" head="t1" phrase="NP">
+      <span>
+        <target id="t0"/>
+        <target id="t1"/>
+      </span>
+    </chunk>
+    <chunk id="c1" head="t10" phrase="PP">
+      <span>
+        <target id="t10"/>
+        <target id="t11"/>
+      </span>
+    </chunk>
+    <chunk id="c2" head="t11" phrase="NP">
+      <span>
+        <target id="t11"/>
+      </span>
+    </chunk>
+    <chunk id="c3" head="t14" phrase="PP">
+      <span>
+        <target id="t14"/>
+        <target id="t15"/>
+        <target id="t16"/>
+      </span>
+    </chunk>
+    <chunk id="c4" head="t16" phrase="NP">
+      <span>
+        <target id="t15"/>
+        <target id="t16"/>
+      </span>
+    </chunk>
+  </chunks>
+</NAF>

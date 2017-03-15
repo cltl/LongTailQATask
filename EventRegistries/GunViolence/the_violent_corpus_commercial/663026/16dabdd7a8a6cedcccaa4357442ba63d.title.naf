@@ -1,0 +1,93 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<NAF>
+  <nafHeader>
+    <linguisticProcessors layer="text">
+      <lp name="SpaCy" timestamp="2017-02-01T13:07:37UTC"/>
+    </linguisticProcessors>
+    <linguisticProcessors layer="terms">
+      <lp name="SpaCy" timestamp="2017-02-01T13:07:37UTC"/>
+    </linguisticProcessors>
+  </nafHeader>
+  <text>
+    <wf sent="1" id="w0" length="3" offset="0">Two</wf>
+    <wf sent="1" id="w1" length="4" offset="4">year</wf>
+    <wf sent="1" id="w2" length="3" offset="9">old</wf>
+    <wf sent="1" id="w3" length="12" offset="13">accidentally</wf>
+    <wf sent="1" id="w4" length="6" offset="26">shoots</wf>
+    <wf sent="1" id="w5" length="2" offset="33">12</wf>
+    <wf sent="1" id="w6" length="4" offset="36">year</wf>
+    <wf sent="1" id="w7" length="3" offset="41">old</wf>
+  </text>
+  <terms>
+    <term id="t0" lemma="two" pos="NUM" morphofeat="CD">
+      <span>
+        <target id="w0"/>
+      </span>
+    </term>
+    <term id="t1" lemma="year" pos="NOUN" morphofeat="NN">
+      <span>
+        <target id="w1"/>
+      </span>
+    </term>
+    <term id="t2" lemma="old" pos="ADJ" morphofeat="JJ">
+      <span>
+        <target id="w2"/>
+      </span>
+    </term>
+    <term id="t3" lemma="accidentally" pos="ADV" morphofeat="RB">
+      <span>
+        <target id="w3"/>
+      </span>
+    </term>
+    <term id="t4" lemma="shoot" pos="VERB" morphofeat="VBZ">
+      <span>
+        <target id="w4"/>
+      </span>
+    </term>
+    <term id="t5" lemma="12" pos="NUM" morphofeat="CD">
+      <span>
+        <target id="w5"/>
+      </span>
+    </term>
+    <term id="t6" lemma="year" pos="NOUN" morphofeat="NN">
+      <span>
+        <target id="w6"/>
+      </span>
+    </term>
+    <term id="t7" lemma="old" pos="ADJ" morphofeat="JJ">
+      <span>
+        <target id="w7"/>
+      </span>
+    </term>
+  </terms>
+  <entities>
+    <entity id="e0" type="DATE">
+      <references>
+        <span>
+          <target id="t0"/>
+          <target id="t1"/>
+          <target id="t2"/>
+        </span>
+      </references>
+    </entity>
+    <entity id="e1" type="DATE">
+      <references>
+        <span>
+          <target id="t5"/>
+          <target id="t6"/>
+          <target id="t7"/>
+        </span>
+      </references>
+    </entity>
+  </entities>
+  <deps>
+    <dep from="t1" to="t0" rfunc="nummod"/>
+    <dep from="t2" to="t1" rfunc="npadvmod"/>
+    <dep from="t4" to="t2" rfunc="nsubj"/>
+    <dep from="t4" to="t3" rfunc="advmod"/>
+    <dep from="t6" to="t5" rfunc="nummod"/>
+    <dep from="t7" to="t6" rfunc="npadvmod"/>
+    <dep from="t4" to="t7" rfunc="dobj"/>
+  </deps>
+  <chunks/>
+</NAF>

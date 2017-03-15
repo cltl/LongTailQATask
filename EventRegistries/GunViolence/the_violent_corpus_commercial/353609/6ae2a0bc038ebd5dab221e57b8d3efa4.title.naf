@@ -1,0 +1,89 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<NAF>
+  <nafHeader>
+    <linguisticProcessors layer="text">
+      <lp name="SpaCy" timestamp="2017-02-01T13:10:50UTC"/>
+    </linguisticProcessors>
+    <linguisticProcessors layer="terms">
+      <lp name="SpaCy" timestamp="2017-02-01T13:10:50UTC"/>
+    </linguisticProcessors>
+  </nafHeader>
+  <text>
+    <wf sent="1" id="w0" length="6" offset="0">Murray</wf>
+    <wf sent="1" id="w1" length="6" offset="7">police</wf>
+    <wf sent="1" id="w2" length="11" offset="14">investigate</wf>
+    <wf sent="1" id="w3" length="8" offset="26">apparent</wf>
+    <wf sent="1" id="w4" length="6" offset="35">double</wf>
+    <wf sent="1" id="w5" length="6" offset="42">murder</wf>
+    <wf sent="1" id="w6" length="1" offset="48">-</wf>
+    <wf sent="1" id="w7" length="7" offset="49">suicide</wf>
+  </text>
+  <terms>
+    <term id="t0" lemma="murray" pos="ADJ" morphofeat="JJ">
+      <span>
+        <target id="w0"/>
+      </span>
+    </term>
+    <term id="t1" lemma="police" pos="NOUN" morphofeat="NN">
+      <span>
+        <target id="w1"/>
+      </span>
+    </term>
+    <term id="t2" lemma="investigate" pos="VERB" morphofeat="VB">
+      <span>
+        <target id="w2"/>
+      </span>
+    </term>
+    <term id="t3" lemma="apparent" pos="ADJ" morphofeat="JJ">
+      <span>
+        <target id="w3"/>
+      </span>
+    </term>
+    <term id="t4" lemma="double" pos="ADJ" morphofeat="JJ">
+      <span>
+        <target id="w4"/>
+      </span>
+    </term>
+    <term id="t5" lemma="murder" pos="NOUN" morphofeat="NN">
+      <span>
+        <target id="w5"/>
+      </span>
+    </term>
+    <term id="t6" lemma="-" pos="PUNCT" morphofeat="HYPH">
+      <span>
+        <target id="w6"/>
+      </span>
+    </term>
+    <term id="t7" lemma="suicide" pos="NOUN" morphofeat="NN">
+      <span>
+        <target id="w7"/>
+      </span>
+    </term>
+  </terms>
+  <entities/>
+  <deps>
+    <dep from="t2" to="t0" rfunc="amod"/>
+    <dep from="t2" to="t1" rfunc="nsubj"/>
+    <dep from="t7" to="t3" rfunc="amod"/>
+    <dep from="t2" to="t7" rfunc="dobj"/>
+    <dep from="t7" to="t4" rfunc="amod"/>
+    <dep from="t7" to="t5" rfunc="compound"/>
+    <dep from="t7" to="t6" rfunc="punct"/>
+  </deps>
+  <chunks>
+    <chunk id="c0" head="t1" phrase="NP">
+      <span>
+        <target id="t1"/>
+      </span>
+    </chunk>
+    <chunk id="c1" head="t7" phrase="NP">
+      <span>
+        <target id="t3"/>
+        <target id="t4"/>
+        <target id="t5"/>
+        <target id="t6"/>
+        <target id="t7"/>
+      </span>
+    </chunk>
+  </chunks>
+</NAF>

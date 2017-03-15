@@ -1,0 +1,98 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<NAF>
+  <nafHeader>
+    <linguisticProcessors layer="text">
+      <lp name="SpaCy" timestamp="2017-02-01T13:14:59UTC"/>
+    </linguisticProcessors>
+    <linguisticProcessors layer="terms">
+      <lp name="SpaCy" timestamp="2017-02-01T13:14:59UTC"/>
+    </linguisticProcessors>
+  </nafHeader>
+  <text>
+    <wf sent="1" id="w0" length="5" offset="0">Child</wf>
+    <wf sent="1" id="w1" length="3" offset="6">and</wf>
+    <wf sent="1" id="w2" length="5" offset="10">adult</wf>
+    <wf sent="1" id="w3" length="4" offset="16">shot</wf>
+    <wf sent="1" id="w4" length="2" offset="21">in</wf>
+    <wf sent="1" id="w5" length="6" offset="24">Dekalb</wf>
+    <wf sent="1" id="w6" length="6" offset="31">County</wf>
+  </text>
+  <terms>
+    <term id="t0" lemma="child" pos="NOUN" morphofeat="NN">
+      <span>
+        <target id="w0"/>
+      </span>
+    </term>
+    <term id="t1" lemma="and" pos="CONJ" morphofeat="CC">
+      <span>
+        <target id="w1"/>
+      </span>
+    </term>
+    <term id="t2" lemma="adult" pos="NOUN" morphofeat="NN">
+      <span>
+        <target id="w2"/>
+      </span>
+    </term>
+    <term id="t3" lemma="shot" pos="NOUN" morphofeat="NN">
+      <span>
+        <target id="w3"/>
+      </span>
+    </term>
+    <term id="t4" lemma="in" pos="ADP" morphofeat="IN">
+      <span>
+        <target id="w4"/>
+      </span>
+    </term>
+    <term id="t5" lemma="dekalb" pos="PROPN" morphofeat="NNP">
+      <span>
+        <target id="w5"/>
+      </span>
+    </term>
+    <term id="t6" lemma="county" pos="PROPN" morphofeat="NNP">
+      <span>
+        <target id="w6"/>
+      </span>
+    </term>
+  </terms>
+  <entities>
+    <entity id="e0" type="GPE">
+      <references>
+        <span>
+          <target id="t5"/>
+          <target id="t6"/>
+        </span>
+      </references>
+    </entity>
+  </entities>
+  <deps>
+    <dep from="t3" to="t0" rfunc="nmod"/>
+    <dep from="t0" to="t1" rfunc="cc"/>
+    <dep from="t0" to="t2" rfunc="conj"/>
+    <dep from="t3" to="t4" rfunc="prep"/>
+    <dep from="t6" to="t5" rfunc="compound"/>
+    <dep from="t4" to="t6" rfunc="pobj"/>
+  </deps>
+  <chunks>
+    <chunk id="c0" head="t3" phrase="NP">
+      <span>
+        <target id="t0"/>
+        <target id="t1"/>
+        <target id="t2"/>
+        <target id="t3"/>
+      </span>
+    </chunk>
+    <chunk id="c1" head="t4" phrase="PP">
+      <span>
+        <target id="t4"/>
+        <target id="t5"/>
+        <target id="t6"/>
+      </span>
+    </chunk>
+    <chunk id="c2" head="t6" phrase="NP">
+      <span>
+        <target id="t5"/>
+        <target id="t6"/>
+      </span>
+    </chunk>
+  </chunks>
+</NAF>

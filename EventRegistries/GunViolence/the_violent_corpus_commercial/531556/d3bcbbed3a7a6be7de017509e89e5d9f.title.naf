@@ -1,0 +1,53 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<NAF>
+  <nafHeader>
+    <linguisticProcessors layer="text">
+      <lp name="SpaCy" timestamp="2017-02-01T13:15:04UTC"/>
+    </linguisticProcessors>
+    <linguisticProcessors layer="terms">
+      <lp name="SpaCy" timestamp="2017-02-01T13:15:04UTC"/>
+    </linguisticProcessors>
+  </nafHeader>
+  <text>
+    <wf sent="1" id="w0" length="4" offset="0">NOPD</wf>
+    <wf sent="1" id="w1" length="13" offset="5">investigating</wf>
+    <wf sent="1" id="w2" length="5" offset="19">fatal</wf>
+    <wf sent="1" id="w3" length="7" offset="25">Algiers</wf>
+    <wf sent="1" id="w4" length="8" offset="33">shooting</wf>
+  </text>
+  <terms>
+    <term id="t0" lemma="nopd" pos="ADV" morphofeat="RB">
+      <span>
+        <target id="w0"/>
+      </span>
+    </term>
+    <term id="t1" lemma="investigate" pos="VERB" morphofeat="VBG">
+      <span>
+        <target id="w1"/>
+      </span>
+    </term>
+    <term id="t2" lemma="fatal" pos="ADJ" morphofeat="JJ">
+      <span>
+        <target id="w2"/>
+      </span>
+    </term>
+    <term id="t3" lemma="algiers" pos="PROPN" morphofeat="NNP">
+      <span>
+        <target id="w3"/>
+      </span>
+    </term>
+    <term id="t4" lemma="shoot" pos="VERB" morphofeat="VBG">
+      <span>
+        <target id="w4"/>
+      </span>
+    </term>
+  </terms>
+  <entities/>
+  <deps>
+    <dep from="t1" to="t0" rfunc="advmod"/>
+    <dep from="t4" to="t2" rfunc="amod"/>
+    <dep from="t1" to="t4" rfunc="dobj"/>
+    <dep from="t4" to="t3" rfunc="compound"/>
+  </deps>
+  <chunks/>
+</NAF>

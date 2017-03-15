@@ -1,0 +1,82 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<NAF>
+  <nafHeader>
+    <linguisticProcessors layer="text">
+      <lp name="SpaCy" timestamp="2017-02-01T13:06:02UTC"/>
+    </linguisticProcessors>
+    <linguisticProcessors layer="terms">
+      <lp name="SpaCy" timestamp="2017-02-01T13:06:02UTC"/>
+    </linguisticProcessors>
+  </nafHeader>
+  <text>
+    <wf sent="1" id="w0" length="9" offset="0">Sylvester</wf>
+    <wf sent="1" id="w1" length="8" offset="10">Shooting</wf>
+    <wf sent="1" id="w2" length="7" offset="19">reveals</wf>
+    <wf sent="1" id="w3" length="3" offset="27">8th</wf>
+    <wf sent="1" id="w4" length="6" offset="31">victim</wf>
+  </text>
+  <terms>
+    <term id="t0" lemma="sylvester" pos="PROPN" morphofeat="NNP">
+      <span>
+        <target id="w0"/>
+      </span>
+    </term>
+    <term id="t1" lemma="shooting" pos="PROPN" morphofeat="NNP">
+      <span>
+        <target id="w1"/>
+      </span>
+    </term>
+    <term id="t2" lemma="reveal" pos="VERB" morphofeat="VBZ">
+      <span>
+        <target id="w2"/>
+      </span>
+    </term>
+    <term id="t3" lemma="8th" pos="NOUN" morphofeat="NN">
+      <span>
+        <target id="w3"/>
+      </span>
+    </term>
+    <term id="t4" lemma="victim" pos="NOUN" morphofeat="NN">
+      <span>
+        <target id="w4"/>
+      </span>
+    </term>
+  </terms>
+  <entities>
+    <entity id="e0" type="PERSON">
+      <references>
+        <span>
+          <target id="t0"/>
+          <target id="t1"/>
+        </span>
+      </references>
+    </entity>
+    <entity id="e1" type="ORDINAL">
+      <references>
+        <span>
+          <target id="t3"/>
+        </span>
+      </references>
+    </entity>
+  </entities>
+  <deps>
+    <dep from="t1" to="t0" rfunc="compound"/>
+    <dep from="t2" to="t1" rfunc="nsubj"/>
+    <dep from="t4" to="t3" rfunc="compound"/>
+    <dep from="t2" to="t4" rfunc="dobj"/>
+  </deps>
+  <chunks>
+    <chunk id="c0" head="t1" phrase="NP">
+      <span>
+        <target id="t0"/>
+        <target id="t1"/>
+      </span>
+    </chunk>
+    <chunk id="c1" head="t4" phrase="NP">
+      <span>
+        <target id="t3"/>
+        <target id="t4"/>
+      </span>
+    </chunk>
+  </chunks>
+</NAF>

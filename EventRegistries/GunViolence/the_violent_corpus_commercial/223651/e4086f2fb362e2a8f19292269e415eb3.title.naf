@@ -1,0 +1,112 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<NAF>
+  <nafHeader>
+    <linguisticProcessors layer="text">
+      <lp name="SpaCy" timestamp="2017-02-01T13:08:27UTC"/>
+    </linguisticProcessors>
+    <linguisticProcessors layer="terms">
+      <lp name="SpaCy" timestamp="2017-02-01T13:08:27UTC"/>
+    </linguisticProcessors>
+  </nafHeader>
+  <text>
+    <wf sent="1" id="w0" length="9" offset="0">Cleveland</wf>
+    <wf sent="1" id="w1" length="6" offset="10">police</wf>
+    <wf sent="1" id="w2" length="8" offset="17">announce</wf>
+    <wf sent="1" id="w3" length="6" offset="26">arrest</wf>
+    <wf sent="1" id="w4" length="2" offset="33">in</wf>
+    <wf sent="1" id="w5" length="8" offset="36">November</wf>
+    <wf sent="1" id="w6" length="9" offset="45">quintuple</wf>
+    <wf sent="1" id="w7" length="8" offset="55">homicide</wf>
+  </text>
+  <terms>
+    <term id="t0" lemma="cleveland" pos="PROPN" morphofeat="NNP">
+      <span>
+        <target id="w0"/>
+      </span>
+    </term>
+    <term id="t1" lemma="police" pos="NOUN" morphofeat="NNS">
+      <span>
+        <target id="w1"/>
+      </span>
+    </term>
+    <term id="t2" lemma="announce" pos="VERB" morphofeat="VBP">
+      <span>
+        <target id="w2"/>
+      </span>
+    </term>
+    <term id="t3" lemma="arrest" pos="NOUN" morphofeat="NN">
+      <span>
+        <target id="w3"/>
+      </span>
+    </term>
+    <term id="t4" lemma="in" pos="ADP" morphofeat="IN">
+      <span>
+        <target id="w4"/>
+      </span>
+    </term>
+    <term id="t5" lemma="november" pos="PROPN" morphofeat="NNP">
+      <span>
+        <target id="w5"/>
+      </span>
+    </term>
+    <term id="t6" lemma="quintuple" pos="NOUN" morphofeat="NN">
+      <span>
+        <target id="w6"/>
+      </span>
+    </term>
+    <term id="t7" lemma="homicide" pos="NOUN" morphofeat="NN">
+      <span>
+        <target id="w7"/>
+      </span>
+    </term>
+  </terms>
+  <entities>
+    <entity id="e0" type="GPE">
+      <references>
+        <span>
+          <target id="t0"/>
+        </span>
+      </references>
+    </entity>
+    <entity id="e1" type="DATE">
+      <references>
+        <span>
+          <target id="t5"/>
+        </span>
+      </references>
+    </entity>
+  </entities>
+  <deps>
+    <dep from="t1" to="t0" rfunc="compound"/>
+    <dep from="t2" to="t1" rfunc="nsubj"/>
+    <dep from="t2" to="t3" rfunc="dobj"/>
+    <dep from="t2" to="t4" rfunc="prep"/>
+    <dep from="t4" to="t5" rfunc="pobj"/>
+    <dep from="t7" to="t6" rfunc="compound"/>
+    <dep from="t2" to="t7" rfunc="npadvmod"/>
+  </deps>
+  <chunks>
+    <chunk id="c0" head="t1" phrase="NP">
+      <span>
+        <target id="t0"/>
+        <target id="t1"/>
+      </span>
+    </chunk>
+    <chunk id="c1" head="t3" phrase="NP">
+      <span>
+        <target id="t3"/>
+      </span>
+    </chunk>
+    <chunk id="c2" head="t4" phrase="PP">
+      <span>
+        <target id="t4"/>
+        <target id="t5"/>
+      </span>
+    </chunk>
+    <chunk id="c3" head="t5" phrase="NP">
+      <span>
+        <target id="t5"/>
+      </span>
+    </chunk>
+  </chunks>
+</NAF>

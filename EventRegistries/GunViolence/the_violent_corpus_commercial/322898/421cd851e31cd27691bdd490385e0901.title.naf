@@ -1,0 +1,80 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<NAF>
+  <nafHeader>
+    <linguisticProcessors layer="text">
+      <lp name="SpaCy" timestamp="2017-02-01T13:08:36UTC"/>
+    </linguisticProcessors>
+    <linguisticProcessors layer="terms">
+      <lp name="SpaCy" timestamp="2017-02-01T13:08:36UTC"/>
+    </linguisticProcessors>
+  </nafHeader>
+  <text>
+    <wf sent="1" id="w0" length="6" offset="0">Police</wf>
+    <wf sent="1" id="w1" length="1" offset="7">&amp;</wf>
+    <wf sent="1" id="w2" length="4" offset="9">Fire</wf>
+    <wf sent="1" id="w3" length="1" offset="13">:</wf>
+    <wf sent="1" id="w4" length="5" offset="15">Crash</wf>
+    <wf sent="1" id="w5" length="6" offset="21">victim</wf>
+    <wf sent="1" id="w6" length="1" offset="28">‘</wf>
+    <wf sent="1" id="w7" length="9" offset="29">critical’</wf>
+  </text>
+  <terms>
+    <term id="t0" lemma="police" pos="NOUN" morphofeat="NN">
+      <span>
+        <target id="w0"/>
+      </span>
+    </term>
+    <term id="t1" lemma="&amp;" pos="CONJ" morphofeat="CC">
+      <span>
+        <target id="w1"/>
+      </span>
+    </term>
+    <term id="t2" lemma="fire" pos="PROPN" morphofeat="NNP">
+      <span>
+        <target id="w2"/>
+      </span>
+    </term>
+    <term id="t3" lemma=":" pos="PUNCT" morphofeat=":">
+      <span>
+        <target id="w3"/>
+      </span>
+    </term>
+    <term id="t4" lemma="crash" pos="PROPN" morphofeat="NNP">
+      <span>
+        <target id="w4"/>
+      </span>
+    </term>
+    <term id="t5" lemma="victim" pos="NOUN" morphofeat="NN">
+      <span>
+        <target id="w5"/>
+      </span>
+    </term>
+    <term id="t6" lemma="'" pos="PUNCT" morphofeat=".">
+      <span>
+        <target id="w6"/>
+      </span>
+    </term>
+    <term id="t7" lemma="critical’" pos="NOUN" morphofeat="NN">
+      <span>
+        <target id="w7"/>
+      </span>
+    </term>
+  </terms>
+  <entities/>
+  <deps>
+    <dep from="t0" to="t1" rfunc="cc"/>
+    <dep from="t0" to="t2" rfunc="conj"/>
+    <dep from="t2" to="t3" rfunc="punct"/>
+    <dep from="t5" to="t4" rfunc="compound"/>
+    <dep from="t2" to="t5" rfunc="appos"/>
+    <dep from="t2" to="t6" rfunc="punct"/>
+    <dep from="t2" to="t7" rfunc="appos"/>
+  </deps>
+  <chunks>
+    <chunk id="c0" head="t0" phrase="NP">
+      <span>
+        <target id="t0"/>
+      </span>
+    </chunk>
+  </chunks>
+</NAF>

@@ -1,0 +1,45 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<NAF>
+  <nafHeader>
+    <linguisticProcessors layer="text">
+      <lp name="SpaCy" timestamp="2017-02-01T13:12:45UTC"/>
+    </linguisticProcessors>
+    <linguisticProcessors layer="terms">
+      <lp name="SpaCy" timestamp="2017-02-01T13:12:45UTC"/>
+    </linguisticProcessors>
+  </nafHeader>
+  <text>
+    <wf sent="1" id="w0" length="8" offset="0">Shooting</wf>
+    <wf sent="1" id="w1" length="7" offset="9">details</wf>
+    <wf sent="1" id="w2" length="6" offset="17">emerge</wf>
+  </text>
+  <terms>
+    <term id="t0" lemma="shoot" pos="VERB" morphofeat="VBG">
+      <span>
+        <target id="w0"/>
+      </span>
+    </term>
+    <term id="t1" lemma="detail" pos="NOUN" morphofeat="NNS">
+      <span>
+        <target id="w1"/>
+      </span>
+    </term>
+    <term id="t2" lemma="emerge" pos="VERB" morphofeat="VBP">
+      <span>
+        <target id="w2"/>
+      </span>
+    </term>
+  </terms>
+  <entities/>
+  <deps>
+    <dep from="t2" to="t1" rfunc="nsubj"/>
+    <dep from="t0" to="t2" rfunc="ccomp"/>
+  </deps>
+  <chunks>
+    <chunk id="c0" head="t1" phrase="NP">
+      <span>
+        <target id="t1"/>
+      </span>
+    </chunk>
+  </chunks>
+</NAF>

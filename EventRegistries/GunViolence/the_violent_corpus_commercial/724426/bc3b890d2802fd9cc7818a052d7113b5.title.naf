@@ -1,0 +1,185 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<NAF>
+  <nafHeader>
+    <linguisticProcessors layer="text">
+      <lp name="SpaCy" timestamp="2017-02-01T13:08:16UTC"/>
+    </linguisticProcessors>
+    <linguisticProcessors layer="terms">
+      <lp name="SpaCy" timestamp="2017-02-01T13:08:16UTC"/>
+    </linguisticProcessors>
+  </nafHeader>
+  <text>
+    <wf sent="1" id="w0" length="7" offset="0">College</wf>
+    <wf sent="1" id="w1" length="7" offset="8">Station</wf>
+    <wf sent="1" id="w2" length="6" offset="16">police</wf>
+    <wf sent="1" id="w3" length="1" offset="22">:</wf>
+    <wf sent="1" id="w4" length="10" offset="24">Accidental</wf>
+    <wf sent="1" id="w5" length="8" offset="35">shooting</wf>
+    <wf sent="1" id="w6" length="5" offset="44">sends</wf>
+    <wf sent="1" id="w7" length="7" offset="50">17-year</wf>
+    <wf sent="1" id="w8" length="1" offset="57">-</wf>
+    <wf sent="1" id="w9" length="3" offset="58">old</wf>
+    <wf sent="1" id="w10" length="2" offset="62">to</wf>
+    <wf sent="1" id="w11" length="3" offset="65">the</wf>
+    <wf sent="1" id="w12" length="2" offset="69">ER</wf>
+    <wf sent="1" id="w13" length="6" offset="72">Monday</wf>
+    <wf sent="1" id="w14" length="9" offset="79">afternoon</wf>
+  </text>
+  <terms>
+    <term id="t0" lemma="college" pos="PROPN" morphofeat="NNP">
+      <span>
+        <target id="w0"/>
+      </span>
+    </term>
+    <term id="t1" lemma="station" pos="PROPN" morphofeat="NNP">
+      <span>
+        <target id="w1"/>
+      </span>
+    </term>
+    <term id="t2" lemma="police" pos="NOUN" morphofeat="NN">
+      <span>
+        <target id="w2"/>
+      </span>
+    </term>
+    <term id="t3" lemma=":" pos="PUNCT" morphofeat=":">
+      <span>
+        <target id="w3"/>
+      </span>
+    </term>
+    <term id="t4" lemma="accidental" pos="ADJ" morphofeat="JJ">
+      <span>
+        <target id="w4"/>
+      </span>
+    </term>
+    <term id="t5" lemma="shooting" pos="NOUN" morphofeat="NN">
+      <span>
+        <target id="w5"/>
+      </span>
+    </term>
+    <term id="t6" lemma="send" pos="VERB" morphofeat="VBZ">
+      <span>
+        <target id="w6"/>
+      </span>
+    </term>
+    <term id="t7" lemma="17-year" pos="ADJ" morphofeat="JJ">
+      <span>
+        <target id="w7"/>
+      </span>
+    </term>
+    <term id="t8" lemma="-" pos="PUNCT" morphofeat="HYPH">
+      <span>
+        <target id="w8"/>
+      </span>
+    </term>
+    <term id="t9" lemma="old" pos="ADJ" morphofeat="JJ">
+      <span>
+        <target id="w9"/>
+      </span>
+    </term>
+    <term id="t10" lemma="to" pos="ADP" morphofeat="IN">
+      <span>
+        <target id="w10"/>
+      </span>
+    </term>
+    <term id="t11" lemma="the" pos="DET" morphofeat="DT">
+      <span>
+        <target id="w11"/>
+      </span>
+    </term>
+    <term id="t12" lemma="er" pos="PROPN" morphofeat="NNP">
+      <span>
+        <target id="w12"/>
+      </span>
+    </term>
+    <term id="t13" lemma="monday" pos="PROPN" morphofeat="NNP">
+      <span>
+        <target id="w13"/>
+      </span>
+    </term>
+    <term id="t14" lemma="afternoon" pos="NOUN" morphofeat="NN">
+      <span>
+        <target id="w14"/>
+      </span>
+    </term>
+  </terms>
+  <entities>
+    <entity id="e0" type="ORG">
+      <references>
+        <span>
+          <target id="t0"/>
+          <target id="t1"/>
+        </span>
+      </references>
+    </entity>
+    <entity id="e1" type="ORG">
+      <references>
+        <span>
+          <target id="t11"/>
+          <target id="t12"/>
+        </span>
+      </references>
+    </entity>
+    <entity id="e2" type="DATE">
+      <references>
+        <span>
+          <target id="t13"/>
+        </span>
+      </references>
+    </entity>
+    <entity id="e3" type="TIME">
+      <references>
+        <span>
+          <target id="t14"/>
+        </span>
+      </references>
+    </entity>
+  </entities>
+  <deps>
+    <dep from="t1" to="t0" rfunc="compound"/>
+    <dep from="t2" to="t1" rfunc="compound"/>
+    <dep from="t6" to="t2" rfunc="nsubj"/>
+    <dep from="t2" to="t3" rfunc="punct"/>
+    <dep from="t5" to="t4" rfunc="compound"/>
+    <dep from="t6" to="t5" rfunc="nsubj"/>
+    <dep from="t9" to="t7" rfunc="amod"/>
+    <dep from="t6" to="t9" rfunc="dobj"/>
+    <dep from="t9" to="t8" rfunc="punct"/>
+    <dep from="t6" to="t10" rfunc="prep"/>
+    <dep from="t14" to="t11" rfunc="det"/>
+    <dep from="t10" to="t14" rfunc="pobj"/>
+    <dep from="t14" to="t12" rfunc="compound"/>
+    <dep from="t14" to="t13" rfunc="compound"/>
+  </deps>
+  <chunks>
+    <chunk id="c0" head="t2" phrase="NP">
+      <span>
+        <target id="t0"/>
+        <target id="t1"/>
+        <target id="t2"/>
+      </span>
+    </chunk>
+    <chunk id="c1" head="t5" phrase="NP">
+      <span>
+        <target id="t4"/>
+        <target id="t5"/>
+      </span>
+    </chunk>
+    <chunk id="c2" head="t10" phrase="PP">
+      <span>
+        <target id="t10"/>
+        <target id="t11"/>
+        <target id="t12"/>
+        <target id="t13"/>
+        <target id="t14"/>
+      </span>
+    </chunk>
+    <chunk id="c3" head="t14" phrase="NP">
+      <span>
+        <target id="t11"/>
+        <target id="t12"/>
+        <target id="t13"/>
+        <target id="t14"/>
+      </span>
+    </chunk>
+  </chunks>
+</NAF>

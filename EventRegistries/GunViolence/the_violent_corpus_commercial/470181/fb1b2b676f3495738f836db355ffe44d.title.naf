@@ -1,0 +1,94 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<NAF>
+  <nafHeader>
+    <linguisticProcessors layer="text">
+      <lp name="SpaCy" timestamp="2017-02-01T13:07:59UTC"/>
+    </linguisticProcessors>
+    <linguisticProcessors layer="terms">
+      <lp name="SpaCy" timestamp="2017-02-01T13:07:59UTC"/>
+    </linguisticProcessors>
+  </nafHeader>
+  <text>
+    <wf sent="1" id="w0" length="7" offset="0">UPDATE|</wf>
+    <wf sent="1" id="w1" length="9" offset="8">Neighbors</wf>
+    <wf sent="1" id="w2" length="3" offset="18">say</wf>
+    <wf sent="1" id="w3" length="10" offset="22">accidental</wf>
+    <wf sent="1" id="w4" length="8" offset="33">shooting</wf>
+    <wf sent="1" id="w5" length="5" offset="42">could</wf>
+    <wf sent="1" id="w6" length="4" offset="48">have</wf>
+    <wf sent="1" id="w7" length="4" offset="53">been</wf>
+    <wf sent="1" id="w8" length="9" offset="58">prevented</wf>
+  </text>
+  <terms>
+    <term id="t0" lemma="update|" pos="ADJ" morphofeat="JJ">
+      <span>
+        <target id="w0"/>
+      </span>
+    </term>
+    <term id="t1" lemma="neighbor" pos="NOUN" morphofeat="NNS">
+      <span>
+        <target id="w1"/>
+      </span>
+    </term>
+    <term id="t2" lemma="say" pos="VERB" morphofeat="VBP">
+      <span>
+        <target id="w2"/>
+      </span>
+    </term>
+    <term id="t3" lemma="accidental" pos="ADJ" morphofeat="JJ">
+      <span>
+        <target id="w3"/>
+      </span>
+    </term>
+    <term id="t4" lemma="shooting" pos="NOUN" morphofeat="NN">
+      <span>
+        <target id="w4"/>
+      </span>
+    </term>
+    <term id="t5" lemma="could" pos="VERB" morphofeat="MD">
+      <span>
+        <target id="w5"/>
+      </span>
+    </term>
+    <term id="t6" lemma="have" pos="VERB" morphofeat="VB">
+      <span>
+        <target id="w6"/>
+      </span>
+    </term>
+    <term id="t7" lemma="be" pos="VERB" morphofeat="VBN">
+      <span>
+        <target id="w7"/>
+      </span>
+    </term>
+    <term id="t8" lemma="prevent" pos="VERB" morphofeat="VBN">
+      <span>
+        <target id="w8"/>
+      </span>
+    </term>
+  </terms>
+  <entities/>
+  <deps>
+    <dep from="t1" to="t0" rfunc="amod"/>
+    <dep from="t2" to="t1" rfunc="nsubj"/>
+    <dep from="t4" to="t3" rfunc="amod"/>
+    <dep from="t8" to="t4" rfunc="nsubj"/>
+    <dep from="t2" to="t8" rfunc="ccomp"/>
+    <dep from="t8" to="t5" rfunc="aux"/>
+    <dep from="t8" to="t6" rfunc="aux"/>
+    <dep from="t8" to="t7" rfunc="auxpass"/>
+  </deps>
+  <chunks>
+    <chunk id="c0" head="t1" phrase="NP">
+      <span>
+        <target id="t0"/>
+        <target id="t1"/>
+      </span>
+    </chunk>
+    <chunk id="c1" head="t4" phrase="NP">
+      <span>
+        <target id="t3"/>
+        <target id="t4"/>
+      </span>
+    </chunk>
+  </chunks>
+</NAF>
