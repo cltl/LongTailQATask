@@ -23,6 +23,16 @@ def get_cached_dct_gvdb(url):
     else:
         return None
 
+def get_archive_uri(original_url):
+    if not original_url:
+        return None
+    if not utils.is_archive_uri(original_url):
+        url=utils.generate_archive_uri(original_url)
+        return url
+    else:
+        return original_url
+    
+
 def website_extraction(original_url, max_sec=10, debug=False):
     """
     attempt to obtain:
@@ -42,33 +52,24 @@ def website_extraction(original_url, max_sec=10, debug=False):
     4. [slightly less reliable] 'published_time'
     5. [slightly slightly less reliable] 'date'
     """
-    if not original_url:
-        return classes.NewsItem(
-	    title='',
-	    content='',
-	    dct=None,
-            id=None,
-            uri=''
-        )
     global no_archive_version
     global no_date_articles
     global extraction_error
-    global all_good
+    global all_good 
 
-    if not utils.is_archive_uri(original_url):
-        url=utils.generate_archive_uri(original_url)
-        if not url:
-            utils.log_no_archive(original_url)
-            no_archive_version+=1
-            return classes.NewsItem(
-                    title='',
-                    content='',
-                    dct=None,
-                    id=None,
-                    uri=''
-                )
-    else:
-        url=original_url
+    url=get_archive_uri(original_url)
+
+    if not url:
+        utils.log_no_archive(original_url)
+        no_archive_version+=1
+        return classes.NewsItem(
+            title='',
+            content='',
+            dct=None,
+            id=None,
+            uri=''
+        )
+
     language='en'
     a=Article(url, language)
     a.download()
