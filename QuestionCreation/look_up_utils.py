@@ -1,7 +1,6 @@
 import itertools
 import pandas
 from collections import defaultdict
-from nameparser import HumanName
 from datetime import datetime
 
 
@@ -75,18 +74,25 @@ def update_sf_m_dict_with_participant(row, part_obj, sf_dict, m_dict):
         sf_dict[gran_level] = ''
         m_dict[gran_level] = ''
 
-    full_name = part_obj['Name']
+    full_name = part_obj['Name'].strip()
+    
     if full_name:
-        name_obj = HumanName(full_name)
+        
+        # filter out all names with three or more components
+        name_parts = full_name.strip().split()
+        if len(name_parts) == 2:
+            first, last = name_parts
+            parts_gran_levels = [('first', first),
+                                 ('last', last),
+                                 ('full_name', full_name)]
+           
+            for gran_level, value in parts_gran_levels:
 
-        for gran_level in parts_gran_levels:
-            value = getattr(name_obj, gran_level)
-
-            sf_dict[gran_level] = value
-            m_dict[gran_level] = (incident_uri, value)
+                sf_dict[gran_level] = value
+                m_dict[gran_level] = (incident_uri, value)
 
 
-def create_look_up(df):
+def create_look_up(df, discard_ambiguous_names=True):
     """
     create look_up for:
     1. location: state | city | address
@@ -95,6 +101,8 @@ def create_look_up(df):
     4. combination of participant, location, and time
 
     :param df: dataframe containing possibly frames from Gun Violence | FireRescue
+    :param bool discard_ambiguous_names: if True, full names that occur in multiple incidents
+    will be ignored
 
     :rtype: tuple
     :return: (look_up, mapping parameters2incident uris)
@@ -109,6 +117,15 @@ def create_look_up(df):
 
     parameters2incident_uris = dict()
     look_up = dict()
+
+    if discard_ambiguous_names:
+        participant2freq = defaultdict(int)
+        for index, row in df.iterrows():
+            for part_obj in row['participants']:
+                if 'Name' in part_obj:
+                    name = part_obj['Name']
+                    if name:
+                        participant2freq[name] += 1
 
     for index, row in df.iterrows():
 
@@ -153,6 +170,13 @@ def create_look_up(df):
                     else:  # hence participant in categories
                         for part_obj in row['participants']:
                             if 'Name' in part_obj:
+
+                                if discard_ambiguous_names:
+                                    if all([part_obj['Name'],
+                                            participant2freq[part_obj['Name']] >= 2
+                                            ]):
+                                        continue
+
                                 # update sf_dict m_dict with participant info
                                 update_sf_m_dict_with_participant(row, part_obj, sf_dict, m_dict)
 
