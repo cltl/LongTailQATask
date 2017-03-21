@@ -13,6 +13,7 @@ import json
 from newspaper import Article
 from dateutil import parser
 from collections import Counter
+import time
 
 import utils
 import classes
