@@ -54,6 +54,7 @@ class Question:
                  granularity,
                  sf,
                  meanings,
+                 gold_loc_meaning,
                  answer,
                  oa_info,
                  answer_df,
@@ -65,6 +66,7 @@ class Question:
         self.granularity = granularity
         self.sf = sf
         self.meanings = meanings
+        self.gold_loc_meaning = gold_loc_meaning
         self.answer = answer
         self.oa_info = oa_info
         self.answer_df = answer_df
@@ -85,22 +87,27 @@ class Question:
         return 'location' in self.confusion_factors
 
     @property
+    def num_both_sf_overlap(self):
+        return len(self.meanings)
+
+    @property
     def question(self):
         time_chunk = ''
         location_chunk = ''
         participant_chunk = ''
+        event_type = 'killing AND injuring'
 
         for index, (confusion_factor, a_sf) in enumerate(zip(self.confusion_factors,
                                                              self.sf)):
             if confusion_factor == 'time':
-                time_chunk = 'in %s ' % self.sf[index]
+                time_chunk = 'in %s (%s) ' % (self.sf[index], self.granularity[index])
             elif confusion_factor == 'location':
-                location_chunk = 'in %s ' % self.sf[index]
+                location_chunk = 'in %s (%s) ' % (self.gold_loc_meaning, self.granularity[index])
             elif confusion_factor == 'participant':
-                participant_chunk = 'that involve %s ' % self.sf[index]
+                participant_chunk = 'that involve the name %s (%s) ' % (self.sf[index], self.granularity[index])
 
-        the_question = 'How many events happened {time_chunk}{location_chunk}{participant_chunk}?'.format_map(locals())
-        return the_question
+        the_question = 'How many {event_type} events happened {time_chunk}{location_chunk}{participant_chunk}?'.format_map(locals())
+        return the_question.strip()
 
     @property
     def c2s_ratio(self):
@@ -128,13 +135,13 @@ class Question:
         else:
             return 0
 
-    @property
-    def a_avg_date_spread(self):
-        return sources_date_spread(self.answer_incident_uris)
+    #@property
+    #def a_avg_date_spread(self):
+    #    return sources_date_spread(self.answer_incident_uris)
 
-    @property
-    def c_avg_date_spread(self):
-        return sources_date_spread(self.confusion_incident_uris)
+    #@property
+    #def c_avg_date_spread(self):
+    #    return sources_date_spread(self.confusion_incident_uris)
 
     def oa(self, confusion_factor):
         try:
