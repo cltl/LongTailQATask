@@ -1,45 +1,41 @@
-import json
 import metrics
-from datetime import datetime
-from statistics import mean
-from glob import glob
+import datetime
 
-
-def sources_date_spread(set_of_uris):
-    """
-
-    :param set_of_uris:
-    :return:
-    """
-    date_spreads = []
-    for incident_uri in set_of_uris:
-        dates = set()
-        path = '../EventRegistries/GunViolence/the_violent_corpus/%s/*.json' % incident_uri
-        for json_file in glob(path):
-            document = json.load(open(json_file))
-            try:
-                dates.add(datetime.strptime(document['dct'], '%a, %d %b %Y %H:%M:%S GMT'))
-            except ValueError:  # NODATE documents
-                pass
-        date_spreads.append(metrics.get_dct_spread(dates))
-
-    mean_date_spreads = -1
-    if date_spreads:
-        mean_date_spreads = mean(date_spreads)
-
-    return mean_date_spreads
 
 def get_sources(dataframe):
     """
+    extract sources
 
-    :param dataframe:
-    :return:
+
+    :param pandas.core.frame.DataFrame dataframe:
+
+    :rtype: set
+    :return: set of archive.org links
     """
     sources = set()
     for index, row in dataframe.iterrows():
-        sources.add(row['source_url'])
-        sources.update(row['incident_sources'])
+        sources.update(row['incident_sources'].keys())
     return sources
+
+def get_dcts(dataframe):
+    """
+    set of datetime objects
+
+    :param pandas.core.frame.DataFrame dataframe:
+
+    :rtype: list
+    :return: list of datetime.date instances
+    """
+    dcts = []
+    for index, row in dataframe.iterrows():
+        for date in row['incident_sources'].values():
+            if type(date) == datetime.date:
+                dcts.append(date)
+
+    dcts = [datetime.datetime(d.year, d.month, d.day)
+            for d in dcts]
+
+    return dcts
 
 
 class Question:
@@ -135,13 +131,15 @@ class Question:
         else:
             return 0
 
-    #@property
-    #def a_avg_date_spread(self):
-    #    return sources_date_spread(self.answer_incident_uris)
+    @property
+    def a_avg_date_spread(self):
+        sources_dcts = get_dcts(self.answer_df)
+        return metrics.get_dct_spread(sources_dcts)
 
-    #@property
-    #def c_avg_date_spread(self):
-    #    return sources_date_spread(self.confusion_incident_uris)
+    @property
+    def c_avg_date_spread(self):
+        confusion_dcts = get_dcts(self.confusion_df)
+        return metrics.get_dct_spread(confusion_dcts)
 
     def oa(self, confusion_factor):
         try:
@@ -160,8 +158,7 @@ class Question:
     def time_oa(self):
         return self.oa('time')
 
-    def debug(self):
-        for prop in dir(Question):
-            if isinstance(getattr(Question, prop), property):
-                getattr(self, prop)
+    def set_all_attributes(self):
+        vars(self)
+
 

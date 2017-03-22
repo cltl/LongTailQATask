@@ -82,7 +82,8 @@ def lookup_and_merge(look_up,
                      min_num_answer_incidents,
                      df,
                      debug=False,
-                     inspect_one=False):
+                     inspect_one=False,
+                     set_attr_values=False):
     """
     create Question instances 
     
@@ -94,6 +95,7 @@ def lookup_and_merge(look_up,
     :param pandas.core.frame.DataFrame df: gunviolence dataframes
     :param bool debug: set all class properties to debug
     :param bool inspect_one: if True, the first question will be printed to stdout
+    :param bool set_attr_values: if True, all property values will be computed
     
     :rtype: set
     :return set of Question class instances (each representing a question)
@@ -156,6 +158,9 @@ def lookup_and_merge(look_up,
 
                     if debug:
                         q_instance.debug()
+
+                    if set_attr_values:
+                        vars(q_instance)
 
                     q_id += 1
 
