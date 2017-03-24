@@ -124,7 +124,7 @@ def website_extraction(original_url, url, max_sec=10, debug=False):
     dct_newspaper=None
     dct_cached_api=None
     dct_cached_gvdb=None
-    dct_newspaper=a.publish_date or a.meta_data['date'] or a.meta_data['published_time']
+    #dct_newspaper=a.publish_date or a.meta_data['date'] or a.meta_data['published_time']
     if a.publish_date:
         if validate_date(a.publish_date.date()):
             dct_newspaper=a.publish_date.date()
@@ -193,7 +193,8 @@ def get_gunviolence_page(url):
     headers = ['incident_uri',
                'date', 'state', 'city_or_county',
                'address', 'num_killed', 'num_injured',
-               'incident_url', 'incident_sources',
+               'incident_url', 'incident_sources', 
+               'original_sources', 'hashed_ids',
                'participants', 'gvdb_annotation']
     list_of_reports = []
 
@@ -255,6 +256,7 @@ def get_gunviolence_page(url):
         
         # extract sources data
         ready_sources={}
+        hashes={}
         annotations={}
         for src in sources:
             archive_src=get_archive_uri(src)
@@ -263,6 +265,7 @@ def get_gunviolence_page(url):
                 if article and article.id and article.dct:
                     target_file="%s%s.json" % (my_dir, article.id)
                     article.toJSON(target_file)
+                    hashes[archive_src]=article.id
                     print("Article %s written!" % article.uri)
                     ready_sources[archive_src]=article.dct
                     gvdb_ann=get_gvdb_annotation(src)
@@ -276,10 +279,13 @@ def get_gunviolence_page(url):
                                date, state, city_or_county,
                                address, num_killed, num_injured,
                                incident_url, ready_sources, 
+                               sources, hashes,
                                participants, annotations]
             list_of_reports.append(incident_report)
     
     df = pandas.DataFrame(list_of_reports, columns=headers)
+    # Remove duplicates
+    df=df.drop_duplicates(subset='incident_uri')
     return df
 
 
