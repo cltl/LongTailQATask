@@ -258,8 +258,10 @@ def get_gunviolence_page(url):
         ready_sources={}
         hashes={}
         annotations={}
+        sources_to_archive={}
         for src in sources:
             archive_src=get_archive_uri(src)
+            sources_to_archive[src]=archive_src
             if archive_src:
                 article=website_extraction(src, archive_src)
                 if article and article.id and article.dct:
@@ -279,7 +281,7 @@ def get_gunviolence_page(url):
                                date, state, city_or_county,
                                address, num_killed, num_injured,
                                incident_url, ready_sources, 
-                               sources, hashes,
+                               sources_to_archive, hashes,
                                participants, annotations]
             list_of_reports.append(incident_report)
     
