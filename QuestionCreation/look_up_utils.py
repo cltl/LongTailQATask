@@ -92,7 +92,9 @@ def update_sf_m_dict_with_participant(row, part_obj, sf_dict, m_dict):
                 m_dict[gran_level] = (incident_uri, value)
 
 
-def create_look_up(df, discard_ambiguous_names=True):
+def create_look_up(df,
+                   discard_ambiguous_names=True,
+                   allowed_incident_years={2013, 2014, 2015, 2016, 2017}):
     """
     create look_up for:
     1. location: state | city | address
@@ -103,6 +105,7 @@ def create_look_up(df, discard_ambiguous_names=True):
     :param df: dataframe containing possibly frames from Gun Violence | FireRescue
     :param bool discard_ambiguous_names: if True, full names that occur in multiple incidents
     will be ignored
+    :param set allowed_incident_years: the incident allowed in the question creation
 
     :rtype: tuple
     :return: (look_up, mapping parameters2incident uris)
@@ -130,6 +133,14 @@ def create_look_up(df, discard_ambiguous_names=True):
     for index, row in df.iterrows():
 
         incident_uri = row['incident_uri']
+
+        incident_date = datetime.strptime(row['date'], '%B %d, %Y')
+        incident_year = incident_date.year
+
+        if incident_year not in allowed_incident_years:
+            continue
+
+
         sf_dict, m_dict = get_sf_m_dict(row)
 
         # for number of combinations
