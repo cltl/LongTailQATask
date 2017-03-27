@@ -17,7 +17,7 @@ import time
 
 import utils
 import classes
-
+import location_utils
 
 # In[2]:
 
@@ -191,7 +191,7 @@ def get_gunviolence_page(url):
     doc = etree.HTML(call.text)
     
     headers = ['incident_uri',
-               'date', 'state', 'city_or_county',
+               'date', 'locations', 'state', 'city_or_county',
                'address', 'num_killed', 'num_injured',
                'incident_url', 'incident_sources', 
                'original_sources', 'hashed_ids',
@@ -277,8 +277,13 @@ def get_gunviolence_page(url):
                     errors.write(src + '\n')
         
         if len(ready_sources):
+            try:
+                location_uris=location_utils.geocoder_address_to_links(address + ', ' + city_or_county + ', ' + state)
+            except:
+                location_uris={'city': None, 'state': None}
             incident_report = [incident_uri,
-                               date, state, city_or_county,
+                               date, location_uris,
+                               state, city_or_county,
                                address, num_killed, num_injured,
                                incident_url, ready_sources, 
                                sources_to_archive, hashes,
@@ -358,7 +363,7 @@ urls_and_paths = [('frames/children_killed', 'http://www.gunviolencearchive.org/
                   ('frames/mass_shootings', 'http://www.gunviolencearchive.org/mass-shooting')
                   ]
 
-#urls_and_paths = [('frames/mass_shootings_2015', 'http://www.gunviolencearchive.org/reports/mass-shootings/2015')]
+urls_and_paths = [('frames/mass_shootings_2015', 'http://www.gunviolencearchive.org/reports/mass-shootings/2015')]
 for output_path, base_url in urls_and_paths:
     print()
     print('starting', output_path, datetime.now())
