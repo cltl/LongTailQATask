@@ -158,7 +158,82 @@ class Question:
     def time_oa(self):
         return self.oa('time')
 
+    @property
+    def gvdb_annotations(self):
+        gvdb_objects = set()
+        for index, row in self.answer_df.iterrows():
+            if row['gvdb_annotation']:
+                for archive_org_link, gvdb_annotation in row['gvdb_annotation'].items():
+                    gvdb_instance = GVDB(gvdb_annotation)
+                    gvdb_objects.add(gvdb_instance)
+
+        return gvdb_objects
+
+    @property
+    def num_gvdb_part_annotations(self):
+        total = 0
+        for gvdb_instance in self.gvdb_annotations:
+            total += gvdb_instance.num_victim_annotations
+            total += gvdb_instance.num_shooter_annotations
+
+        return total
+
     def set_all_attributes(self):
         vars(self)
 
 
+class GVDB:
+    """
+    compute stats about gun violence database annotation
+    """
+
+    def __init__(self, gvdb_info):
+        self.gvdb_info = gvdb_info
+
+    @property
+    def city(self):
+        value = self.gvdb_info['date-and-time']['city']['value']
+        city = None
+        if value:
+            city = value
+
+        return city
+
+    @property
+    def date(self):
+        value = self.gvdb_info['date-and-time']['date']
+
+        date = None
+        if value:
+            date = datetime.datetime.strptime(value, '%Y-%m-%d')
+
+        return date
+
+    @property
+    def state(self):
+        value = self.gvdb_info['date-and-time']['state']
+
+        state = None
+        if value:
+            state = value
+
+        return state
+
+    def num_part_annotations(self, key):
+        num_annotations = 0
+        for victim_annotation in self.gvdb_info[key]:
+
+            for category, annotation in victim_annotation.items():
+                if type(annotation) == dict:
+                    if annotation['startIndex'] != -1:
+                        num_annotations += 1
+
+        return num_annotations
+
+    @property
+    def num_victim_annotations(self):
+        return self.num_part_annotations('victim-section')
+
+    @property
+    def num_shooter_annotations(self):
+        return self.num_part_annotations('shooter-section')
