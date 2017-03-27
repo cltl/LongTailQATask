@@ -277,10 +277,11 @@ def get_gunviolence_page(url):
                     errors.write(src + '\n')
         
         if len(ready_sources):
-            try:
-                location_uris=location_utils.geocoder_address_to_links(address + ', ' + city_or_county + ', ' + state)
-            except:
-                location_uris={'city': None, 'state': None}
+            #try:
+            location_uris=location_utils.geocoder_address_to_links(address + ', ' + city_or_county + ', ' + state)
+            #except:
+            #    print('error')
+            #    location_uris={'city': None, 'state': None}
             incident_report = [incident_uri,
                                date, location_uris,
                                state, city_or_county,
