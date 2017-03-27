@@ -2,6 +2,9 @@ import itertools
 import pandas
 from collections import defaultdict
 from datetime import datetime
+import classes
+import hashlib
+import pickle
 
 
 def get_sf_m_dict(row):
@@ -66,6 +69,9 @@ def update_sf_m_dict_with_participant(row, part_obj, sf_dict, m_dict):
     :param dict part_obj: attributes of a victim/suspect from GunViolence database
     :param dict sf_dict: see output get_sf_m_dict
     :param m_dict m_dict: get_sf_m_dict
+    
+    :rtype: tuple
+    :return: first, last, full_name
     """
     incident_uri = row['incident_uri']
     parts_gran_levels = ['first', 'last', 'full_name']
@@ -75,7 +81,8 @@ def update_sf_m_dict_with_participant(row, part_obj, sf_dict, m_dict):
         m_dict[gran_level] = ''
 
     full_name = part_obj['Name'].strip()
-    
+    first = ''
+    last = ''
     if full_name:
         
         # filter out all names with three or more components
@@ -91,10 +98,13 @@ def update_sf_m_dict_with_participant(row, part_obj, sf_dict, m_dict):
                 sf_dict[gran_level] = value
                 m_dict[gran_level] = (incident_uri, value)
 
+    return first, last, full_name
+
 
 def create_look_up(df,
                    discard_ambiguous_names=True,
-                   allowed_incident_years={2013, 2014, 2015, 2016, 2017}):
+                   allowed_incident_years={2013, 2014, 2015, 2016, 2017},
+                   check_name_in_article=True):
     """
     create look_up for:
     1. location: state | city | address
@@ -106,6 +116,8 @@ def create_look_up(df,
     :param bool discard_ambiguous_names: if True, full names that occur in multiple incidents
     will be ignored
     :param set allowed_incident_years: the incident allowed in the question creation
+    :param bool check_name_in_article: if True, it will be checked if the full name occur at least once
+    on one of the answer documents
 
     :rtype: tuple
     :return: (look_up, mapping parameters2incident uris)
@@ -130,7 +142,24 @@ def create_look_up(df,
                     if name:
                         participant2freq[name] += 1
 
+    news_article_template =  '../EventRegistries/GunViolence/the_violent_corpus/{incident_uri}/{the_hash}.json'
+
     for index, row in df.iterrows():
+
+        # load news sources
+        news_article_objs = set()
+        for incident_url in row['incident_sources']:
+            hash_obj = hashlib.md5(incident_url.encode())
+            the_hash = hash_obj.hexdigest()
+            incident_uri = row['incident_uri']
+
+            path = news_article_template.format_map(locals())
+            try:
+                with open(path, 'rb') as infile:
+                    news_article_obj = pickle.load(infile)
+                    news_article_objs.add(news_article_obj)
+            except FileNotFoundError:
+                continue
 
         incident_uri = row['incident_uri']
 
@@ -189,12 +218,22 @@ def create_look_up(df,
                                         continue
 
                                 # update sf_dict m_dict with participant info
-                                update_sf_m_dict_with_participant(row, part_obj, sf_dict, m_dict)
+                                first, last, full = update_sf_m_dict_with_participant(row, part_obj, sf_dict, m_dict)
 
                                 # SF_KEY M_KEY + UPDATE DICTIONARY
                                 sf_key = tuple([sf_dict[gran_level] for gran_level in gran_comb])
                                 if any([item in {'', 'N/A'} for item in sf_key]):
                                     continue
+
+                                # check if name actually occurs in documents
+                                if check_name_in_article:
+                                    match = False
+                                    for news_article_obj in news_article_objs:
+                                        if full in news_article_obj.content:
+                                            match = True
+
+                                    if not match:
+                                        continue
 
                                 if sf_key not in look_up[categories][gran_comb]:
                                     look_up[categories][gran_comb][sf_key] = defaultdict(set)

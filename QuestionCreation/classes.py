@@ -237,3 +237,19 @@ class GVDB:
     @property
     def num_shooter_annotations(self):
         return self.num_part_annotations('shooter-section')
+    
+    
+class NewsItem:
+
+    def __init__(self, title='',
+                 content='',
+                 dct='', id=None,
+                 uri=''):
+        self.title=title
+        self.content=content
+        self.dct=dct
+        self.id=id
+        self.uri=uri
+
+    def toJSON(self, targetFile):
+        pickle.dump(self, open(targetFile, 'wb'))
