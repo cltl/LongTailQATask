@@ -27,6 +27,23 @@ def compose_query(coordinates):
     """ % (min_long, max_long, min_lat, max_lat)
     return query
 
+def sparql_select_best_link(query, city_label):
+    sparql.setQuery(query)
+    sparql.setReturnFormat(JSON)
+    results = sparql.query().convert()
+   
+    best_state=None
+    best_city=None
+    best_score=-0.1
+
+    for result in results["results"]["bindings"]:
+        ss=Levenshtein.ratio(city_label, result['label']['value'])
+        if ss>best_score:
+            best_city=result['a']['value']
+            best_state=result['state']['value']
+            best_score=ss
+    return best_city, best_state
+
 def geocoder_address_to_links(address_string):
     address_geo = google(address_string)
     city_string = address_geo.city + ', ' + address_geo.state + ', ' + address_geo.country
