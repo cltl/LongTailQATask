@@ -7,7 +7,6 @@ addresses_to_city=pickle.load(open(filename, 'rb'))
 print(len(addresses_to_city)) # 3449 unique addresses
 
 for address, city in addresses_to_city.items():
-    break
     if city=="":
         try:
             address_geo = google(address)
