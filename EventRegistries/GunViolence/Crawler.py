@@ -17,13 +17,30 @@ import time
 
 import utils
 import classes
-import location_utils
+#import location_utils
 
 # In[2]:
 
 # File mappings
 DIRECTORY='GVDB/gvdb-aggregated-db'
 article_info="%s/Articles-with-extracted-info.tsv" % DIRECTORY
+
+# Caches for locations
+address_to_city=pickle.load(open('locations/city_addresses.p', 'rb'))
+address_to_county=pickle.load(open('locations/county_addresses.p', 'rb'))
+city_to_uri=pickle.load(open('locations/city_uris.p', 'rb'))
+county_to_uri=pickle.load(open('locations/county_uris.p', 'rb'))
+
+
+def address_string_to_links(address_string):
+    if address_string in address_to_city:
+        city_string=address_to_city[address_string]
+        return city_to_uri[city_string]
+    elif address_string in address_to_county:
+        county_string=address_to_county[address_string]
+        return county_to_uri[county_string]
+    else:
+        return {}
 
 def get_gvdb_sources():
     with open(article_info, 'r') as csvfile:
@@ -277,19 +294,16 @@ def get_gunviolence_page(url):
                     errors.write(src + '\n')
         
         if len(ready_sources):
-            try:
-                location_uris=location_utils.geocoder_address_to_links(address + ', ' + city_or_county + ', ' + state)
-            except:
-                print('error')
-                location_uris={'city': None, 'state': None}
-            incident_report = [incident_uri,
+            location_uris=address_string_to_links(address + ', ' + city_or_county + ', ' + state)
+            if len(location_uris) and location_uris['state']:
+                incident_report = [incident_uri,
                                date, location_uris,
                                state, city_or_county,
                                address, num_killed, num_injured,
                                incident_url, ready_sources, 
                                sources_to_archive, hashes,
                                participants, annotations]
-            list_of_reports.append(incident_report)
+                list_of_reports.append(incident_report)
     
     df = pandas.DataFrame(list_of_reports, columns=headers)
     # Remove duplicates
