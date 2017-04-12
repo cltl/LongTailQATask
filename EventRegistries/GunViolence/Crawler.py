@@ -293,17 +293,18 @@ def get_gunviolence_page(url):
                 else:
                     errors.write(src + '\n')
         
-        if len(ready_sources):
-            location_uris=address_string_to_links(address + ', ' + city_or_county + ', ' + state)
-            if len(location_uris) and location_uris['state']:
-                incident_report = [incident_uri,
-                               date, location_uris,
-                               state, city_or_county,
-                               address, num_killed, num_injured,
-                               incident_url, ready_sources, 
-                               sources_to_archive, hashes,
-                               participants, annotations]
-                list_of_reports.append(incident_report)
+        #if len(ready_sources):
+        location_uris=address_string_to_links(address + ', ' + city_or_county + ', ' + state)
+        if not len(location_uris) or not location_uris['state']:
+            location_uris=""
+        incident_report = [incident_uri,
+	    date, location_uris,
+            state, city_or_county,
+            address, num_killed, num_injured,
+            incident_url, ready_sources, 
+            sources_to_archive, hashes,
+            participants, annotations]
+        list_of_reports.append(incident_report)
     
     df = pandas.DataFrame(list_of_reports, columns=headers)
     # Remove duplicates
@@ -378,7 +379,7 @@ urls_and_paths = [('frames/children_killed', 'http://www.gunviolencearchive.org/
                   ('frames/mass_shootings', 'http://www.gunviolencearchive.org/mass-shooting')
                   ]
 
-#urls_and_paths = [('frames/mass_shootings_2015', 'http://www.gunviolencearchive.org/reports/mass-shootings/2015')]
+urls_and_paths = [('frames/mass_shootings_2015', 'http://www.gunviolencearchive.org/reports/mass-shootings/2015')]
 for output_path, base_url in urls_and_paths:
     print()
     print('starting', output_path, datetime.now())
