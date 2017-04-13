@@ -359,10 +359,11 @@ dates_gvdb=pickle.load(open(GVDB_DATES_CACHE, 'rb'))
 
 utils.reset_files()
 
+big_frame_path="frames/all"
 
 # In[12]:
 
-urls_and_paths = [('frames/children_killed', 'http://www.gunviolencearchive.org/children-killed'),
+all_urls_and_paths = [('frames/children_killed', 'http://www.gunviolencearchive.org/children-killed'),
                   ('frames/children_injured', 'http://www.gunviolencearchive.org/children-injured'),
                   ('frames/teens_killed', 'http://www.gunviolencearchive.org/teens-killed'),
                   ('frames/teens_injured', 'http://www.gunviolencearchive.org/teens-injured'),
@@ -379,7 +380,12 @@ urls_and_paths = [('frames/children_killed', 'http://www.gunviolencearchive.org/
                   ('frames/mass_shootings', 'http://www.gunviolencearchive.org/mass-shooting')
                   ]
 
+urls_and_paths=all_urls_and_paths
+
 #urls_and_paths = [('frames/mass_shootings_2015', 'http://www.gunviolencearchive.org/reports/mass-shootings/2015')]
+
+#urls_and_paths=[]
+
 for output_path, base_url in urls_and_paths:
     print()
     print('starting', output_path, datetime.now())
@@ -388,6 +394,19 @@ for output_path, base_url in urls_and_paths:
         pickle.dump(df, outfile)
     print('done', output_path, datetime.now())
 
+
+frames = []
+for df_path, url in all_urls_and_paths:
+    with open(df_path, 'rb') as infile:
+        df = pickle.load(infile)
+        frames.append(df)
+df = pandas.concat(frames)
+
+df=df.drop_duplicates(subset='incident_uri')
+                  
+with open(big_frame_path, 'wb') as outfile:
+    pickle.dump(df, outfile)
+print('done', big_frame_path, datetime.now())
 
 # In[13]:
 
