@@ -379,7 +379,7 @@ urls_and_paths = [('frames/children_killed', 'http://www.gunviolencearchive.org/
                   ('frames/mass_shootings', 'http://www.gunviolencearchive.org/mass-shooting')
                   ]
 
-urls_and_paths = [('frames/mass_shootings_2015', 'http://www.gunviolencearchive.org/reports/mass-shootings/2015')]
+#urls_and_paths = [('frames/mass_shootings_2015', 'http://www.gunviolencearchive.org/reports/mass-shootings/2015')]
 for output_path, base_url in urls_and_paths:
     print()
     print('starting', output_path, datetime.now())
