@@ -121,9 +121,17 @@ class Question:
         return len(self.a_sources) / len(self.answer_incident_uris)
 
     @property
+    def num_a_sources(self):
+        return len(self.a_sources)
+    
+    @property
     def c_sources(self):
         return get_sources(self.confusion_df)
 
+    @property
+    def num_c_sources(self):
+        return len(self.c_sources)
+    
     @property
     def c_avg_num_sources(self):
         if self.confusion_incident_uris:
