@@ -17,10 +17,10 @@ The main script that crawls all frames from the GVA database, and all correspond
 
 Overview of the directories in the GVA folder:
 
-⋅⋅* Unordered sub-list
-⋅⋅* Unordered sub-list
-⋅⋅* Unordered sub-list
-⋅⋅* Unordered sub-list
+  * Unordered sub-list
+  * Unordered sub-list
+  * Unordered sub-list
+  * Unordered sub-list
 
 #### 1.2) FireRescue1
 
