@@ -2,7 +2,7 @@ from glob import glob
 import json
 import pickle
 
-iterable = glob('the_violent_corpus/**/*.json', recursive=True)
+iterable = glob('../the_violent_corpus/**/*.json', recursive=True)
 pickle_file='date_cache.p'
 pickle_data={}
 
