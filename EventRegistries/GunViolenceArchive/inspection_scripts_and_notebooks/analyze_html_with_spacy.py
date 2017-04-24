@@ -41,7 +41,7 @@ def json2spacy2naf(json_path):
                            encoding='utf-8')
 
 print('start', datetime.now())
-iterable = glob.glob('the_violent_corpus/**/*.json', recursive=True)
+iterable = glob.glob('../the_violent_corpus/**/*.json', recursive=True)
 pool = ThreadPool(5)
 results = pool.map(json2spacy2naf, iterable)
 print('end', len(results), datetime.now())

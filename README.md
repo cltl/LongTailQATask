@@ -13,7 +13,14 @@ As we describe in *Section 7* of the proposal, in our pilot we only use the GVA 
 
 #### 1.1) GunViolenceArchive (GVA)
 
-The main script that crawls all frames from the GVA database, and all corresponding articles from Archive.org is `Crawler.py`. This script also normalizes the incident locations to Wikipedia URIs and detects the DCT of a document.
+The main script that crawls all frames from the GVA database, and all corresponding articles from Archive.org is `Crawler.py`. This script also normalizes the incident locations to Wikipedia URIs and detects the DCT of a document. It uses two scripts as input: `utils.py` where many functions are implemented, and `classes.py` where we define a set of object-oriented classes.
+
+Overview of the directories in the GVA folder:
+
+⋅⋅* Unordered sub-list
+⋅⋅* Unordered sub-list
+⋅⋅* Unordered sub-list
+⋅⋅* Unordered sub-list
 
 #### 1.2) FireRescue1
 
