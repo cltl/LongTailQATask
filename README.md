@@ -31,6 +31,9 @@ The data is crawled with the Python Notebook file `Crawler.ipynb`, it is stored 
 
 ### 2) QuestionCreation
 
+The main question creation notebooks are `CreateQ.ipynb` and `Stats.ipynb`, which create questions and generate per-question statistics. These rely on the classes in `classes.py` and the utility scripts: `createq_utils.py`, `display_utils.py`, and `look_up_utils.py`.
+
+Other notable notebooks are `Participant.ipynb` and `Location check.ipynb`, which inspect the ambiguity that might occur with the participants and the locations in the data.
 
 ### Contact:
 
