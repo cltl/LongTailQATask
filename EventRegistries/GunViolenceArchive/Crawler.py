@@ -349,8 +349,8 @@ def paginate(base_url, debug=False):
 
 # In[11]:
 
-DATES_CACHE='date_cache.p'
-GVDB_DATES_CACHE='gvdb_date_cache.p'
+DATES_CACHE='cache_data/date_cache.p'
+GVDB_DATES_CACHE='cache_data/gvdb_date_cache.p'
 ERRORS_FILE="logs/errors.txt"
 errors=open(ERRORS_FILE, "a+")
 
