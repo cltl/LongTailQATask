@@ -17,13 +17,22 @@ The main script that crawls all frames from the GVA database, and all correspond
 
 Overview of the directories in the GVA folder:
 
-  * Unordered sub-list
-  * Unordered sub-list
-  * Unordered sub-list
-  * Unordered sub-list
+  * `frames/` contains the extracted structured data from the GVA website, stored in pandas Dataframes
+  * `the_violent_corpus/` contains all documents that are used in this task, crawled from archive.org
+  * `inspection_scripts_and_notebooks/` contains a set of scripts and Python notebooks that are primarily used to analyze various aspects of the data. Most importantly, `Stats.ipynb` generates stats (e.g. number of incidents per state) and `Verify_sources.ipynb` is used to verify that the incident information is found in an article.
+  * `archive/` contains scripts that try to automatically archive websites in archive.org
+  * `locations/` contains scripts that automatically link locations to wikipedia URIs
+  * `cache_data/` contains caches that are used to improve the data, e.g. with respect to document creation times
+  * `GVDB/` and `logs/` are not shown on github. The former deals with the annotations from the Gun Violence Database, while the latter contains various logs of the crawler.
 
 #### 1.2) FireRescue1
 
 The data is crawled with the Python Notebook file `Crawler.ipynb`, it is stored in `firerescue.pickle`, and we analyze it in `Inspect.ipynb`. 
 
 ### 2) QuestionCreation
+
+
+### Contact:
+
+Filip Ilievski (f.ilievski@vu.nl)
+Marten Postma (m.c.postma@vu.nl)
