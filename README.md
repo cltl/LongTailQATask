@@ -5,7 +5,7 @@ This repository contains the code for the pilot of the task **Counting Events an
 Following the conceptual division in the proposal text, the task implementation is divided into two parts: 
 
 1) The folder **EventRegistries** contains the data preparation scripts and data (described in *Section 4.1* of the proposal)
-2) The folder **QuestionCreation** creates questions based on the data in 1) and generates question stats (as described in *Section 5.3*)
+2) The folder **QuestionCreation** creates questions based on the data in 1. and generates question stats (as described in *Section 5.3* of our proposal)
 
 ### 1) EventRegistries
 
