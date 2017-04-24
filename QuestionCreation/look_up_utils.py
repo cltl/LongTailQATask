@@ -142,7 +142,7 @@ def create_look_up(df,
                     if name:
                         participant2freq[name] += 1
 
-    news_article_template =  '../EventRegistries/GunViolence/the_violent_corpus/{incident_uri}/{the_hash}.json'
+    news_article_template =  '../EventRegistries/GunViolenceArchive/the_violent_corpus/{incident_uri}/{the_hash}.json'
 
     for index, row in df.iterrows():
 
