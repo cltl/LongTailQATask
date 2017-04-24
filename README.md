@@ -9,12 +9,14 @@ Following the conceptual division in the proposal text, the task implementation 
 
 ### 1) EventRegistries
 
+As we describe in *Section 7* of the proposal, in our pilot we only use the GVA data to create questions. However, we have also crawled and inspected the data from the FireRescue1 database.
+
 #### 1.1) GunViolenceArchive (GVA)
 
-
+The main script that crawls all frames from the GVA database, and all corresponding articles from Archive.org is `Crawler.py`. This script also normalizes the incident locations to Wikipedia URIs and detects the DCT of a document.
 
 #### 1.2) FireRescue1
 
-The data is crawled with the Python Notebook file `Crawler.ipynb`, it is stored in `firerescue.pickle`, and we analyze it in `Inspect.ipynb`. As we describe in *Section 7* of the proposal, in our pilot we only use the GVA data to create questions.
+The data is crawled with the Python Notebook file `Crawler.ipynb`, it is stored in `firerescue.pickle`, and we analyze it in `Inspect.ipynb`. 
 
 ### 2) QuestionCreation
