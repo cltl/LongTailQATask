@@ -1,6 +1,12 @@
 import metrics
 import datetime
+import pickle
+import hashlib
+import spacy_to_naf
+from lxml import etree
+from spacy.en import English
 
+nlp = English()
 
 def get_sources(dataframe):
     """
@@ -36,6 +42,26 @@ def get_dcts(dataframe):
             for d in dcts]
 
     return dcts
+
+
+def text2conll(output_folder, doc_id, text):
+    """
+    use spacy to output text (tokenized) in conll
+
+    :param str output_folder: output folder
+    :param str doc_id: document identifier
+    """
+    doc = spacy_to_naf.text_to_NAF(text, nlp)
+
+    output_path = f'{output_folder}/{doc_id}.conll'
+
+    with open(output_path, 'w') as outfile:
+        for wf_el in doc.xpath('text/wf'):
+            sent_id = wf_el.get('sent')
+            token_id = wf_el.get('id')
+            text = wf_el.text
+            id_ = f'd{doc_id}.s{sent_id}.{token_id}'
+            outfile.write(id_ + '\t' + wf_el.text + '\n')
 
 
 class Question:
@@ -185,6 +211,33 @@ class Question:
             total += gvdb_instance.num_shooter_annotations
 
         return total
+
+    def to_conll(self, a_df):
+        """
+        given a pandas dataframe, convert articles to conll
+
+        :param pandas.core.frame.DataFrame a_df: 
+        """
+        news_article_template = '../EventRegistries/GunViolenceArchive/the_violent_corpus/{incident_uri}/{the_hash}.json'
+
+        for index, row in a_df.iterrows():
+
+            # load news sources
+            news_article_objs = set()
+            for incident_url in row['incident_sources']:
+                hash_obj = hashlib.md5(incident_url.encode())
+                the_hash = hash_obj.hexdigest()
+                incident_uri = row['incident_uri']
+
+                path = news_article_template.format_map(locals())
+                try:
+                    with open(path, 'rb') as infile:
+                        news_article_obj = pickle.load(infile)
+                        news_article_objs.add(news_article_obj)
+                        text2conll('trial', the_hash, news_article_obj.content)
+
+                except FileNotFoundError:
+                    continue
 
     def set_all_attributes(self):
         vars(self)
