@@ -6,7 +6,6 @@ echo "If there is any error in one of these steps, the script will exit."
 #variable names
 cwd=${PWD#*}
 
-python_version='3.6'
 vir_env_dir='long_tail_venv'
 ext_modules='external_modules.txt'
 
@@ -20,11 +19,8 @@ RETVAL=$?
 #check if python version is installed
 echo
 echo "CHECK 1: Checking python version"
-export succes="Succes: python$python_version is installed"
-export failure="Fail: please install python version $python_version"
-
-python$python_version -c "exit()"
-command_check
+python -c 'import sys ; assert sys.version_info.major == 3 and sys.version_info.minor >= 4, 'please install python 3.4 or 3.5 or 3.6 \(you have %s.%s\)' % \(sys.version_info.major, sys.version_info.minor\)'
+echo "Succes: correct version of python is installed"
 
 #check if pip is installed
 echo
