@@ -13,17 +13,17 @@ for fl in glob('%s*' % indir):
     goldlines.append('#begin document (%s); ' % fl)
     syslines.append('#begin document (%s); ' % fl)
     for line in f:
-        r=random.randint(1, 5000)
+        r=random.randint(1, 50000)
         sysfields=line.split('\t')
         sysfields[1]=sysfields[1].strip('\n')
         goldfields=list(sysfields)
-        if r<=30:
+        if r<=58:
             sysfields.append('(%d)' % r)
             goldfields.append('-')
         elif r<=60:
             sysfields.append('(%d)' % r)
             goldfields.append('(%d)' % r)
-        elif r<=90:
+        elif r<=62:
             sysfields.append('-')
             goldfields.append('(%d)' % r)
         else:
@@ -36,7 +36,7 @@ for fl in glob('%s*' % indir):
 #    cnt+=1
 #    if cnt==2:
 #        break
-with open('%s3.conll' % sysdir, 'w') as w:
+with open('%s5.conll' % sysdir, 'w') as w:
     w.write('\n'.join(syslines))
-with open('%s3.conll' % golddir, 'w') as w:
+with open('%s5.conll' % golddir, 'w') as w:
     w.write('\n'.join(goldlines))

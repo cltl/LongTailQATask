@@ -1,3 +1,4 @@
+#!/bin/sh
 
 SCORERDIR="reference-coreference-scorers"
 DATADIR="../Data"
@@ -29,3 +30,7 @@ do
 done
 
 echo "*** Mention-level evaluation done! ***"
+
+echo "*** Document-level evaluation ***"
+
+./evaluate_more.py $DATADIR
