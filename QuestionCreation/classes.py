@@ -5,6 +5,8 @@ import hashlib
 import spacy_to_naf
 from lxml import etree
 from spacy.en import English
+import json
+import os
 
 nlp = English()
 
@@ -44,24 +46,24 @@ def get_dcts(dataframe):
     return dcts
 
 
-def text2conll(output_folder, doc_id, text):
+def text2conll(output_path, doc_id, text):
     """
     use spacy to output text (tokenized) in conll
 
     :param str output_folder: output folder
     :param str doc_id: document identifier
+    :param str text: content (either title or context of news article)
     """
     doc = spacy_to_naf.text_to_NAF(text, nlp)
-
-    output_path = f'{output_folder}/{doc_id}.conll'
 
     with open(output_path, 'w') as outfile:
         for wf_el in doc.xpath('text/wf'):
             sent_id = wf_el.get('sent')
             token_id = wf_el.get('id')
-            text = wf_el.text
             id_ = f'd{doc_id}.s{sent_id}.{token_id}'
-            outfile.write(id_ + '\t' + wf_el.text + '\n')
+
+            info = [id_, wf_el.get('offset'), wf_el.get('length')]
+            outfile.write('\t'.join(info) + '\n')
 
 
 class Question:
@@ -212,32 +214,83 @@ class Question:
 
         return total
 
-    def to_conll(self, a_df):
+    def to_conll(self, a_df, output_folder, debug=False):
         """
         given a pandas dataframe, convert articles to conll
 
         :param pandas.core.frame.DataFrame a_df: 
+        :param str output_folder: the output folder
         """
         news_article_template = '../EventRegistries/GunViolenceArchive/the_violent_corpus/{incident_uri}/{the_hash}.json'
+        path_doc_id2article = f'{output_folder}/pre/doc_id2article_url.json'
+
+        if not os.path.exists(path_doc_id2article):
+            doc_id2article = dict()
+        else:
+            doc_id2article = json.load(open(path_doc_id2article))
+
 
         for index, row in a_df.iterrows():
 
             # load news sources
             news_article_objs = set()
-            for incident_url in row['incident_sources']:
-                hash_obj = hashlib.md5(incident_url.encode())
+            for source_url in row['incident_sources']:
+                hash_obj = hashlib.md5(source_url.encode())
                 the_hash = hash_obj.hexdigest()
                 incident_uri = row['incident_uri']
 
                 path = news_article_template.format_map(locals())
+
                 try:
                     with open(path, 'rb') as infile:
                         news_article_obj = pickle.load(infile)
                         news_article_objs.add(news_article_obj)
-                        text2conll('trial', the_hash, news_article_obj.content)
+
+                        phase = 'pre'
+                        doc_id = the_hash
+
+                        content_type = 'body'
+                        output_path = f'{output_folder}/{phase}/{doc_id}.{content_type}.conll'
+                        text2conll(output_path, the_hash, news_article_obj.content)
+
+                        content_type = 'title'
+                        output_path = f'{output_folder}/{phase}/{doc_id}.{content_type}.conll'
+                        text2conll(output_path, the_hash, news_article_obj.title)
+
+                        content_type = 'dct'
+                        phase = 'post'
+                        output_path = f'{output_folder}/{phase}/{doc_id}.{content_type}.conll'
+                        with open(output_path, 'w') as outfile:
+                            outfile.write(str(news_article_obj.dct))
+
+                        doc_id2article[the_hash] = source_url
+
+                        hash_obj = hashlib.md5(news_article_obj.content.encode())
+                        content_hash = hash_obj.hexdigest()
+
+                        hash_obj = hashlib.md5(news_article_obj.title.encode())
+                        title_hash = hash_obj.hexdigest()
+
+                        content_type = 'checksum'
+                        phase = 'pre'
+                        output_path = f'{output_folder}/{phase}/{doc_id}.{content_type}.conll'
+
+                        checksum_info = {'title': title_hash,
+                                         'body': content_hash}
+
+                        with open(output_path, 'w') as outfile:
+                            json.dump(checksum_info, outfile)
+
+
+                        if debug:
+                            break
 
                 except FileNotFoundError:
                     continue
+
+        with open(path_doc_id2article, 'w') as outfile:
+            json.dump(doc_id2article, outfile)
+
 
     def set_all_attributes(self):
         vars(self)
