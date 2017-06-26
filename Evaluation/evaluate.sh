@@ -9,7 +9,6 @@ else
 fi
 GOLDDIR="$DATADIR/gold/"
 SYSTEMDIR="$DATADIR/system/"
-echo $DATADIR
 
 if [ ! -d "$SCORERDIR" ]; then
     echo "*** The coreference scorer directory was not detected. Now cloning ... ***"
@@ -78,5 +77,5 @@ do
     fi
 done
 
-ABSDATADIR="$(cd "$(dirname "$DATADIR")"; pwd)/$(basename "$DATADIR")"
-python3 evaluate_more.py $ABSDATADIR
+#ABSDATADIR="$(cd "$(dirname "$DATADIR")"; pwd)/$(basename "$DATADIR")"
+python3 evaluate_more.py $DATADIR

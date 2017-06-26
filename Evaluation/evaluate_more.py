@@ -5,6 +5,8 @@ import sys
 questions=5
 metrics=['bcub', 'blanc', 'ceafe', 'ceafm', 'muc']
 
+expected={'bcub_f1': 59.886667, 'blanc_f1': 56.603333, 'ceafe_f1': 59.838333, 'ceafm_f1': 59.886667, 'muc_f1': 59.003333, 'doc_p': 0.6689258325240012, 'doc_r': 0.8217613543955121, 'doc_f1': 0.6935945190468833, 'inc_acc': 0.60, 'inc_rmse': 28.0}
+
 def extract_docs(mydir):
     q=1
     docs={}
@@ -31,7 +33,7 @@ def accuracy_evaluation(sys_incidents, gold_incidents):
     for k in gold_incidents:
         if len(gold_incidents[k])==len(sys_incidents[k]):
             correct+=1
-    return correct*100.0/questions
+    return correct/questions
 
 def rmse_evaluation(sys_incidents, gold_incidents):
     sum_diffs=0.0
@@ -78,8 +80,22 @@ def compute_mention_avg(scoresdir, metric):
            lc+=1
     return p/lc,r/lc,f1/lc 
 
+def feq(a,b):
+    if abs(a-b)<0.000001:
+        print('less')
+        return 1
+    else:
+        print(abs(a-b))
+        print('more')
+        return 0
+
 if __name__=="__main__":
     datadir=sys.argv[1]
+    TESTMODE=False
+    print(datadir)
+    if datadir.strip('/')=="Test":
+        TESTMODE=True
+        print("Running in Test Mode: All scores will be checked against the expected ones.")
     sysdir = "%s/system/" % datadir
     golddir = "%s/gold/" % datadir
     scoresdir = "%s/scores/" % datadir
@@ -91,7 +107,9 @@ if __name__=="__main__":
     for metric in metrics:
         metric_r, metric_p, metric_f1 = compute_mention_avg(scoresdir, metric)
         print('METRIC %s: Precision = %f; Recall = %f; F1-score = %f' % (metric, metric_p, metric_r, metric_f1))
-
+        if TESTMODE:
+            k='%s_f1' % metric
+            assert feq(expected[k], metric_f1), "%f different than %f for the metric %s" % (metric_f1, expected[k], metric)
     print("*** Mention-level evaluation done. ***")
     print()
     ### Done. ###
@@ -102,13 +120,20 @@ if __name__=="__main__":
     print("*** Document-level evaluation ***")
 
     p, r, f1 = document_evaluation(sys_docs, gold_docs)
+    avg_p=compute_avg(p)
+    avg_r=compute_avg(r)
+    avg_f1=compute_avg(f1)
+    if TESTMODE:
+        assert feq(avg_p,expected['doc_p']), "%f different than %f for the metric %s" % (avg_p, expected['doc_p'], 'Document-level precision')
+        assert feq(avg_r,expected['doc_r']), "%f different than %f for the metric %s" % (avg_r, expected['doc_r'], 'Document-level recall')
+        assert feq(avg_f1,expected['doc_f1']), "%f different than %f for the metric %s" % (avg_f1, expected['doc_f1'], 'Document-level F1-score')
 
     print("Precision per question", p)
-    print("Average precision", compute_avg(p))
+    print("Average precision", avg_p)
     print("Recall per question", r)
-    print("Average recall", compute_avg(r))
+    print("Average recall", avg_r)
     print("F1-score per question", f1)
-    print("Average F1-score", compute_avg(f1))
+    print("Average F1-score", avg_f1)
 
     print("*** Document-level evaluation done. ***")
     print()
@@ -116,7 +141,13 @@ if __name__=="__main__":
 
     accuracy = accuracy_evaluation(sys_incidents, gold_incidents)
     rmse = rmse_evaluation(sys_incidents, gold_incidents)
+    if TESTMODE:
+        assert feq(accuracy, expected['inc_acc']), "%f different than %f for the metric %s" % (accuracy, expected['inc_acc'], 'Incident-level accuracy')
+        assert feq(rmse, expected['inc_rmse']), "%f different than %f for the metric %s" % (rmse, expected['inc_rmse'], 'Incident-level RMSE')
     print("Accuracy over all questions:", accuracy)
     print("RMSE over all questions:", rmse)
 
     print("*** Incident-level evaluation done. ***")
+
+    if TESTMODE:
+        print("ALL TESTS COMPLETED SUCCESSFULLY")
