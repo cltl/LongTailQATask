@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 echo
 echo "This script is meant to install a python environment for the long tail QA task"
 echo "It will perform checks for this and will try to install external python modules with pip."
@@ -24,7 +25,7 @@ echo "Succes: correct version of python is installed"
 echo
 echo "INSTALL: Installing external python modules"
 export succes="Succes: external modules have been installed"
-export failure="Fail: please check external_modules.txt and try to install them"
+export failure="Fail: please try to install module newspaper3k version 0.1.9"
 
 # installing external module newspaper
 python3 -m pip install newspaper3k==0.1.9
