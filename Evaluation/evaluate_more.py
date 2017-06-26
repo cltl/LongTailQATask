@@ -1,8 +1,9 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 import math
 import sys
 
 questions=5
+metrics=['bcub', 'blanc', 'ceafe', 'ceafm', 'muc']
 
 def extract_docs(mydir):
     q=1
@@ -65,11 +66,35 @@ def document_evaluation(sys_documents, gold_documents):
 def compute_avg(v):
     return sum(v.values())/len(v)
 
+def compute_mention_avg(scoresdir, metric):
+    r,p,f1=0.0, 0.0, 0.0
+    lc=0
+    with open('%s%s_all.conll' % (scoresdir, metric)) as f:
+        for line in f:
+           scores=[float(s.split()[-1]) for s in line.split('%') if s.strip()]
+           r+=scores[0]
+           p+=scores[1]
+           f1+=scores[2]
+           lc+=1
+    return p/lc,r/lc,f1/lc 
+
 if __name__=="__main__":
     datadir=sys.argv[1]
     sysdir = "%s/system/" % datadir
     golddir = "%s/gold/" % datadir
     scoresdir = "%s/scores/" % datadir
+
+    ### Compute averages for all mention-level metrics ###
+
+    print("*** Mention-level evaluation ***")
+
+    for metric in metrics:
+        metric_r, metric_p, metric_f1 = compute_mention_avg(scoresdir, metric)
+        print('METRIC %s: Precision = %f; Recall = %f; F1-score = %f' % (metric, metric_p, metric_r, metric_f1))
+
+    print("*** Mention-level evaluation done. ***")
+    print()
+    ### Done. ###
 
     gold_docs, gold_incidents = extract_docs(golddir)
     sys_docs, sys_incidents = extract_docs(sysdir)
