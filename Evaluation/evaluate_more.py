@@ -7,7 +7,8 @@ import json
 
 metrics=['bcub', 'blanc', 'ceafe', 'ceafm', 'muc']
 
-expected={'men_bcub_f1': 39.830000, 'men_blanc_f1': 34.905000, 'men_ceafe_f1': 39.757500, 'men_ceafm_f1': 39.830000, 'men_muc_f1': 38.505000, 'doc_p': 0.5861572906550014, 'doc_r': 0.7772016929943902, 'doc_f1': 0.6169931488086041, 'inc_acc': 0.5, 'inc_rmse': 31.304951684997057}
+expected={"doc_f1": 0.12618296529968456, "men_blanc_f1": 8.33, "men_ceafe_f1": 5.38, "inc_acc": 0.0, "men_ceafm_f1": 5.66, "doc_p": 0.06872852233676977, "men_muc_f1": 18.18, "inc_rmse": 56.0, "men_bcub_f1": 5.66, "doc_r": 0.7692307692307693}
+
 
 def extract_docs(mydir):
     docs={}
