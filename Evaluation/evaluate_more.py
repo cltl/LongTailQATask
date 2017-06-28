@@ -1,21 +1,22 @@
 #!/usr/bin/env python3
 import math
 import sys
+from glob import glob
 
-questions=5
 metrics=['bcub', 'blanc', 'ceafe', 'ceafm', 'muc']
 
-expected={'bcub_f1': 59.886667, 'blanc_f1': 56.603333, 'ceafe_f1': 59.838333, 'ceafm_f1': 59.886667, 'muc_f1': 59.003333, 'doc_p': 0.6689258325240012, 'doc_r': 0.8217613543955121, 'doc_f1': 0.6935945190468833, 'inc_acc': 0.60, 'inc_rmse': 28.0}
+expected={'bcub_f1': 39.830000, 'blanc_f1': 34.905000, 'ceafe_f1': 39.757500, 'ceafm_f1': 39.830000, 'muc_f1': 38.505000, 'doc_p': 0.5861572906550014, 'doc_r': 0.7772016929943902, 'doc_f1': 0.6169931488086041, 'inc_acc': 0.5, 'inc_rmse': 31.304951684997057}
 
 def extract_docs(mydir):
-    q=1
     docs={}
     incidents={}
-    while q<=questions:
+    qs=set()
+    for fn in glob('%s*.conll' % mydir):
+        q=int(fn.split('/')[-1].split('.')[0])
         docs[q]=set()
         incidents[q]=set()
         current_doc=""
-        with open('%s%d.conll' % (mydir, q)) as f:
+        with open(fn, 'r') as f:
             for line in f:
                 line=line.strip('\n')
                 if not line: continue
@@ -25,34 +26,33 @@ def extract_docs(mydir):
                 elif not line.startswith('#end') and len(elements)==3 and elements[2]!='-':
                     docs[q].add(current_doc)
                     incidents[q].add(elements[2])
-        q+=1
-    return docs, incidents
+        qs.add(q)
+    return docs, incidents, qs
 
-def accuracy_evaluation(sys_incidents, gold_incidents):
+def accuracy_evaluation(sys_incidents, gold_incidents, questions):
     correct=0
-    for k in gold_incidents:
+    for k in sys_incidents:
         if len(gold_incidents[k])==len(sys_incidents[k]):
             correct+=1
-    return correct/questions
+    return correct/len(questions)
 
-def rmse_evaluation(sys_incidents, gold_incidents):
+def rmse_evaluation(sys_incidents, gold_incidents, questions):
     sum_diffs=0.0
-    for k in gold_incidents:
+    for k in sys_incidents:
         diff=len(gold_incidents[k])-len(sys_incidents[k])
         diff_sq = diff * diff
         sum_diffs+=diff_sq
 
-    div=sum_diffs/questions
+    div=sum_diffs/len(questions)
     return math.sqrt(div)
 
-def document_evaluation(sys_documents, gold_documents):
+def document_evaluation(sys_documents, gold_documents, questions):
 
     f1={}
     p={}
     r={}
 
-    q=1
-    while q<=questions:
+    for q in questions:
         tp = len(sys_docs[q] & gold_docs[q])
         fp = len(sys_docs[q] - gold_docs[q])
         fn = len(gold_docs[q] - sys_docs[q])
@@ -60,8 +60,6 @@ def document_evaluation(sys_documents, gold_documents):
         p[q] = tp/(fp + tp)
         r[q] = tp/(fn + tp)
         f1[q] = 2*p[q]*r[q]/(p[q]+r[q])
-
-        q+=1
 
     return p, r, f1
 
@@ -82,17 +80,14 @@ def compute_mention_avg(scoresdir, metric):
 
 def feq(a,b):
     if abs(a-b)<0.000001:
-        print('less')
         return 1
     else:
-        print(abs(a-b))
-        print('more')
         return 0
 
 if __name__=="__main__":
     datadir=sys.argv[1]
     TESTMODE=False
-    print(datadir)
+    print('Data directory: %s' % datadir)
     if datadir.strip('/')=="Test":
         TESTMODE=True
         print("Running in Test Mode: All scores will be checked against the expected ones.")
@@ -102,6 +97,7 @@ if __name__=="__main__":
 
     ### Compute averages for all mention-level metrics ###
 
+    print()
     print("*** Mention-level evaluation ***")
 
     for metric in metrics:
@@ -114,12 +110,13 @@ if __name__=="__main__":
     print()
     ### Done. ###
 
-    gold_docs, gold_incidents = extract_docs(golddir)
-    sys_docs, sys_incidents = extract_docs(sysdir)
+    gold_docs, gold_incidents, gold_qs = extract_docs(golddir)
+    sys_docs, sys_incidents, sys_qs = extract_docs(sysdir)
+    questions = gold_qs & sys_qs
 
     print("*** Document-level evaluation ***")
 
-    p, r, f1 = document_evaluation(sys_docs, gold_docs)
+    p, r, f1 = document_evaluation(sys_docs, gold_docs, questions)
     avg_p=compute_avg(p)
     avg_r=compute_avg(r)
     avg_f1=compute_avg(f1)
@@ -139,8 +136,8 @@ if __name__=="__main__":
     print()
     print("*** Incident-level evaluation ***")
 
-    accuracy = accuracy_evaluation(sys_incidents, gold_incidents)
-    rmse = rmse_evaluation(sys_incidents, gold_incidents)
+    accuracy = accuracy_evaluation(sys_incidents, gold_incidents, questions)
+    rmse = rmse_evaluation(sys_incidents, gold_incidents, questions)
     if TESTMODE:
         assert feq(accuracy, expected['inc_acc']), "%f different than %f for the metric %s" % (accuracy, expected['inc_acc'], 'Incident-level accuracy')
         assert feq(rmse, expected['inc_rmse']), "%f different than %f for the metric %s" % (rmse, expected['inc_rmse'], 'Incident-level RMSE')
@@ -148,6 +145,9 @@ if __name__=="__main__":
     print("RMSE over all questions:", rmse)
 
     print("*** Incident-level evaluation done. ***")
-
+    print()
+    print("Answered questions: %d" % len(questions))
+    print("Total questions: %d" % len(gold_qs))
+    print()
     if TESTMODE:
         print("ALL TESTS COMPLETED SUCCESSFULLY")

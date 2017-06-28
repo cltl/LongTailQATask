@@ -1,23 +1,4 @@
 version: 8.01 /Users/filipilievski/phd/LongTailQATask/Evaluation/reference-coreference-scorers/lib/CorScorer.pm
-====> (trial/007d7cc29e5632865d4f4f8e51f615fd.conll); :
-File (trial/007d7cc29e5632865d4f4f8e51f615fd.conll); :
-Entity 0: (12,12) (32,32) (38,38) (39,39) (102,102) (104,104) (115,115) (119,119) (128,128) (133,133)
-Entity 1: (58,58) (82,82) (146,146) (152,152)
-Entity 2: (156,156)
-====> (trial/007d7cc29e5632865d4f4f8e51f615fd.conll); :
-File (trial/007d7cc29e5632865d4f4f8e51f615fd.conll); :
-Entity 0: (12,12) (32,32) (38,38) (39,39) (102,102) (104,104) (115,115) (119,119) (128,128) (133,133)
-Entity 1: (58,58) (82,82) (146,146) (152,152)
-Entity 2: (156,156)
-(trial/007d7cc29e5632865d4f4f8e51f615fd.conll); :
-Total key mentions: 15
-Total response mentions: 15
-Strictly correct identified mentions: 15
-Partially correct identified mentions: 0
-No identified: 0
-Invented: 0
-Recall: (15 / 15) 100%	Precision: (15 / 15) 100%	F1: 100%
---------------------------------------------------------------------------
 ====> (trial/00695b7ea5ff7b7d4c2091c09566034b.conll); :
 File (trial/00695b7ea5ff7b7d4c2091c09566034b.conll); :
 Entity 0: (12,12) (34,34) (55,55) (82,82) (102,102) (173,173) (180,180) (215,215) (221,221) (227,227) (231,231)
@@ -36,6 +17,25 @@ Partially correct identified mentions: 0
 No identified: 0
 Invented: 0
 Recall: (26 / 26) 100%	Precision: (26 / 26) 100%	F1: 100%
+--------------------------------------------------------------------------
+====> (trial/007d7cc29e5632865d4f4f8e51f615fd.conll); :
+File (trial/007d7cc29e5632865d4f4f8e51f615fd.conll); :
+Entity 0: (12,12) (32,32) (38,38) (39,39) (102,102) (104,104) (115,115) (119,119) (128,128) (133,133)
+Entity 1: (58,58) (82,82) (146,146) (152,152)
+Entity 2: (156,156)
+====> (trial/007d7cc29e5632865d4f4f8e51f615fd.conll); :
+File (trial/007d7cc29e5632865d4f4f8e51f615fd.conll); :
+Entity 0: (12,12) (32,32) (38,38) (39,39) (102,102) (104,104) (115,115) (119,119) (128,128) (133,133)
+Entity 1: (58,58) (82,82) (146,146) (152,152)
+Entity 2: (156,156)
+(trial/007d7cc29e5632865d4f4f8e51f615fd.conll); :
+Total key mentions: 15
+Total response mentions: 15
+Strictly correct identified mentions: 15
+Partially correct identified mentions: 0
+No identified: 0
+Invented: 0
+Recall: (15 / 15) 100%	Precision: (15 / 15) 100%	F1: 100%
 --------------------------------------------------------------------------
 
 ====== TOTALS =======

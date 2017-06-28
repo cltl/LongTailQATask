@@ -62,19 +62,18 @@ fi
 
 ### MENTION - LEVEL EVALUATION ###
 
-for goldfile in "$GOLDDIR"/*
+for sysfile in "$SYSTEMDIR"/*
 do
-    sysfile="$SYSTEMDIR/${goldfile##*/}"
-    if [ -f $sysfile ]; then
-        for metric in muc bcub ceafm ceafe blanc; do
-            outfile="$DATADIR/scores/${metric}.${goldfile##*/}"
-            perl reference-coreference-scorers/scorer.pl $metric $goldfile $sysfile > $outfile
-            tail -2 $outfile | head -1 >> "$DATADIR/scores/${metric}_all.conll"
-        done
-    else
-        echo "ERROR: System output missing for $goldfile"
+    goldfile="$GOLDDIR/${sysfile##*/}"
+    if [ ! -f $goldfile ]; then
+        echo "ERROR: GOLD file missing for $sysfile. Exiting now..."
         exit
     fi
+    for metric in muc bcub ceafm ceafe blanc; do
+        outfile="$DATADIR/scores/${metric}.${goldfile##*/}"
+        perl reference-coreference-scorers/scorer.pl $metric $goldfile $sysfile > $outfile
+        tail -2 $outfile | head -1 >> "$DATADIR/scores/${metric}_all.conll"
+    done
 done
 
 #ABSDATADIR="$(cd "$(dirname "$DATADIR")"; pwd)/$(basename "$DATADIR")"
