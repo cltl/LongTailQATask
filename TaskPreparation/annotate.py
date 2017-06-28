@@ -17,6 +17,8 @@ for fl in glob('%s*' % indir):
         sysfields=line.split('\t')
         sysfields[1]=sysfields[1].strip('\n')
         goldfields=list(sysfields)
+        sysfields.append('BODY')
+        goldfields.append('BODY')
         if r<=58:
             sysfields.append('(%d)' % r)
             goldfields.append('-')

@@ -55,9 +55,9 @@ fi
 if [ ! -d "$DATADIR/scores" ]; then
     mkdir "$DATADIR/scores"
 else
-    for metric in muc bcub ceafm ceafe blanc; do
-        rm "$DATADIR/scores/${metric}_all.conll"
-    done
+    #for metric in muc bcub ceafm ceafe blanc; do
+    rm "$DATADIR/scores"/*
+    #done
 fi
 
 ### MENTION - LEVEL EVALUATION ###
