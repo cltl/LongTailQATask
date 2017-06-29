@@ -2,11 +2,11 @@
 
 Evaluation in this task is performed on three levels: mention-level, document-level, and incident-level. All these can be run by executing the Bash script `evaluate.sh` in this way:
 
-`bash evaluate.sh <DATA_DIRECTORY>`
+`bash evaluate.sh <DATA_DIRECTORY> <SYSTEM_OUTPUT_DIRECTORY> <GOLD_DIRECTORY>`
 
-The data directory must contain two non-empty folders: `system` (containing the system-processed files) and `gold` (containing the gold-annotated files). The `DATA_DIRECTORY` argument is optional: by default, the data is located in the folder `../Data/`. 
+The data directory must contain the file `answers.json`, which contains the answer number of incidents and set of documents for all questions. Also, in a subfolder of this directory called `scores`, we store also all the scores we compute (but you can also read these directly from the stdout).
 
-Before running the `evaluate.sh` script on their own files, we advice participants to first ensure the evaluation script is functioning as expected, i.e. if the evaluation on all three levels gives the correct scores. This can be done by executing `bash evaluate.sh Test`, which will evaluate the documents for 5 questions, found in the `Test` folder.
+Before running the `evaluate.sh` script on their own files, we advice participants to first ensure the evaluation script is functioning as expected, i.e. if the evaluation on all three levels gives the correct scores. This can be done by executing `bash evaluate.sh Test Test/system_output/ Test/gold/`, which will evaluate the documents for 4 questions, found in the `Test` folder.
 
 #### Explanation of the levels of evaluation ####
 
