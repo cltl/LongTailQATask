@@ -12,7 +12,7 @@ SYSTEMDIR="$DATADIR/system/"
 
 if [ ! -d "$SCORERDIR" ]; then
     echo "*** The coreference scorer directory was not detected. Now cloning ... ***"
-    echo 
+    echo
     git clone https://github.com/cltl/reference-coreference-scorers/ > git.log 2>&1
     success=$?
     if [[ $success -eq 0 ]];
@@ -62,7 +62,7 @@ fi
 
 ### MENTION - LEVEL EVALUATION ###
 
-for sysfile in "$SYSTEMDIR"/*
+for sysfile in "$SYSTEMDIR/*.conll"
 do
     goldfile="$GOLDDIR/${sysfile##*/}"
     if [ ! -f $goldfile ]; then
