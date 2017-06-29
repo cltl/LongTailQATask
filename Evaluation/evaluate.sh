@@ -2,13 +2,14 @@
 
 SCORERDIR="reference-coreference-scorers"
 
-if [ -z "$1" ]; then
-    DATADIR="../Data"
-else
-    DATADIR="$1"
+if [ -z "$1" ] || [ -z "$2" ] || [ -z "$3" ]; then
+    echo "Please supply 3 arguments to this script: DATADIR, SYSTEMDIR, GOLDDIR. Usage: bash evaluate.sh <DATADIR> <SYSTEMDIR> <GOLDDIR>"
+    exit
 fi
-GOLDDIR="$DATADIR/gold/"
-SYSTEMDIR="$DATADIR/system/"
+
+DATADIR="$1"
+SYSTEMDIR="$2"
+GOLDDIR="$3"
 
 if [ ! -d "$SCORERDIR" ]; then
     echo "*** The coreference scorer directory was not detected. Now cloning ... ***"
@@ -32,8 +33,8 @@ fi
 ### CHECKS ###
 
 if [ ! -d $DATADIR ]; then
-    echo "$DATADIR does not exist. Nothing to evaluate here! Exiting now..."
-    exit
+    echo "WARN: $DATADIR does not exist. Creating it now..."
+    mkdir $DATADIR
 fi
 
 goldfiles=$(shopt -s nullglob dotglob; echo $GOLDDIR/*)
@@ -53,6 +54,7 @@ else
 fi
 
 if [ ! -d "$DATADIR/scores" ]; then
+    echo "WARN: $DATADIR/scores does not exist. Creating it now..."
     mkdir "$DATADIR/scores"
 else
     #for metric in muc bcub ceafm ceafe blanc; do
@@ -62,19 +64,28 @@ fi
 
 ### MENTION - LEVEL EVALUATION ###
 
-for sysfile in "$SYSTEMDIR/*.conll"
+for goldfile in "${GOLDDIR}"/*.conll
 do
-    goldfile="$GOLDDIR/${sysfile##*/}"
-    if [ ! -f $goldfile ]; then
-        echo "ERROR: GOLD file missing for $sysfile. Exiting now..."
-        exit
+    sysfile="$SYSTEMDIR/${goldfile##*/}"
+    if [ ! -f $sysfile ]; then
+        echo "WARN: System answer missing for gold file $goldfile."
+    else
+        for metric in muc bcub ceafm ceafe blanc; do
+            outfile="$DATADIR/scores/${metric}.${goldfile##*/}"
+            perl reference-coreference-scorers/scorer.pl $metric $goldfile $sysfile > $outfile
+            tail -2 $outfile | head -1 >> "$DATADIR/scores/${metric}_all.conll"
+        done
     fi
-    for metric in muc bcub ceafm ceafe blanc; do
-        outfile="$DATADIR/scores/${metric}.${goldfile##*/}"
-        perl reference-coreference-scorers/scorer.pl $metric $goldfile $sysfile > $outfile
-        tail -2 $outfile | head -1 >> "$DATADIR/scores/${metric}_all.conll"
-    done
 done
 
 #ABSDATADIR="$(cd "$(dirname "$DATADIR")"; pwd)/$(basename "$DATADIR")"
-python3 evaluate_more.py $DATADIR
+python3 evaluate_mentions.py $DATADIR $SYSTEMDIR $GOLDDIR
+
+JSONDIR="$DATADIR/answers.json"
+if [ ! -f "$JSONDIR" ]; then
+    echo "The JSON file with answers does not exist. Exiting now..."
+    exit
+fi
+
+python3 evaluate_more.py $DATADIR $SYSTEMDIR $JSONDIR
+

@@ -5,19 +5,28 @@ from glob import glob
 from pprint import pprint
 import json
 
-metrics=['bcub', 'blanc', 'ceafe', 'ceafm', 'muc']
+import config
 
-expected={"doc_f1": 0.12618296529968456, "men_blanc_f1": 8.33, "men_ceafe_f1": 5.38, "inc_acc": 0.0, "men_ceafm_f1": 5.66, "doc_p": 0.06872852233676977, "men_muc_f1": 18.18, "inc_rmse": 56.0, "men_bcub_f1": 5.66, "doc_r": 0.7692307692307693}
+metrics=config.metrics
+expected=config.expected
 
+def extract_gold(data):
+    qs=set(data.keys())
+    docs={}
+    incidents={}
+    for q in data:
+        docs[q]=set(data[q]["answer_docs"])
+        incidents[q]=data[q]["numerical_answer"]
+    return docs, incidents, qs
 
 def extract_docs(mydir):
     docs={}
     incidents={}
     qs=set()
     for fn in glob('%s*.conll' % mydir):
-        q=int(fn.split('/')[-1].split('.')[0])
+        q=fn.split('/')[-1].split('.')[0]
         docs[q]=set()
-        incidents[q]=set()
+        incs=set()
         current_doc=""
         with open(fn, 'r') as f:
             for line in f:
@@ -25,24 +34,26 @@ def extract_docs(mydir):
                 if not line: continue
                 elements = line.split('\t')
                 if line.startswith('#begin'):
-                    current_doc=line.split()[-1]
+                    current_doc=line.split()[-1].lstrip('(').rstrip(');')
                 elif not line.startswith('#end') and len(elements)==4 and elements[3]!='-':
                     docs[q].add(current_doc)
-                    incidents[q].add(elements[3])
+                    incs.add(elements[3])
+        incidents[q]=len(incs)
         qs.add(q)
     return docs, incidents, qs
 
 def accuracy_evaluation(sys_incidents, gold_incidents, questions):
     correct=0
     for k in sys_incidents:
-        if len(gold_incidents[k])==len(sys_incidents[k]):
+        print(gold_incidents[k], sys_incidents[k])
+        if gold_incidents[k]==sys_incidents[k]:
             correct+=1
     return correct/len(questions)
 
 def rmse_evaluation(sys_incidents, gold_incidents, questions):
     sum_diffs=0.0
     for k in sys_incidents:
-        diff=len(gold_incidents[k])-len(sys_incidents[k])
+        diff=gold_incidents[k]-sys_incidents[k]
         diff_sq = diff * diff
         sum_diffs+=diff_sq
 
@@ -69,19 +80,6 @@ def document_evaluation(sys_documents, gold_documents, questions):
 def compute_avg(v):
     return sum(v.values())/len(v)
 
-def compute_mention_avg(scoresdir, metric):
-    r,p,f1=0.0, 0.0, 0.0
-    lc=0
-    with open('%s%s_all.conll' % (scoresdir, metric)) as f:
-        for line in f:
-           #scores=[float(s.split()[-1]) for s in line.split('%') if s.strip()]
-           scores=[float(s.split()[-1].strip('%')) for s in line.strip().split('\t') if s]
-           r+=scores[0]
-           p+=scores[1]
-           f1+=scores[2]
-           lc+=1
-    return p/lc,r/lc,f1/lc 
-
 def feq(a,b):
     if abs(a-b)<0.000001:
         return 1
@@ -90,34 +88,23 @@ def feq(a,b):
 
 if __name__=="__main__":
     datadir=sys.argv[1]
+    sysdir=sys.argv[2]
+    goldjson=sys.argv[3]
+    scoresdir = "%s/scores/" % datadir
+
+        
+    with open(goldjson, 'r') as datafile:
+        golddata=json.load(datafile)
+
     TESTMODE=False
     print('Data directory: %s' % datadir)
     if datadir.strip('/')=="Test":
         TESTMODE=True
         print("Running in Test Mode: All scores will be checked against the expected ones.")
-    sysdir = "%s/system/" % datadir
-    golddir = "%s/gold/" % datadir
-    scoresdir = "%s/scores/" % datadir
 
     scores={}
 
-    ### Compute averages for all mention-level metrics ###
-
-    print()
-    print("*** Mention-level evaluation ***")
-
-    for metric in metrics:
-        metric_r, metric_p, metric_f1 = compute_mention_avg(scoresdir, metric)
-        print('METRIC %s: Precision = %f; Recall = %f; F1-score = %f' % (metric, metric_p, metric_r, metric_f1))
-        k='men_%s_f1' % metric
-        scores[k] = metric_f1
-        if TESTMODE:
-            assert feq(expected[k], metric_f1), "%f different than %f for the metric %s" % (metric_f1, expected[k], metric)
-    print("*** Mention-level evaluation done. ***")
-    print()
-    ### Done. ###
-
-    gold_docs, gold_incidents, gold_qs = extract_docs(golddir)
+    gold_docs, gold_incidents, gold_qs = extract_gold(golddata)
     sys_docs, sys_incidents, sys_qs = extract_docs(sysdir)
     questions = gold_qs & sys_qs
 
@@ -128,9 +115,9 @@ if __name__=="__main__":
     scores['doc_r']=compute_avg(r)
     scores['doc_f1']=compute_avg(f1)
     if TESTMODE:
-        assert feq(scores['doc_p'],expected['doc_p']), "%f different than %f for the metric %s" % (avg_p, expected['doc_p'], 'Document-level precision')
-        assert feq(scores['doc_r'],expected['doc_r']), "%f different than %f for the metric %s" % (avg_r, expected['doc_r'], 'Document-level recall')
-        assert feq(scores['doc_f1'],expected['doc_f1']), "%f different than %f for the metric %s" % (avg_f1, expected['doc_f1'], 'Document-level F1-score')
+        assert feq(scores['doc_p'],expected['doc_p']), "%f different than %f for the metric %s" % (scores['doc_p'], expected['doc_p'], 'Document-level precision')
+        assert feq(scores['doc_r'],expected['doc_r']), "%f different than %f for the metric %s" % (scores['doc_r'], expected['doc_r'], 'Document-level recall')
+        assert feq(scores['doc_f1'],expected['doc_f1']), "%f different than %f for the metric %s" % (scores['doc_f1'], expected['doc_f1'], 'Document-level F1-score')
 
     print("Precision per question", p)
     print("Average precision", scores['doc_p'])
@@ -146,8 +133,8 @@ if __name__=="__main__":
     scores['inc_acc'] = accuracy_evaluation(sys_incidents, gold_incidents, questions)
     scores['inc_rmse'] = rmse_evaluation(sys_incidents, gold_incidents, questions)
     if TESTMODE:
-        assert feq(scores['inc_acc'], expected['inc_acc']), "%f different than %f for the metric %s" % (accuracy, expected['inc_acc'], 'Incident-level accuracy')
-        assert feq(scores['inc_rmse'], expected['inc_rmse']), "%f different than %f for the metric %s" % (rmse, expected['inc_rmse'], 'Incident-level RMSE')
+        assert feq(scores['inc_acc'], expected['inc_acc']), "%f different than %f for the metric %s" % (scores['inc_acc'], expected['inc_acc'], 'Incident-level accuracy')
+        assert feq(scores['inc_rmse'], expected['inc_rmse']), "%f different than %f for the metric %s" % (scores['inc_rmse'], expected['inc_rmse'], 'Incident-level RMSE')
     print("Accuracy over all questions:", scores['inc_acc'])
     print("RMSE over all questions:", scores['inc_rmse'])
 
@@ -163,9 +150,9 @@ if __name__=="__main__":
     print("*** Evaluation done. ***")
     print()
 
-    with open('%ssummary.json' % scoresdir, 'w') as outfile:
+    with open('%ssummary_inc_doc.json' % scoresdir, 'w') as outfile:
         json.dump(scores, outfile)
-        print("*** Summary JSON stored in %ssummary.json . ***" % scoresdir)
+        print("*** Summary JSON stored in %ssummary_inc_doc.json . ***" % scoresdir)
         print()
     if TESTMODE:
         print("ALL TESTS COMPLETED SUCCESSFULLY")
