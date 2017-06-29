@@ -46,23 +46,27 @@ def get_dcts(dataframe):
     return dcts
 
 
-def text2conll(output_path, doc_id, text):
+def text2conll_one_file(outfile, doc_id, discourse, text, pre=False):
     """
     use spacy to output text (tokenized) in conll
 
-    :param str output_folder: output folder
+    :param _io.TextIOWrapper outfile: outfile
     :param str doc_id: document identifier
+    :param str discourse: TITLE | BODY
     :param str text: content (either title or context of news article)
     """
     doc = spacy_to_naf.text_to_NAF(text, nlp)
 
-    with open(output_path, 'w') as outfile:
-        for wf_el in doc.xpath('text/wf'):
-            sent_id = wf_el.get('sent')
-            token_id = wf_el.get('id')
-            id_ = f'd{doc_id}.s{sent_id}.{token_id}'
+    for wf_el in doc.xpath('text/wf'):
+        sent_id = wf_el.get('sent')
+        token_id = wf_el.get('id')
+        id_ = f'd{doc_id}.s{sent_id}.{token_id}'
 
+        if pre:
             info = [id_, wf_el.get('offset'), wf_el.get('length')]
+            outfile.write('\t'.join(info) + '\n')
+        else:
+            info = [id_, wf_el.text, discourse, '-']
             outfile.write('\t'.join(info) + '\n')
 
 
@@ -85,7 +89,7 @@ class Question:
                  answer_incident_uris,
                  confusion_df,
                  confusion_incident_uris):
-        self.q_id = q_id
+        self.q_id = int(q_id)
         self.confusion_factors = confusion_factors
         self.granularity = granularity
         self.sf = sf
@@ -97,6 +101,7 @@ class Question:
         self.answer_incident_uris = answer_incident_uris
         self.confusion_df = confusion_df
         self.confusion_incident_uris = confusion_incident_uris
+        self.to_include_in_task = True
 
     @property
     def participant_confusion(self):
@@ -114,24 +119,52 @@ class Question:
     def num_both_sf_overlap(self):
         return len(self.meanings)
 
-    @property
-    def question(self):
+    def question(self, subtask, event_types, debug=False):
+
+        system_input = {'subtask': subtask,
+                        'event_types': event_types,
+                        'all_doc_ids': self.all_doc_ids}
+
         time_chunk = ''
         location_chunk = ''
         participant_chunk = ''
-        event_type = 'killing AND injuring'
 
         for index, (confusion_factor, a_sf) in enumerate(zip(self.confusion_factors,
                                                              self.sf)):
             if confusion_factor == 'time':
                 time_chunk = 'in %s (%s) ' % (self.sf[index], self.granularity[index])
+                system_input['time'] = (self.sf[index], self.granularity[index])
             elif confusion_factor == 'location':
                 location_chunk = 'in %s (%s) ' % (self.gold_loc_meaning, self.granularity[index])
+                gran_level = self.granularity[index]
+                all_dbpedia_links = {row['locations'][gran_level]
+                                     for index, row in self.answer_df.iterrows()
+                                     if gran_level in row['locations']}
+
+                if len(all_dbpedia_links) == 1:
+                    the_dbpedia_link = all_dbpedia_links.pop()
+                    system_input['location'] = (the_dbpedia_link, gran_level)
+                else:
+                    print('multiple or no dbpedia options for %s: %s' % (self.q_id, all_dbpedia_links))
+                    system_input['location'] = (None, None)
+                    self.to_include_in_task = False
+
             elif confusion_factor == 'participant':
                 participant_chunk = 'that involve the name %s (%s) ' % (self.sf[index], self.granularity[index])
+                system_input['participant'] = (self.sf[index], self.granularity[index])
 
-        the_question = 'How many {event_type} events happened {time_chunk}{location_chunk}{participant_chunk}?'.format_map(locals())
-        return the_question.strip()
+        the_question = 'How many {event_types} events happened {time_chunk}{location_chunk}{participant_chunk}?'.format_map(locals())
+
+        if debug:
+            print(the_question)
+
+        self.verbose_question = the_question.strip()
+
+        if self.to_include_in_task:
+            system_input['verbose_question'] = self.verbose_question
+            return system_input
+        else:
+            return None
 
     @property
     def c2s_ratio(self):
@@ -214,6 +247,62 @@ class Question:
 
         return total
 
+
+    def to_conll_one_file_per_question(self, dfs, output_path, debug=False):
+        """
+        create one conll file per question, which serves as input file
+        for task participants
+        
+        :param list dfs: [gold_df, confusion_df]
+        :param str output_path: output path where conll file will be stored 
+        :param bool debug: set to True for debugging
+        """
+        news_article_template = '../EventRegistries/GunViolenceArchive/the_violent_corpus/{incident_uri}/{the_hash}.json'
+        all_doc_ids = set()
+
+        outfile = open(output_path, 'w')
+
+        for df in dfs:
+            for index, row in df.iterrows():
+                for source_url in row['incident_sources']:
+                    hash_obj = hashlib.md5(source_url.encode())
+                    the_hash = hash_obj.hexdigest()
+                    incident_uri = row['incident_uri']
+
+                    all_doc_ids.add(the_hash)
+
+                    path = news_article_template.format_map(locals())
+                    try:
+                        with open(path, 'rb') as infile:
+                            news_article_obj = pickle.load(infile)
+                    except FileNotFoundError:
+                        continue
+
+                    # write begin document
+                    outfile.write('begin ({the_hash});\n'.format_map(locals()))
+
+                    # write dct
+                    info = ['DCT', str(news_article_obj.dct), 'DCT', '-']
+                    outfile.write('\t'.join(info) + '\n')
+
+                    # write title
+                    text2conll_one_file(outfile, the_hash, 'TITLE', news_article_obj.title)
+
+                    # write body
+                    text2conll_one_file(outfile, the_hash, 'BODY', news_article_obj.content)
+
+
+                    # write end document
+                    outfile.write('end document\n')
+
+        outfile.close()
+
+        self.all_doc_ids = list(all_doc_ids)
+
+
+
+
+
     def to_conll(self, a_df, output_folder, debug=False):
         """
         given a pandas dataframe, convert articles to conll
@@ -275,7 +364,10 @@ class Question:
                         phase = 'pre'
                         output_path = f'{output_folder}/{phase}/{doc_id}.{content_type}.conll'
 
+                        print(incident_uri)
+                        input('continue?')
                         checksum_info = {'title': title_hash,
+                                         'incident_id' : row['incident_uri'],
                                          'body': content_hash}
 
                         with open(output_path, 'w') as outfile:
