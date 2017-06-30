@@ -6,7 +6,7 @@ from nltk.stem.wordnet import WordNetLemmatizer
 
 lmtzr = WordNetLemmatizer()
 
-wn_synsets={'killing': {'killing.n.02', 'kill.v.01'}, 'injuring': {'injured.a.01'}, 'fire_burning': {'fire.n.01'}, 'job_firing': {'displace.v.03'}}
+wn_synsets={'killing': {'killing.n.02', 'kill.v.01'}, 'injuring': {'injure.v.01', 'injured.a.01'}, 'fire_burning': {'fire.n.01'}, 'job_firing': {'displace.v.03'}}
 
 def extract_keywords(qdata):
     keywords=set()
