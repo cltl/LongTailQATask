@@ -84,25 +84,29 @@ class Question:
                  sf,
                  meanings,
                  gold_loc_meaning,
-                 answer,
+                 ev_answer,
                  oa_info,
                  answer_df,
                  answer_incident_uris,
                  confusion_df,
-                 confusion_incident_uris):
+                 confusion_incident_uris,
+                 subtask,
+                 event_types):
         self.q_id = int(q_id)
         self.confusion_factors = confusion_factors
         self.granularity = granularity
         self.sf = sf
         self.meanings = meanings
         self.gold_loc_meaning = gold_loc_meaning
-        self.answer = answer
+        self.ev_answer = ev_answer
         self.oa_info = oa_info
         self.answer_df = answer_df
         self.answer_incident_uris = answer_incident_uris
         self.confusion_df = confusion_df
         self.confusion_incident_uris = confusion_incident_uris
         self.to_include_in_task = True
+        self.subtask=subtask
+        self.event_types=event_types
 
     @property
     def participant_confusion(self):
@@ -120,10 +124,18 @@ class Question:
     def num_both_sf_overlap(self):
         return len(self.meanings)
 
-    def question(self, subtask, event_types, debug=False):
+    @property
+    def part_answer(self):
+        return sum(len(row['participants']) for index, row in self.answer_df.iterrows())
 
-        system_input = {'subtask': subtask,
-                        'event_types': event_types}
+    @property
+    def answer(self):
+        return self.part_answer if self.subtask==3 else self.ev_answer
+
+    def question(self, debug=False):
+
+        system_input = {'subtask': self.subtask,
+                        'event_types': self.event_types}
 
         time_chunk = ''
         location_chunk = ''
@@ -153,7 +165,12 @@ class Question:
                 participant_chunk = 'that involve the name %s (%s) ' % (self.sf[index], self.granularity[index])
                 system_input['participant'] = (self.sf[index], self.granularity[index])
 
-        the_question = 'How many {event_types} events happened {time_chunk}{location_chunk}{participant_chunk}?'.format_map(locals())
+        if self.subtask==1:
+            the_question = 'Which {self.event_types} event happened {time_chunk}{location_chunk}{participant_chunk}?'.format_map(locals())
+        elif self.subtask==2:
+            the_question = 'How many {self.event_types} events happened {time_chunk}{location_chunk}{participant_chunk}?'.format_map(locals())
+        elif self.subtask==3:
+            the_question = 'How many people were involved in {self.event_types} events which happened {time_chunk}{location_chunk}{participant_chunk}?'.format_map(locals())
 
         if debug:
             print(the_question)
