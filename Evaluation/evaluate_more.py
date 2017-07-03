@@ -45,7 +45,6 @@ def extract_docs(mydir):
 def accuracy_evaluation(sys_incidents, gold_incidents, questions):
     correct=0
     for k in sys_incidents:
-        print(gold_incidents[k], sys_incidents[k])
         if gold_incidents[k]==sys_incidents[k]:
             correct+=1
     return correct/len(questions)
@@ -107,6 +106,7 @@ if __name__=="__main__":
     gold_docs, gold_incidents, gold_qs = extract_gold(golddata)
     sys_docs, sys_incidents, sys_qs = extract_docs(sysdir)
     questions = gold_qs & sys_qs
+
 
     print("*** Document-level evaluation ***")
 

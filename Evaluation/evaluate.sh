@@ -64,12 +64,14 @@ fi
 
 ### MENTION - LEVEL EVALUATION ###
 
+MCOUNTER=0
 for goldfile in "${GOLDDIR}"/*.conll
 do
     sysfile="$SYSTEMDIR/${goldfile##*/}"
     if [ ! -f $sysfile ]; then
         echo "WARN: System answer missing for gold file $goldfile."
     else
+        (( MCOUNTER++ ))
         for metric in muc bcub ceafm ceafe blanc; do
             outfile="$DATADIR/scores/${metric}.${goldfile##*/}"
             perl reference-coreference-scorers/scorer.pl $metric $goldfile $sysfile > $outfile
@@ -78,8 +80,14 @@ do
     fi
 done
 
-#ABSDATADIR="$(cd "$(dirname "$DATADIR")"; pwd)/$(basename "$DATADIR")"
-python3 evaluate_mentions.py $DATADIR $SYSTEMDIR $GOLDDIR
+echo
+if [ $MCOUNTER -eq 0 ]; then
+    echo "*** None of the gold-annotated questions with mentions is answered by the system. Skipping mention-level evaluation... ***"
+else
+    echo "*** Number of gold-annotated questions with mentions answered by the system: $MCOUNTER"
+    #ABSDATADIR="$(cd "$(dirname "$DATADIR")"; pwd)/$(basename "$DATADIR")"
+    python3 evaluate_mentions.py $DATADIR $SYSTEMDIR $GOLDDIR
+fi
 
 JSONDIR="$DATADIR/answers.json"
 if [ ! -f "$JSONDIR" ]; then
