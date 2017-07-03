@@ -5,6 +5,7 @@ import hashlib
 import spacy_to_naf
 from lxml import etree
 from spacy.en import English
+from collections import defaultdict
 import json
 import os
 
@@ -59,8 +60,8 @@ def text2conll_one_file(outfile, doc_id, discourse, text, pre=False):
 
     for wf_el in doc.xpath('text/wf'):
         sent_id = wf_el.get('sent')
-        token_id = wf_el.get('id')
-        id_ = f'd{doc_id}.s{sent_id}.{token_id}'
+        token_id = wf_el.get('id')[1:]
+        id_ = f'{doc_id}.{sent_id}.{token_id}'
 
         if pre:
             info = [id_, wf_el.get('offset'), wf_el.get('length')]
@@ -72,7 +73,7 @@ def text2conll_one_file(outfile, doc_id, discourse, text, pre=False):
 
 class Question:
     """
-    represents one instance of a question 
+    represents one instance of a question
     with metrics valued computed
     """
 
@@ -122,8 +123,7 @@ class Question:
     def question(self, subtask, event_types, debug=False):
 
         system_input = {'subtask': subtask,
-                        'event_types': event_types,
-                        'all_doc_ids': self.all_doc_ids}
+                        'event_types': event_types}
 
         time_chunk = ''
         location_chunk = ''
@@ -184,7 +184,7 @@ class Question:
     @property
     def num_a_sources(self):
         return len(self.a_sources)
-    
+
     @property
     def c_sources(self):
         return get_sources(self.confusion_df)
@@ -192,7 +192,7 @@ class Question:
     @property
     def num_c_sources(self):
         return len(self.c_sources)
-    
+
     @property
     def c_avg_num_sources(self):
         if self.confusion_incident_uris:
@@ -252,24 +252,22 @@ class Question:
         """
         create one conll file per question, which serves as input file
         for task participants
-        
-        :param list dfs: [gold_df, confusion_df]
-        :param str output_path: output path where conll file will be stored 
+
+        :param list dfs: [('gold', gold_df), ('confusion', confusion_df)]
+        :param str output_path: output path where conll file will be stored
         :param bool debug: set to True for debugging
         """
         news_article_template = '../EventRegistries/GunViolenceArchive/the_violent_corpus/{incident_uri}/{the_hash}.json'
-        all_doc_ids = set()
 
         outfile = open(output_path, 'w')
+        self.all_doc_ids = defaultdict(list)
 
-        for df in dfs:
+        for type_df, df in dfs:
             for index, row in df.iterrows():
                 for source_url in row['incident_sources']:
                     hash_obj = hashlib.md5(source_url.encode())
                     the_hash = hash_obj.hexdigest()
                     incident_uri = row['incident_uri']
-
-                    all_doc_ids.add(the_hash)
 
                     path = news_article_template.format_map(locals())
                     try:
@@ -278,11 +276,14 @@ class Question:
                     except FileNotFoundError:
                         continue
 
+                    if type_df == 'gold':
+                        self.all_doc_ids[incident_uri].append(source_url)
+
                     # write begin document
-                    outfile.write('begin ({the_hash});\n'.format_map(locals()))
+                    outfile.write('#begin document ({the_hash});\n'.format_map(locals()))
 
                     # write dct
-                    info = ['DCT', str(news_article_obj.dct), 'DCT', '-']
+                    info = [the_hash + '.DCT', str(news_article_obj.dct), 'DCT', '-']
                     outfile.write('\t'.join(info) + '\n')
 
                     # write title
@@ -293,11 +294,10 @@ class Question:
 
 
                     # write end document
-                    outfile.write('end document\n')
+                    outfile.write('#end document\n')
 
         outfile.close()
 
-        self.all_doc_ids = list(all_doc_ids)
 
 
 
@@ -307,7 +307,7 @@ class Question:
         """
         given a pandas dataframe, convert articles to conll
 
-        :param pandas.core.frame.DataFrame a_df: 
+        :param pandas.core.frame.DataFrame a_df:
         :param str output_folder: the output folder
         """
         news_article_template = '../EventRegistries/GunViolenceArchive/the_violent_corpus/{incident_uri}/{the_hash}.json'
@@ -443,8 +443,8 @@ class GVDB:
     @property
     def num_shooter_annotations(self):
         return self.num_part_annotations('shooter-section')
-    
-    
+
+
 class NewsItem:
 
     def __init__(self, title='',
