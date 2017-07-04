@@ -28,8 +28,6 @@ if __name__=="__main__":
         all_candidates.update(candidates)
         print(len(all_candidates))
 
-
-
     # convert trial data
     questions = dict()
     answers = dict()

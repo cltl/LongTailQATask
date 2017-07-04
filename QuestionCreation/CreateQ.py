@@ -12,7 +12,7 @@ if __name__=="__main__":
     parser.add_argument('-d', dest='path_gva_df', required=True, help='path to gva frame (../EventRegistries/GunViolenceArchive/frames/all)')
     parser.add_argument('-e', dest='event_types', required=True, help='event types separated by underscore e.g. killing_injuring')
     parser.add_argument('-s', dest='subtask', required=True, help='1 | 2 | 3')
-    parser.add_argument('-o', dest='output_folder', required=True, help='folder where output wsd will be stored')
+    parser.add_argument('-o', dest='output_folder', required=True, help='folder where output will be stored')
     args = parser.parse_args()
 
     # load arguments
@@ -35,7 +35,6 @@ if __name__=="__main__":
     # set min and max number of incidents
     min_num_answer_incidents = 0
     max_num_answer_incidents = 99999
-    count_participants=False
 
     if subtask==1:
         min_num_answer_incidents = 1
