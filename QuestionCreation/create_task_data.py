@@ -43,7 +43,7 @@ if __name__=="__main__":
             break
 
         dfs = [('gold', candidate.answer_df),
-               # ('confusion', candidate.confusion_df)
+               ('confusion', candidate.confusion_df)
                ]
 
         output_path = '%s/system_input/%s.conll' % (args.output_folder, candidate.q_id)
