@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 bindir="trial_bin"
-datadir="../Data"
+datadir="output"
 framefile="../EventRegistries/GunViolenceArchive/frames/all"
 
 if [ ! -f $framefile ]; then

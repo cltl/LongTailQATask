@@ -29,7 +29,7 @@ def text2conll_one_file(nlp, doc_id, discourse, text, pre=False):
     for wf_el in doc.xpath('text/wf'):
         sent_id = wf_el.get('sent')
         token_id = wf_el.get('id')[1:]
-        id_ = f'{doc_id}.{sent_id}.{token_id}'
+        id_ = '{doc_id}.{sent_id}.{token_id}'.format_map(locals())
 
         if pre:
             info = [id_, wf_el.get('offset'), wf_el.get('length')]
