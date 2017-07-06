@@ -3,7 +3,8 @@ import subprocess
 import json
 from glob import glob
 import pickle
-import sys
+import os
+from random import shuffle
 
 if __name__=="__main__":
     parser = argparse.ArgumentParser(description='Create participant data for SemEval-2018 task 5')
@@ -20,42 +21,42 @@ if __name__=="__main__":
     for bash_command in bash_commands:
         output = subprocess.check_output(bash_command, shell=True)
 
-
     # load all candidates
     all_candidates = set()
     for bin_path in glob(args.input_folder + '/*.bin'):
         candidates = pickle.load(open(bin_path, 'rb'))
         all_candidates.update(candidates)
-        print(len(all_candidates))
+
+    print(len(all_candidates))
+
+    # load tokenization
+    path_cache_tokenization = '%s/tokenization.cache' % args.input_folder
+    with open(path_cache_tokenization, 'rb') as infile:
+        doc_id2conll = pickle.load(infile)
+
 
     # convert trial data
     questions = dict()
     answers = dict()
 
-    maximum = 20
-    counter = 0
-    for candidate in candidates:
+    for candidate in all_candidates:
 
-        counter += 1
-        if counter == maximum:
-            break
-
+        types_and_rows = []
         dfs = [('gold', candidate.answer_df),
-               ('confusion', candidate.confusion_df)
-               ]
+               ('confusion', candidate.confusion_df)]
+        for a_type, a_df in dfs:
+            for index, row in a_df.iterrows():
+                types_and_rows.append((a_type, row))
+        shuffle(types_and_rows)
 
+        # create answer (and validate)
         output_path = '%s/system_input/%s.conll' % (args.output_folder, candidate.q_id)
-        candidate.to_conll_one_file_per_question(dfs, output_path)
-        one_question = candidate.question()
+        candidate.generate_answer_info(types_and_rows, doc_id2conll, output_path, debug=False)
 
-        if len(candidate.all_doc_ids) != candidate.answer:
-            print('mismatch answer and incidents/documents')
-
-        if all([one_question is not None,
-                len(candidate.all_doc_ids) >= 2]):
-            questions[candidate.q_id] = one_question
-            answers[candidate.q_id] = {'numerical_answer': len(candidate.all_doc_ids),
-                                       'answer_docs': candidate.all_doc_ids}
+        # update question and answer dictionaries
+        if candidate.to_include_in_task:
+            questions[candidate.q_id] = candidate.question()
+            answers[candidate.q_id] = candidate.answer_info
 
     question_out_path = '%s/questions.json' % args.output_folder
     with open(question_out_path, 'w') as outfile:

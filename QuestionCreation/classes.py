@@ -47,30 +47,6 @@ def get_dcts(dataframe):
     return dcts
 
 
-def text2conll_one_file(outfile, doc_id, discourse, text, pre=False):
-    """
-    use spacy to output text (tokenized) in conll
-
-    :param _io.TextIOWrapper outfile: outfile
-    :param str doc_id: document identifier
-    :param str discourse: TITLE | BODY
-    :param str text: content (either title or context of news article)
-    """
-    doc = spacy_to_naf.text_to_NAF(text, nlp)
-
-    for wf_el in doc.xpath('text/wf'):
-        sent_id = wf_el.get('sent')
-        token_id = wf_el.get('id')[1:]
-        id_ = f'{doc_id}.{sent_id}.{token_id}'
-
-        if pre:
-            info = [id_, wf_el.get('offset'), wf_el.get('length')]
-            outfile.write('\t'.join(info) + '\n')
-        else:
-            info = [id_, wf_el.text, discourse, '-']
-            outfile.write('\t'.join(info) + '\n')
-
-
 class Question:
     """
     represents one instance of a question
@@ -92,7 +68,6 @@ class Question:
                  confusion_incident_uris,
                  subtask,
                  event_types):
-        self.q_id = int(q_id)
         self.confusion_factors = confusion_factors
         self.granularity = granularity
         self.sf = sf
@@ -107,6 +82,8 @@ class Question:
         self.to_include_in_task = True
         self.subtask=subtask
         self.event_types=event_types
+        self.q_id = '%s-%s' % (self.subtask, q_id)
+
 
     @property
     def participant_confusion(self):
@@ -123,10 +100,6 @@ class Question:
     @property
     def num_both_sf_overlap(self):
         return len(self.meanings)
-
-    @property
-    def part_answer(self):
-        return sum(len(row['participants']) for index, row in self.answer_df.iterrows())
 
     @property
     def answer(self):
@@ -170,6 +143,7 @@ class Question:
         elif self.subtask==2:
             the_question = 'How many {self.event_types} events happened {time_chunk}{location_chunk}{participant_chunk}?'.format_map(locals())
         elif self.subtask==3:
+
             the_question = 'How many people were involved in {self.event_types} events which happened {time_chunk}{location_chunk}{participant_chunk}?'.format_map(locals())
 
         if debug:
@@ -265,145 +239,78 @@ class Question:
         return total
 
 
-    def to_conll_one_file_per_question(self, dfs, output_path, debug=False):
+    def generate_answer_info(self, type_and_row, doc_id2conll, output_path, debug=False):
         """
         create one conll file per question, which serves as input file
         for task participants
 
-        :param list dfs: [('gold', gold_df), ('confusion', confusion_df)]
-        :param str output_path: output path where conll file will be stored
+        :param list type_and_row: list of tuples ('gold' | 'confusion', df row)
+        :param dict doc_id2conll: source url -> conll output
+        :param str output_path: output path where conll file potentially (if validation is ok) will be stored
         :param bool debug: set to True for debugging
         """
-        news_article_template = '../EventRegistries/GunViolenceArchive/the_violent_corpus/{incident_uri}/{the_hash}.json'
+        all_doc_ids = defaultdict(list)
+        parts_info = dict()
 
-        outfile = open(output_path, 'w')
-        self.all_doc_ids = defaultdict(list)
+        for a_type, a_row in type_and_row:
+            for source_url in a_row['incident_sources']:
 
-        for type_df, df in dfs:
-            for index, row in df.iterrows():
-                for source_url in row['incident_sources']:
-                    hash_obj = hashlib.md5(source_url.encode())
-                    the_hash = hash_obj.hexdigest()
-                    incident_uri = row['incident_uri']
-
-                    path = news_article_template.format_map(locals())
-                    try:
-                        with open(path, 'rb') as infile:
-                            news_article_obj = pickle.load(infile)
-                    except FileNotFoundError:
-                        continue
-
-                    if type_df == 'gold':
-                        self.all_doc_ids[incident_uri].append(source_url)
-
-                    # write begin document
-                    outfile.write('#begin document ({the_hash});\n'.format_map(locals()))
-
-                    # write dct
-                    info = [the_hash + '.DCT', str(news_article_obj.dct), 'DCT', '-']
-                    outfile.write('\t'.join(info) + '\n')
-
-                    # write title
-                    text2conll_one_file(outfile, the_hash, 'TITLE', news_article_obj.title)
-
-                    # write body
-                    text2conll_one_file(outfile, the_hash, 'BODY', news_article_obj.content)
-
-
-                    # write end document
-                    outfile.write('#end document\n')
-
-        outfile.close()
-
-
-
-
-
-
-    def to_conll(self, a_df, output_folder, debug=False):
-        """
-        given a pandas dataframe, convert articles to conll
-
-        :param pandas.core.frame.DataFrame a_df:
-        :param str output_folder: the output folder
-        """
-        news_article_template = '../EventRegistries/GunViolenceArchive/the_violent_corpus/{incident_uri}/{the_hash}.json'
-        path_doc_id2article = f'{output_folder}/pre/doc_id2article_url.json'
-
-        if not os.path.exists(path_doc_id2article):
-            doc_id2article = dict()
-        else:
-            doc_id2article = json.load(open(path_doc_id2article))
-
-
-        for index, row in a_df.iterrows():
-
-            # load news sources
-            news_article_objs = set()
-            for source_url in row['incident_sources']:
-                hash_obj = hashlib.md5(source_url.encode())
-                the_hash = hash_obj.hexdigest()
-                incident_uri = row['incident_uri']
-
-                path = news_article_template.format_map(locals())
-
-                try:
-                    with open(path, 'rb') as infile:
-                        news_article_obj = pickle.load(infile)
-                        news_article_objs.add(news_article_obj)
-
-                        phase = 'pre'
-                        doc_id = the_hash
-
-                        content_type = 'body'
-                        output_path = f'{output_folder}/{phase}/{doc_id}.{content_type}.conll'
-                        text2conll(output_path, the_hash, news_article_obj.content)
-
-                        content_type = 'title'
-                        output_path = f'{output_folder}/{phase}/{doc_id}.{content_type}.conll'
-                        text2conll(output_path, the_hash, news_article_obj.title)
-
-                        content_type = 'dct'
-                        phase = 'post'
-                        output_path = f'{output_folder}/{phase}/{doc_id}.{content_type}.conll'
-                        with open(output_path, 'w') as outfile:
-                            outfile.write(str(news_article_obj.dct))
-
-                        doc_id2article[the_hash] = source_url
-
-                        hash_obj = hashlib.md5(news_article_obj.content.encode())
-                        content_hash = hash_obj.hexdigest()
-
-                        hash_obj = hashlib.md5(news_article_obj.title.encode())
-                        title_hash = hash_obj.hexdigest()
-
-                        content_type = 'checksum'
-                        phase = 'pre'
-                        output_path = f'{output_folder}/{phase}/{doc_id}.{content_type}.conll'
-
-                        print(incident_uri)
-                        input('continue?')
-                        checksum_info = {'title': title_hash,
-                                         'incident_id' : row['incident_uri'],
-                                         'body': content_hash}
-
-                        with open(output_path, 'w') as outfile:
-                            json.dump(checksum_info, outfile)
-
-
-                        if debug:
-                            break
-
-                except FileNotFoundError:
+                if source_url not in doc_id2conll:
                     continue
 
-        with open(path_doc_id2article, 'w') as outfile:
-            json.dump(doc_id2article, outfile)
+                if a_type == 'gold':
+                    incident_uri = a_row['incident_uri']
+                    all_doc_ids[incident_uri].append(source_url)
 
+                    parts_info[incident_uri] = {'num_killed': a_row['num_killed'],
+                                                'num_injured': a_row['num_injured'] }
 
-    def set_all_attributes(self):
-        vars(self)
+        # validate
+        the_question = self.question()
 
+        self.numerical_answer = len(all_doc_ids)
+
+        # min num of answers need
+        needed_answers = 1
+        if self.subtask == 2:
+            needed_answers = 2
+
+        # validate
+        if the_question is None:
+            self.to_include_in_task = False
+
+        if self.subtask in {1,2}:
+            if self.numerical_answer < needed_answers:
+                self.to_include_in_task = False
+
+            self.answer_info = {'numerical_answer': self.numerical_answer,
+                                'answer_docs': all_doc_ids}
+
+        if self.subtask == 3:
+            part_numerical_answer = 0
+
+            if 'killing' in self.event_types:
+                part_numerical_answer += sum([part_info['num_killed']
+                                              for part_info in parts_info.values()])
+            elif 'injuring' in self.event_types:
+                part_numerical_answer += sum([part_info['num_injured']
+                                              for part_info in parts_info.values()])
+
+            self.answer_info = {'numerical_answer': part_numerical_answer,
+                                'answer_docs': all_doc_ids,
+                                'part_info' : parts_info}
+
+        # write to file
+        if self.to_include_in_task:
+            with open(output_path, 'w') as outfile:
+                for a_type, a_row in type_and_row:
+                    for source_url in a_row['incident_sources']:
+                        if source_url not in doc_id2conll:
+                            continue
+
+                        conll_info = doc_id2conll[source_url]
+                        for line in conll_info:
+                            outfile.writelines(line)
 
 class GVDB:
     """

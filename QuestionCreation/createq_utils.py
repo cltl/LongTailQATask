@@ -88,6 +88,7 @@ def event_typing(event_types, df, initial_answer_uris, confusion_uris):
     return new_answer_uris, confusion_uris
 
 def lookup_and_merge(look_up,
+                     q_id,
                      parameters2incident_uris,
                      confusion_tuple,
                      min_num_answer_incidents,
@@ -96,8 +97,7 @@ def lookup_and_merge(look_up,
                      event_types,
                      df,
                      debug=False,
-                     inspect_one=False,
-                     set_attr_values=False):
+                     inspect_one=False):
     """
     create Question instances 
     
@@ -118,7 +118,6 @@ def lookup_and_merge(look_up,
     :return set of Question class instances (each representing a question)
     """
     all_questions = set()
-    q_id = 1
 
     for granularity in (look_up[confusion_tuple]):
         for sf in look_up[confusion_tuple][granularity]:
@@ -184,9 +183,6 @@ def lookup_and_merge(look_up,
                     if debug:
                         q_instance.debug()
 
-                    if set_attr_values:
-                        vars(q_instance)
-
                     q_id += 1
 
                     if inspect_one:
@@ -214,4 +210,4 @@ def lookup_and_merge(look_up,
 
                     all_questions.add(q_instance)
 
-    return all_questions
+    return q_id, all_questions
