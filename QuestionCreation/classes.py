@@ -292,7 +292,7 @@ class Question:
             if 'killing' in self.event_types:
                 part_numerical_answer += sum([part_info['num_killed']
                                               for part_info in parts_info.values()])
-            elif 'injuring' in self.event_types:
+            if 'injuring' in self.event_types:
                 part_numerical_answer += sum([part_info['num_injured']
                                               for part_info in parts_info.values()])
 
