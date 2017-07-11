@@ -18,14 +18,10 @@ def deduplicate(cands):
             if c1.q_id==c2.q_id:
                 continue
             if c2.to_include_in_task and same_answer(c1.answer_info, c2.answer_info):
-                print(c1.q_id, c2.q_id)
-                print(c1.answer_info['answer_docs'].keys(), c2.answer_info['answer_docs'].keys())
                 if choice('01')=='0': # choose c1
                     c2.to_include_in_task=False
-                    print("I CHOOSE C1")
                 else: # choose c2
                     c1.to_include_in_task=False
-                    print("I CHOSE C2")
                     break
     return cands
 
@@ -47,6 +43,7 @@ if __name__=="__main__":
     # load all candidates
     all_candidates = set()
     for bin_path in glob(args.input_folder + '/*.bin'):
+        print("Reading %s" % bin_path)
         candidates = pickle.load(open(bin_path, 'rb'))
         all_candidates.update(candidates)
 
@@ -56,6 +53,8 @@ if __name__=="__main__":
     path_cache_tokenization = '%s/tokenization.cache' % args.input_folder
     with open(path_cache_tokenization, 'rb') as infile:
         doc_id2conll = pickle.load(infile)
+
+    
 
     # convert trial data
     questions = dict()
@@ -75,10 +74,12 @@ if __name__=="__main__":
         candidate.generate_answer_info(types_and_rows, doc_id2conll, debug=False)
 
     print("now deduplicating")
-#    new_candidates=deduplicate(candidates)
-    new_candidates=candidates
+    all_candidates=deduplicate(all_candidates)
+#    new_candidates=candidates
 
-    for candidate in new_candidates:
+    print("deduplication done. storing")
+
+    for candidate in all_candidates:
         # update question and answer dictionaries
         if candidate.to_include_in_task:
             questions[candidate.q_id] = candidate.question()
