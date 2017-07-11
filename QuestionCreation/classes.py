@@ -239,14 +239,13 @@ class Question:
         return total
 
 
-    def generate_answer_info(self, type_and_row, doc_id2conll, output_path, debug=False):
+    def generate_answer_info(self, type_and_row, doc_id2conll, debug=False):
         """
         create one conll file per question, which serves as input file
         for task participants
 
         :param list type_and_row: list of tuples ('gold' | 'confusion', df row)
         :param dict doc_id2conll: source url -> conll output
-        :param str output_path: output path where conll file potentially (if validation is ok) will be stored
         :param bool debug: set to True for debugging
         """
         all_doc_ids = defaultdict(list)
@@ -300,6 +299,7 @@ class Question:
                                 'answer_docs': all_doc_ids,
                                 'part_info' : parts_info}
 
+        """
         # write to file
         if self.to_include_in_task:
             with open(output_path, 'w') as outfile:
@@ -311,6 +311,7 @@ class Question:
                         conll_info = doc_id2conll[source_url]
                         for line in conll_info:
                             outfile.writelines(line)
+        """
 
 class GVDB:
     """
