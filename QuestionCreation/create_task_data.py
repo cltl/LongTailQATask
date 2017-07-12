@@ -88,7 +88,7 @@ if __name__=="__main__":
             # write to file
             output_path = '%s/system_input/%s.conll' % (args.output_folder, candidate.q_id)
             with open(output_path, 'w') as outfile:
-                for a_type, a_row in types_and_rows:
+                for a_type, a_row in candidate.types_and_rows:
                     for source_url in a_row['incident_sources']:
                         if source_url not in doc_id2conll:
                             continue

@@ -67,7 +67,8 @@ class Question:
                  confusion_df,
                  confusion_incident_uris,
                  subtask,
-                 event_types):
+                 event_types,
+                 types_and_rows=None):
         self.confusion_factors = confusion_factors
         self.granularity = granularity
         self.sf = sf
@@ -83,6 +84,7 @@ class Question:
         self.subtask=subtask
         self.event_types=event_types
         self.q_id = '%s-%s' % (self.subtask, q_id)
+        self.types_and_rows=types_and_rows
 
 
     @property
@@ -250,6 +252,8 @@ class Question:
         """
         all_doc_ids = defaultdict(list)
         parts_info = dict()
+
+        self.types_and_rows=type_and_row
 
         for a_type, a_row in type_and_row:
             for source_url in a_row['incident_sources']:
