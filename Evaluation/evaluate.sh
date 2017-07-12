@@ -11,6 +11,48 @@ DATADIR="$1"
 SYSTEMDIR="$2"
 GOLDDIR="$3"
 
+
+GOLDJSONDIR="$DATADIR/answers.json"
+SYSJSONDIR="$SYSTEMDIR/answers.json"
+
+##### 1) INCIDENT- and DOCUMENT-LEVEL EVALUATION #####
+
+if [ ! -f "$GOLDJSONDIR" ]; then
+    echo "The gold JSON file with answers does not exist. Exiting now..."
+    exit
+fi
+
+if [ ! -f "$SYSJSONDIR" ]; then
+    echo "The gold JSON file with answers does not exist. Exiting now..."
+    exit
+fi
+
+### CHECKS ###
+
+if [ ! -d $DATADIR ]; then
+    echo "WARN: $DATADIR does not exist. Creating it now..."
+    mkdir $DATADIR
+fi
+
+if [ ! -d "$DATADIR/scores" ]; then
+    echo "WARN: $DATADIR/scores does not exist. Creating it now..."
+    mkdir "$DATADIR/scores"
+else
+    #for metric in muc bcub ceafm ceafe blanc; do
+    rm "$DATADIR/scores"/*
+    #done
+fi
+
+### CHECKS done ###
+
+python3 evaluate_answers.py $DATADIR $SYSJSONDIR $GOLDJSONDIR
+
+##### 2) MENTION-LEVEL EVALUATION #####
+
+echo "Incident- and document-level evaluation is finished. Now evaluating your mentions..."
+
+### CHECKS ###
+
 if [ ! -d "$SCORERDIR" ]; then
     echo "*** The coreference scorer directory was not detected. Now cloning ... ***"
     echo
@@ -30,13 +72,6 @@ else
     echo
 fi
 
-### CHECKS ###
-
-if [ ! -d $DATADIR ]; then
-    echo "WARN: $DATADIR does not exist. Creating it now..."
-    mkdir $DATADIR
-fi
-
 goldfiles=$(shopt -s nullglob dotglob; echo $GOLDDIR/*)
 if (( ${#goldfiles} )); then
     echo "GOLD directory exists and is not empty!"
@@ -53,16 +88,7 @@ else
     exit
 fi
 
-if [ ! -d "$DATADIR/scores" ]; then
-    echo "WARN: $DATADIR/scores does not exist. Creating it now..."
-    mkdir "$DATADIR/scores"
-else
-    #for metric in muc bcub ceafm ceafe blanc; do
-    rm "$DATADIR/scores"/*
-    #done
-fi
-
-### MENTION - LEVEL EVALUATION ###
+### CHECKS done. ###
 
 MCOUNTER=0
 for goldfile in "${GOLDDIR}"/*.conll
@@ -89,11 +115,4 @@ else
     python3 evaluate_mentions.py $DATADIR $SYSTEMDIR $GOLDDIR
 fi
 
-JSONDIR="$DATADIR/answers.json"
-if [ ! -f "$JSONDIR" ]; then
-    echo "The JSON file with answers does not exist. Exiting now..."
-    exit
-fi
-
-python3 evaluate_more.py $DATADIR $SYSTEMDIR $JSONDIR
 

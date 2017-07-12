@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 import math
 import sys
-from glob import glob
 from pprint import pprint
 import json
 
@@ -10,15 +9,16 @@ import config
 metrics=config.metrics
 expected=config.expected
 
-def extract_gold(data):
+def extract_data(data):
     qs=set(data.keys())
     docs={}
     incidents={}
     for q in data:
-        docs[q]=set(data[q]["answer_docs"])
+        docs[q]=set(doc for inc_id in data[q]["answer_docs"] for doc in data[q]["answer_docs"][inc_id])
         incidents[q]=data[q]["numerical_answer"]
     return docs, incidents, qs
 
+"""
 def extract_docs(mydir):
     docs={}
     incidents={}
@@ -41,6 +41,7 @@ def extract_docs(mydir):
         incidents[q]=len(incs)
         qs.add(q)
     return docs, incidents, qs
+"""
 
 def accuracy_evaluation(sys_incidents, gold_incidents, questions):
     correct=0
@@ -70,9 +71,14 @@ def document_evaluation(sys_documents, gold_documents, questions):
         fp = len(sys_docs[q] - gold_docs[q])
         fn = len(gold_docs[q] - sys_docs[q])
 
-        p[q] = tp/(fp + tp)
-        r[q] = tp/(fn + tp)
-        f1[q] = 2*p[q]*r[q]/(p[q]+r[q])
+        if tp+fp+fn>0:
+            p[q] = tp/(fp + tp)
+            r[q] = tp/(fn + tp)
+            f1[q] = 2*p[q]*r[q]/(p[q]+r[q])
+        else:
+            p[q]=1.0
+            r[q]=1.0
+            f1[q]=1.0
 
     return p, r, f1
 
@@ -87,10 +93,12 @@ def feq(a,b):
 
 if __name__=="__main__":
     datadir=sys.argv[1]
-    sysdir=sys.argv[2]
+    sysjson=sys.argv[2]
     goldjson=sys.argv[3]
     scoresdir = "%s/scores/" % datadir
 
+    with open(sysjson, 'r') as datafile:
+        sysdata=json.load(datafile)
         
     with open(goldjson, 'r') as datafile:
         golddata=json.load(datafile)
@@ -103,10 +111,9 @@ if __name__=="__main__":
 
     scores={}
 
-    gold_docs, gold_incidents, gold_qs = extract_gold(golddata)
-    sys_docs, sys_incidents, sys_qs = extract_docs(sysdir)
+    gold_docs, gold_incidents, gold_qs = extract_data(golddata)
+    sys_docs, sys_incidents, sys_qs = extract_data(sysdata)
     questions = gold_qs & sys_qs
-
 
     print("*** Document-level evaluation ***")
 
