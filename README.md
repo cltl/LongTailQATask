@@ -1,6 +1,25 @@
-# LongTailQATask
+# SemEval-2018 Task 5 #
 
-This repository contains the code for the pilot of the task **Counting Events and Participants within Highly Ambiguous Data covering a very long tail** proposed to SemEval 2018. The pilot is described in *Section 7* of our proposal.
+Welcome!
+
+This repository contains the code for the SemEval-2018 task 5 **Counting Events and Participants within Highly Ambiguous Data covering a very long tail**. 
+
+For general information on this task and for joining as a participant, please visit our Codalab competition site: https://competitions.codalab.org/competitions/17077.
+
+The code distribution of this task consists of the following:
+  - Installation script to get you started with the dependencies (*see https://github.com/cltl/LongTailQATask/blob/master/INSTALL.md* for an explanation of the installation)
+  - The task data, consisting of questions and the documents (for the trial data, we also provide the answers)
+  - Evaluation scripts and baselines (*see https://github.com/cltl/LongTailQATask/blob/master/Evaluation/README.md* for the details on the evaluation)
+
+### Contact:
+
+Filip Ilievski (f.ilievski@vu.nl)
+
+Marten Postma (m.c.postma@vu.nl)
+
+### REMOVE THE REST? ###
+
+The pilot is described in *Section 7* of our proposal.
 
 Following the conceptual division in the proposal text, the task implementation is divided into two parts: 
 
@@ -35,8 +54,3 @@ The main question creation notebooks are `CreateQ.ipynb` and `Stats.ipynb`, whic
 
 Other notable notebooks are `Participant.ipynb` and `Location check.ipynb`, which inspect the ambiguity that might occur with the participants and the locations in the data.
 
-### Contact:
-
-Filip Ilievski (f.ilievski@vu.nl)
-
-Marten Postma (m.c.postma@vu.nl)
