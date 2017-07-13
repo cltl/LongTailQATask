@@ -1,18 +1,18 @@
-### Evaluation ###
+## Evaluation ##
 
-#### Explanation of the levels of evaluation ####
+### Explanation of the levels of evaluation ###
 
 Evaluation in this task is performed on three levels: incident-level, document-level, and mention-level. 
 
-The incident-level evaluation compares the numeric answer provided by the system to the gold answer for each of the questions. The comparison is done twofold: by exact matching and by RMSE for difference scoring.
+**The incident-level evaluation** compares the numeric answer provided by the system to the gold answer for each of the questions. The comparison is done twofold: by exact matching and by RMSE for difference scoring.
 
-The document-level evaluation compares the set of answer documents between the system and the gold standard. The sets of documents for each question are compared by the customary metrics of Precision, Recall and F1-score.
+**The document-level evaluation** compares the set of answer documents between the system and the gold standard. The sets of documents for each question are compared by the customary metrics of Precision, Recall and F1-score.
 
-The mention-level evaluation is essentially a cross-document event coreference evaluation. We use the customary metrics for event coreference: BCUB, BLANC, CEAF_E, CEAF_M, and MUC.
+**The mention-level evaluation** is essentially a cross-document event coreference evaluation. We use the customary metrics for event coreference: BCUB, BLANC, CEAF_E, CEAF_M, and MUC.
 
 For each of the three levels of evaluation, the scores per question are then averaged over all questions to compute a single score for that level.
 
-#### Answer formats ####
+### Answer formats ###
 
 Users provide two different outputs:
 
@@ -47,7 +47,7 @@ Users provide two different outputs:
   
 **Note:** Both for 1) and 2), the systems can decide to answer/annotate a subset of all questions. Our scripts are flexible with respect to this, and we note also the number of questions answered.
 
-#### Running the evaluation scripts ####
+### Running the evaluation scripts ###
 
 Our evaluation is based on two Bash scripts, corresponding to the answer formats defined above:
 
@@ -65,6 +65,6 @@ This setup is analogous to the setup in 1), except that this time the script req
 
 The mention-level evaluation uses an external scoring script for event coreference from https://github.com/conll/reference-coreference-scorers/. This package is automatically cloned when running the evaluation script for the first time.
 
-#### TESTS ####
+### TESTS ###
 
 Before running the `evaluate_answers.sh` and `evaluate_mentions.sh` scripts on their own files, we advice task participants to first ensure the evaluation scripts are functioning as expected, i.e. if the evaluation on all levels gives the correct scores. This can be done by executing ??? (TODO: finish this later)
