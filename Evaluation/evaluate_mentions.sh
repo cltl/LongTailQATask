@@ -1,55 +1,19 @@
 #!/bin/sh
 
-SCORERDIR="reference-coreference-scorers"
-
-if [ -z "$1" ] || [ -z "$2" ] || [ -z "$3" ]; then
-    echo "Please supply 3 arguments to this script: DATADIR, SYSTEMDIR, GOLDDIR. Usage: bash evaluate.sh <DATADIR> <SYSTEMDIR> <GOLDDIR>"
-    exit
-fi
-
-DATADIR="$1"
-SYSTEMDIR="$2"
-GOLDDIR="$3"
-
-
-GOLDJSONDIR="$DATADIR/answers.json"
-SYSJSONDIR="$SYSTEMDIR/answers.json"
-
-##### 1) INCIDENT- and DOCUMENT-LEVEL EVALUATION #####
-
-if [ ! -f "$GOLDJSONDIR" ]; then
-    echo "The gold JSON file with answers does not exist. Exiting now..."
-    exit
-fi
-
-if [ ! -f "$SYSJSONDIR" ]; then
-    echo "The gold JSON file with answers does not exist. Exiting now..."
-    exit
-fi
-
-### CHECKS ###
-
-if [ ! -d $DATADIR ]; then
-    echo "WARN: $DATADIR does not exist. Creating it now..."
-    mkdir $DATADIR
-fi
-
-if [ ! -d "$DATADIR/scores" ]; then
-    echo "WARN: $DATADIR/scores does not exist. Creating it now..."
-    mkdir "$DATADIR/scores"
-else
-    #for metric in muc bcub ceafm ceafe blanc; do
-    rm "$DATADIR/scores"/*
-    #done
-fi
-
-### CHECKS done ###
-
-python3 evaluate_answers.py $DATADIR $SYSJSONDIR $GOLDJSONDIR
-
 ##### 2) MENTION-LEVEL EVALUATION #####
 
-echo "Incident- and document-level evaluation is finished. Now evaluating your mentions..."
+if [ -z "$1" ] || [ -z "$2" ] || [ -z "$3" ]; then
+    echo "Please supply 3 arguments to this script: DATADIR, SYSTEMDIR, GOLDDIR."
+    echo "Usage: "
+    echo "bash evaluate.sh <SYSTEMDIR> <GOLDDIR> <OUTPUTDIR>"
+    exit
+fi
+
+SYSTEMDIR="$1"
+GOLDDIR="$2"
+OUTPUTDIR="$3"
+
+SCORERDIR="reference-coreference-scorers"
 
 ### CHECKS ###
 
@@ -88,7 +52,21 @@ else
     exit
 fi
 
-### CHECKS done. ###
+if [ ! -d "$OUTPUTDIR" ]; then
+    echo "WARN: $OUTPUTDIR does not exist. Creating it now..."
+    mkdir "$OUTPUTDIR"
+#else
+    #for metric in muc bcub ceafm ceafe blanc; do
+    #rm "$OUTPUTDIR"/*
+    #done
+fi
+
+if [ ! -d "$OUTPUTDIR" ]; then
+    echo "Problem with creating the output directory. Exiting ..."
+    exit
+fi
+
+### CHECKS done ###
 
 MCOUNTER=0
 for goldfile in "${GOLDDIR}"/*.conll
@@ -99,9 +77,9 @@ do
     else
         (( MCOUNTER++ ))
         for metric in muc bcub ceafm ceafe blanc; do
-            outfile="$DATADIR/scores/${metric}.${goldfile##*/}"
+            outfile="$OUTPUTDIR/${metric}.${goldfile##*/}"
             perl reference-coreference-scorers/scorer.pl $metric $goldfile $sysfile > $outfile
-            tail -2 $outfile | head -1 >> "$DATADIR/scores/${metric}_all.conll"
+            tail -2 $outfile | head -1 >> "$OUTPUTDIR/${metric}_all.conll"
         done
     fi
 done
@@ -112,7 +90,6 @@ if [ $MCOUNTER -eq 0 ]; then
 else
     echo "*** Number of gold-annotated questions with mentions answered by the system: $MCOUNTER"
     #ABSDATADIR="$(cd "$(dirname "$DATADIR")"; pwd)/$(basename "$DATADIR")"
-    python3 evaluate_mentions.py $DATADIR $SYSTEMDIR $GOLDDIR
+    python3 evaluate_mentions.py $SYSTEMDIR $GOLDDIR $OUTPUTDIR
 fi
-
 

@@ -34,16 +34,14 @@ def feq(a,b):
 if __name__=="__main__":
     if len(sys.argv)!=4:
         sys.exit()
-    datadir=sys.argv[1]
-    sysdir=sys.argv[2]
-    golddir=sys.argv[3]
-    scoresdir = "%s/scores/" % datadir
+    sysdir=sys.argv[1]
+    golddir=sys.argv[2]
+    scoresdir=sys.argv[3]
 
     TESTMODE=False
-    print('Data directory: %s' % datadir)
-    if datadir.strip('/')=="Test":
-        TESTMODE=True
-        print("Running in Test Mode: All scores will be checked against the expected ones.")
+#    if datadir.strip('/')=="Test":
+#        TESTMODE=True
+#        print("Running in Test Mode: All scores will be checked against the expected ones.")
 
     scores={}
 
