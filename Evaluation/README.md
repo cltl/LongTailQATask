@@ -17,16 +17,19 @@ For each of the three levels of evaluation, the scores per question are then ave
 Users provide two different outputs:
 
   1) For the incident- and the document-level evaluation, systems provide a single JSON file per subtask. This JSON file contains the numeric answers to all questions in that subtask, as well as the set of documents that provide evidence for the answer. For example:
-  ```{'1-101':
+  ```
+  {'1-101':
    {
       'numerical_answer': 3,
       'answer_docs': {'8', '11', '15', '17', '87'}
    }
-  }```
+  }
+  ```
 
   2) For the mention-level evaluation, systems are asked to provide a number of CoNLL files that contain mention-level event coreference on a cross-document level. Each CoNLL file represents the documents belonging to a single question. The users should only annotate the answer documents, i.e. the ones that provide evidence for the answer to the question. Each document in the CoNLL file starts with a *#begin document* row, and it ends with *#end document*. Each row of the document in the CoNLL file represents a single token, with the following fields: `token_id`, `token`, `document_part` (whether it is the title, the content or the document creation time), and `coreference_chain`.  Example CoNLL:
   
-```#begin document (748f14771b3febdc874b7827d151b6e0);
+```
+#begin document (748f14771b3febdc874b7827d151b6e0);
 748f14771b3febdc874b7827d151b6e0.DCT	2017-01-01	DCT	-
 748f14771b3febdc874b7827d151b6e0.1.0	Police	TITLE	-
 748f14771b3febdc874b7827d151b6e0.1.1	:	TITLE	-
@@ -43,7 +46,8 @@ Users provide two different outputs:
 6c9fa7f335e78ca818125c626d3bc216.DCT	2017-01-03	DCT	-
 6c9fa7f335e78ca818125c626d3bc216.1.0	Teen	TITLE	-
 6c9fa7f335e78ca818125c626d3bc216.1.1	suspect	TITLE	-
-...```
+...
+```
   
 **Note:** Both for 1) and 2), the systems can decide to answer/annotate a subset of all questions. Our scripts are flexible with respect to this, and we note also the number of questions answered.
 
