@@ -25,6 +25,8 @@ Users provide two different outputs:
    }
   }
   ```
+  
+  In practice, if a task participant takes part in all three subtasks, he should prepare three JSON files following the format above, one per subtask.
 
   2) For the mention-level evaluation, systems are asked to provide a number of CoNLL files that contain mention-level event coreference on a cross-document level. Each CoNLL file represents the documents belonging to a single question. The users should only annotate the answer documents, i.e. the ones that provide evidence for the answer to the question. Each document in the CoNLL file starts with a *#begin document* row, and it ends with *#end document*. Each row of the document in the CoNLL file represents a single token, with the following fields: `token_id`, `token`, `document_part` (whether it is the title, the content or the document creation time), and `coreference_chain`.  Example CoNLL:
   
@@ -60,6 +62,8 @@ Our evaluation is based on two Bash scripts, corresponding to the answer formats
 `bash evaluate_answers.sh <SYSTEM_JSON> <GOLD_JSON> <OUTPUT_JSON>`
 
 `SYSTEM_JSON` and `GOLD_JSON` are the JSON files that contain the system and gold answers, correspondingly, with their evidence documents. As mentioned above, this Bash script computes accuracy of the numeric answers, RMSE of the numeric answers, and Prec/Recall/F1 of the documents per question. We print the resulting scores in stdout, but we also store them in `OUTPUT_JSON` for convenience of our participants.
+
+**Note:** This script evaluates the performance on a single subtask. Participants taking part in multiple tasks should execute this script multiple times.
 
   2) The mention-level annotations in CoNLL format are evaluated by executing the Bash script `evaluate_mentions.sh` in this way:
 
