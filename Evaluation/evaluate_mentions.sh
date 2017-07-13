@@ -55,9 +55,9 @@ fi
 if [ ! -d "$OUTPUTDIR" ]; then
     echo "WARN: $OUTPUTDIR does not exist. Creating it now..."
     mkdir "$OUTPUTDIR"
-else
+#else
     #for metric in muc bcub ceafm ceafe blanc; do
-    rm "$OUTPUTDIR"/*
+    #rm "$OUTPUTDIR"/*
     #done
 fi
 
