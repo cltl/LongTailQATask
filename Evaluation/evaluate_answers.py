@@ -9,12 +9,15 @@ import config
 metrics=config.metrics
 expected=config.expected
 
-def extract_data(data):
+def extract_data(data, gold=True):
     qs=set(data.keys())
     docs={}
     incidents={}
     for q in data:
-        docs[q]=set(doc for inc_id in data[q]["answer_docs"] for doc in data[q]["answer_docs"][inc_id])
+        if gold:
+            docs[q]=set(doc for inc_id in data[q]["answer_docs"] for doc in data[q]["answer_docs"][inc_id])
+        else: # system's format is simpler
+            docs[q]=data[q]["answer_docs"]
         incidents[q]=data[q]["numerical_answer"]
     return docs, incidents, qs
 
@@ -92,10 +95,9 @@ def feq(a,b):
         return 0
 
 if __name__=="__main__":
-    datadir=sys.argv[1]
-    sysjson=sys.argv[2]
-    goldjson=sys.argv[3]
-    scoresdir = "%s/scores/" % datadir
+    sysjson=sys.argv[1]
+    goldjson=sys.argv[2]
+    scoresjson=sys.argv[3]
 
     with open(sysjson, 'r') as datafile:
         sysdata=json.load(datafile)
@@ -104,15 +106,14 @@ if __name__=="__main__":
         golddata=json.load(datafile)
 
     TESTMODE=False
-    print('Data directory: %s' % datadir)
-    if datadir.strip('/')=="Test":
-        TESTMODE=True
-        print("Running in Test Mode: All scores will be checked against the expected ones.")
+#    if datadir.strip('/')=="Test":
+#        TESTMODE=True
+#        print("Running in Test Mode: All scores will be checked against the expected ones.")
 
     scores={}
 
     gold_docs, gold_incidents, gold_qs = extract_data(golddata)
-    sys_docs, sys_incidents, sys_qs = extract_data(sysdata)
+    sys_docs, sys_incidents, sys_qs = extract_data(sysdata, False)
     questions = gold_qs & sys_qs
 
     print("*** Document-level evaluation ***")
@@ -157,9 +158,9 @@ if __name__=="__main__":
     print("*** Evaluation done. ***")
     print()
 
-    with open('%ssummary_inc_doc.json' % scoresdir, 'w') as outfile:
+    with open(scoresjson, 'w') as outfile:
         json.dump(scores, outfile)
-        print("*** Summary JSON stored in %ssummary_inc_doc.json . ***" % scoresdir)
+        print("*** Summary JSON stored in %s . ***" % scoresjson)
         print()
     if TESTMODE:
         print("ALL TESTS COMPLETED SUCCESSFULLY")
