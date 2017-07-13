@@ -4,12 +4,12 @@ Welcome!
 
 This repository contains the code for the SemEval-2018 task 5 **Counting Events and Participants within Highly Ambiguous Data covering a very long tail**. 
 
-For general information on this task and for joining as a participant, please visit our Codalab competition site: https://competitions.codalab.org/competitions/17077.
+For general information on this task and to join as a participant, please visit our Codalab competition site: https://competitions.codalab.org/competitions/17077.
 
 The code distribution of this task consists of the following:
   - Installation script to get you started with the dependencies (*see https://github.com/cltl/LongTailQATask/blob/master/INSTALL.md* for an explanation of the installation)
   - The task data, consisting of questions and the documents (for the trial data, we also provide the answers)
-  - Evaluation scripts and baselines (*see https://github.com/cltl/LongTailQATask/blob/master/Evaluation/README.md* for the details on the evaluation)
+  - Evaluation scripts and baselines (*visit https://github.com/cltl/LongTailQATask/blob/master/Evaluation/README.md* for details on the evaluation)
 
 ### Contact:
 
