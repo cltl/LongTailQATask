@@ -85,7 +85,17 @@ class Question:
         self.event_types=event_types
         self.q_id = '%s-%s' % (self.subtask, q_id)
         self.types_and_rows=types_and_rows
+        self.question_score = self.get_question_score()
 
+
+    def get_question_score(self):
+        """
+        """
+        if self.subtask in {1,2}:
+            return self.ev_answer * self.a_avg_num_sources * self.a_avg_date_spread
+
+        elif self.subtask == 3:
+            return None
 
     @property
     def participant_confusion(self):
@@ -115,6 +125,8 @@ class Question:
         time_chunk = ''
         location_chunk = ''
         participant_chunk = ''
+        event_type_dict = {'killing': 'killed',
+                           'injuring': 'injured'}
 
         for index, (confusion_factor, a_sf) in enumerate(zip(self.confusion_factors,
                                                              self.sf)):
@@ -145,8 +157,9 @@ class Question:
         elif self.subtask==2:
             the_question = 'How many {self.event_types} events happened {time_chunk}{location_chunk}{participant_chunk}?'.format_map(locals())
         elif self.subtask==3:
-
-            the_question = 'How many people were involved in {self.event_types} events which happened {time_chunk}{location_chunk}{participant_chunk}?'.format_map(locals())
+            event_types_label = ' OR '.join([event_type_dict[event_type]
+                                            for event_type in self.event_types])
+            the_question = 'How many people were {event_types_label} {time_chunk}{location_chunk}{participant_chunk}?'.format_map(locals())
 
         if debug:
             print(the_question)

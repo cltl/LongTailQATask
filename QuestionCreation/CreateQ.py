@@ -58,10 +58,17 @@ def pretokenize(df, accepted_years):
     not_found = set()
     nlp = English()
 
+    rows_to_keep = []
+    num_removed = 0
+
     for index, row in df.iterrows():
+        to_check = False
         if any([row['date'].endswith(year)
                 for year in accepted_years]):
-            for source_url in row['incident_sources']:
+
+            to_check = True
+            clean_incident_sources = dict()
+            for source_url, row_dct in row['incident_sources'].items():
 
                 # create path to newsitem object
                 hash_obj = hashlib.md5(source_url.encode())
@@ -108,9 +115,22 @@ def pretokenize(df, accepted_years):
                 # end
                 conll.append('#end document\n')
 
+                clean_incident_sources[source_url] = row_dct
                 doc_id2conll[source_url] = conll
 
-    return doc_id2conll
+        if to_check:
+            if clean_incident_sources:
+                df.set_value(index, 'incident_sources', clean_incident_sources)
+                rows_to_keep.append(index)
+            else:
+                num_removed += 1
+
+    print('%s incidents removed during cleanup' % num_removed)
+    print('%s incidents remain' % len(rows_to_keep))
+    df = df[df.index.isin(rows_to_keep)]
+    print('number of rows in df: %s' % len(df))
+
+    return doc_id2conll, df
 
 if __name__=="__main__":
 
@@ -121,15 +141,23 @@ if __name__=="__main__":
     parser.add_argument('-o', dest='output_folder', required=True, help='folder where output will be stored')
     args = parser.parse_args()
 
+
+    event_types = args.event_types.split('_')
+    subtask = int(args.subtask)
+    all_candidates = set()
+    df = pandas.read_pickle(args.path_gva_df)
+    df = df.reset_index(drop=True) # reset indices
+
     # load arguments
     confusion_tuples = [('location', 'time'),
                         ('participant', 'time'),
                         ('location', 'participant')
                         ]
-    event_types = args.event_types.split('_')
-    subtask = int(args.subtask)
-    all_candidates = set()
-    df = pandas.read_pickle(args.path_gva_df)
+    if subtask == 3:
+        confusion_tuples = [('location', 'time'),
+                            #('participant', 'time'),
+                            #('location', 'participant')
+                            ]
 
     output_path = '%s/%s---%s.bin' % (args.output_folder, args.subtask, args.event_types)
 
@@ -151,12 +179,17 @@ if __name__=="__main__":
             subtasks2q_id = json.load(infile)
 
     # create tokenization
-    path_cache_tokenization = '%s/tokenization.cache' % args.output_folder
+    path_cache_tokenization = '%s/cache' % args.output_folder
     if not os.path.exists(path_cache_tokenization):
-        doc_id2conll = pretokenize(df, ['2017'])
+        print('df + tokenization recomputed')
+        doc_id2conll, df = pretokenize(df, ['2017'])
 
         with open(path_cache_tokenization, 'wb') as outfile:
-            pickle.dump(doc_id2conll, outfile)
+            pickle.dump((doc_id2conll, df), outfile)
+    else:
+        print('df + tokenization from cache')
+        with open(path_cache_tokenization, 'rb') as infile:
+            doc_id2conll, df = pickle.load(infile)
 
     # set min and max number of incidents
     min_num_answer_incidents = 0

@@ -75,16 +75,28 @@ def extract_gold_confusion_key(confusion_tuple,
 
     return gold_confusion_keys
 
-def event_typing(event_types, df, initial_answer_uris, confusion_uris):
+def event_typing(event_types, df, initial_answer_uris, confusion_uris, debug=False):
     new_answer_uris=set()
     answer_rows=df.query('incident_uri in @initial_answer_uris')
+
+    if debug:
+        print(event_types)
+
     for index,row in answer_rows.iterrows():
         if 'killing' in event_types and row['num_killed']>0:
             new_answer_uris.add(row['incident_uri'])
+            if debug:
+                print('killing: %s' % row['incident_uri'])
         elif 'injuring' in event_types and row['num_injured']>0:
             new_answer_uris.add(row['incident_uri'])
+
+            if debug:
+                print('injuring: %s' % row['incident_uri'])
         else:
             confusion_uris.add(row['incident_uri'])
+
+    if debug:
+        input('continue?')
     return new_answer_uris, confusion_uris
 
 def lookup_and_merge(look_up,
@@ -154,10 +166,10 @@ def lookup_and_merge(look_up,
                     # create confusion df and answer df
                     set_confusion_uris = question_info['confusion_incident_uris'] | confusion_incident_uris[0] | confusion_incident_uris[1]
        
-                    answer_incident_uris, set_confusion_uris = event_typing(event_types, df, answer_incident_uris, set_confusion_uris)
-                    num_answer_uris = len(question_info['gold_incident_uris'])
+                    answer_incident_uris, set_confusion_uris = event_typing(event_types, df, answer_incident_uris, set_confusion_uris, debug=False)
+                    num_answer_uris = len(answer_incident_uris)
 
-                    if num_answer_uris < min_num_answer_incidents or num_answer_uris>max_num_answer_incidents:
+                    if num_answer_uris < min_num_answer_incidents or num_answer_uris > max_num_answer_incidents:
                         continue
  
                     confusion_df = df.query('incident_uri in @set_confusion_uris')
@@ -188,24 +200,26 @@ def lookup_and_merge(look_up,
                     if inspect_one:
 
                         for attr in [
-                            # 'participant_confusion',
-                            # 'location_confusion',
-                            # 'time_confusion',
+                            'participant_confusion',
+                            'location_confusion',
+                            'time_confusion',
                             'q_id',
                             'question',
                             'granularity',
                             'answer_incident_uris',
+                            'event_types',
                             #'confusion_incident_uris',
                             'meanings',
-                            'num_both_sf_overlap',
+                            #'num_both_sf_overlap',
                             'gold_loc_meaning',
                             'a_avg_num_sources',
                             'c_avg_num_sources',
-                            #'a_avg_date_spread',
-                            #'c_avg_date_spread'
+                            'a_avg_date_spread',
+                            'c_avg_date_spread',
+                            'question_score'
                         ]:
                             print(attr, getattr(q_instance, attr))
-                        print(look_up[confusion_tuple][granularity][sf])
+                        q_instance.question(debug=True)
                         input('continue?')
 
                     all_questions.add(q_instance)
