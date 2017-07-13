@@ -17,7 +17,7 @@ Filip Ilievski (f.ilievski@vu.nl)
 
 Marten Postma (m.c.postma@vu.nl)
 
-### REMOVE THE REST? ###
+### CODE STRUCTURE and PILOT ###
 
 The pilot is described in *Section 7* of our proposal.
 
