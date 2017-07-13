@@ -13,7 +13,9 @@ import pickle
 import spacy_to_naf
 import json
 from spacy.en import English
-from datetime import datetime
+from datetime import datetime, date
+from collections import defaultdict
+import operator
 
 def text2conll_one_file(nlp, doc_id, discourse, text, pre=False):
     """
@@ -42,13 +44,14 @@ def text2conll_one_file(nlp, doc_id, discourse, text, pre=False):
 
 
 
-def pretokenize(df, accepted_years):
+def pretokenize(df, accepted_years, accepted_char_range, date_range):
     """
     pretokenize news articles using spacy
     and convert to conll
 
     :param pandas.core.frame.DataFrame df: gva archive
     :param list accepted_years: list of accepted years
+    :param range accepted_char_range: how many characters a document is allowed to have
 
     :rtype: dict
     :return: source_url -> list of strings (conll output)
@@ -57,9 +60,15 @@ def pretokenize(df, accepted_years):
     doc_id2conll = dict()
     not_found = set()
     nlp = English()
+    distribution = defaultdict(int)
+    dcts = []
+    start_date, end_date = date_range
 
+
+    num_removed_due_to_length = 0
     rows_to_keep = []
     num_removed = 0
+
 
     for index, row in df.iterrows():
         to_check = False
@@ -97,8 +106,17 @@ def pretokenize(df, accepted_years):
                 if not news_article_obj.dct:
                     continue
 
+                if not start_date < news_article_obj.dct < end_date:
+                    print(news_article_obj.dct, 'not in accepted date range')
+                    continue
+
                 info = [the_hash + '.DCT', str(news_article_obj.dct), 'DCT', '-']
                 conll.append('\t'.join(info) + '\n')
+                dcts.append(news_article_obj.dct)
+
+                if news_article_obj.dct.year == 2016:
+                    print(source_url)
+                    input('continue?')
 
                 # title
                 title_conll = text2conll_one_file(nlp, the_hash, 'TITLE', news_article_obj.title)
@@ -111,6 +129,13 @@ def pretokenize(df, accepted_years):
                 if not body_conll:
                     continue
                 conll.extend(body_conll)
+
+                body_length = len(news_article_obj.content)
+                rounded = round(body_length, -2) # round to nearest 100
+                distribution[rounded] += 1
+
+                if body_length not in accepted_char_range:
+                    num_removed_due_to_length += 1
 
                 # end
                 conll.append('#end document\n')
@@ -129,6 +154,15 @@ def pretokenize(df, accepted_years):
     print('%s incidents remain' % len(rows_to_keep))
     df = df[df.index.isin(rows_to_keep)]
     print('number of rows in df: %s' % len(df))
+    print('documents removed due to length: %s' % num_removed_due_to_length)
+    print('dct range: %s %s' % (min(dcts), max(dcts)))
+
+    #total = sum(distribution.values())
+    #for key, value in sorted(distribution.items(),
+    #                         key=operator.itemgetter(1),
+    #                         reverse=True):
+    #    perc = 100 * (value/total)
+    #    print(key, value, round(perc, 2))
 
     return doc_id2conll, df
 
@@ -141,6 +175,12 @@ if __name__=="__main__":
     parser.add_argument('-o', dest='output_folder', required=True, help='folder where output will be stored')
     args = parser.parse_args()
 
+
+    # accepted character length range for articles
+    accepted_char_range = range(300, 4000)
+
+    # accepted dct range
+    date_range = (date(2016, 12, 31), date(2017, 4, 20))
 
     event_types = args.event_types.split('_')
     subtask = int(args.subtask)
@@ -182,7 +222,7 @@ if __name__=="__main__":
     path_cache_tokenization = '%s/cache' % args.output_folder
     if not os.path.exists(path_cache_tokenization):
         print('df + tokenization recomputed')
-        doc_id2conll, df = pretokenize(df, ['2017'])
+        doc_id2conll, df = pretokenize(df, ['2017'], accepted_char_range, date_range)
 
         with open(path_cache_tokenization, 'wb') as outfile:
             pickle.dump((doc_id2conll, df), outfile)
@@ -200,6 +240,8 @@ if __name__=="__main__":
         max_num_answer_incidents = 1
     elif subtask==2:
         min_num_answer_incidents = 2
+    elif subtask == 3:
+        min_num_answer_incidents = 1
 
     # create questions
     for confusion_tuple in confusion_tuples:

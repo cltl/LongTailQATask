@@ -216,10 +216,9 @@ def lookup_and_merge(look_up,
                             'c_avg_num_sources',
                             'a_avg_date_spread',
                             'c_avg_date_spread',
-                            'question_score'
+                            #'question_score'
                         ]:
                             print(attr, getattr(q_instance, attr))
-                        q_instance.question(debug=True)
                         input('continue?')
 
                     all_questions.add(q_instance)

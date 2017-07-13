@@ -132,6 +132,7 @@ def create_look_up(df,
 
     parameters2incident_uris = dict()
     look_up = dict()
+    discarded = defaultdict(set)
 
     if discard_ambiguous_names:
         participant2freq = defaultdict(int)
@@ -169,7 +170,6 @@ def create_look_up(df,
         if incident_year not in allowed_incident_years:
             continue
 
-
         sf_dict, m_dict = get_sf_m_dict(row)
 
         # for number of combinations
@@ -191,6 +191,38 @@ def create_look_up(df,
                     if gran_comb not in look_up[categories]:
                         look_up[categories][gran_comb] = dict()
                         parameters2incident_uris[categories][gran_comb] = defaultdict(set)
+
+                    # check location
+                    if 'location' in categories:
+
+                        address_match = False
+                        city_match = False
+                        state_match = False
+                        for news_article_obj in news_article_objs:
+                            if sf_dict['address'] in news_article_obj.content:
+                                address_match = True
+                            if sf_dict['city'] in news_article_obj.content:
+                                city_match = True
+                            if sf_dict['state'] in news_article_obj.content:
+                                state_match = True
+
+                        # for adress -> address needs to be at least in there
+                        if 'address' in gran_comb:
+                            if not address_match:
+                                discarded['address'].add(incident_uri)
+                                continue
+
+                        # for city -> either address or city needs to be at least in there
+                        if 'city' in gran_comb:
+                            if not any([address_match, city_match]):
+                                discarded['city'].add(incident_uri)
+
+                                continue
+
+                        if 'state' in gran_comb:
+                            if not any([address_match, city_match, state_match]):
+                                discarded['state'].add(incident_uri)
+                                continue
 
                     # without participant
                     if 'participant' not in categories:
@@ -242,6 +274,11 @@ def create_look_up(df,
 
                                 m_key = tuple(m_dict[gran_level] for gran_level in gran_comb)
                                 look_up[categories][gran_comb][sf_key][m_key].add(incident_uri)
+
+
+    #print('ignored due to locational expressions not occuring in gold docs')
+    #for key, value in discarded.items():
+    #    print(key, len(value))
 
     return look_up, parameters2incident_uris
 

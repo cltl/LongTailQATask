@@ -85,7 +85,9 @@ class Question:
         self.event_types=event_types
         self.q_id = '%s-%s' % (self.subtask, q_id)
         self.types_and_rows=types_and_rows
-        self.question_score = self.get_question_score()
+
+        assert len(self.answer_incident_uris) >= 1, 'no answer incident uris'
+        assert len(self.a_sources) >= 1, 'no answer sources'
 
 
     def get_question_score(self):
@@ -95,7 +97,7 @@ class Question:
             return self.ev_answer * self.a_avg_num_sources * self.a_avg_date_spread
 
         elif self.subtask == 3:
-            return None
+            return self.part_numerical_answer * self.a_avg_num_sources * self.a_avg_date_spread
 
     @property
     def participant_confusion(self):
@@ -112,10 +114,6 @@ class Question:
     @property
     def num_both_sf_overlap(self):
         return len(self.meanings)
-
-    @property
-    def answer(self):
-        return self.part_answer if self.subtask==3 else self.ev_answer
 
     def question(self, debug=False):
 
@@ -209,7 +207,11 @@ class Question:
     @property
     def a_avg_date_spread(self):
         sources_dcts = get_dcts(self.answer_df)
-        return metrics.get_dct_spread(sources_dcts)
+        metric_value = metrics.get_dct_spread(sources_dcts)
+        if not metric_value:
+            return 1
+        else:
+            return metric_value
 
     @property
     def c_avg_date_spread(self):
@@ -276,7 +278,9 @@ class Question:
 
                 if a_type == 'gold':
                     incident_uri = a_row['incident_uri']
-                    all_doc_ids[incident_uri].append(source_url)
+                    hash_obj = hashlib.md5(source_url.encode())
+                    the_hash = hash_obj.hexdigest()
+                    all_doc_ids[incident_uri].append(the_hash)
 
                     parts_info[incident_uri] = {'num_killed': a_row['num_killed'],
                                                 'num_injured': a_row['num_injured'] }
@@ -303,32 +307,18 @@ class Question:
                                 'answer_docs': all_doc_ids}
 
         if self.subtask == 3:
-            part_numerical_answer = 0
+            self.part_numerical_answer = 0
 
             if 'killing' in self.event_types:
-                part_numerical_answer += sum([part_info['num_killed']
+                self.part_numerical_answer += sum([part_info['num_killed']
                                               for part_info in parts_info.values()])
             if 'injuring' in self.event_types:
-                part_numerical_answer += sum([part_info['num_injured']
+                self.part_numerical_answer += sum([part_info['num_injured']
                                               for part_info in parts_info.values()])
 
-            self.answer_info = {'numerical_answer': part_numerical_answer,
+            self.answer_info = {'numerical_answer': self.part_numerical_answer,
                                 'answer_docs': all_doc_ids,
                                 'part_info' : parts_info}
-
-        """
-        # write to file
-        if self.to_include_in_task:
-            with open(output_path, 'w') as outfile:
-                for a_type, a_row in type_and_row:
-                    for source_url in a_row['incident_sources']:
-                        if source_url not in doc_id2conll:
-                            continue
-
-                        conll_info = doc_id2conll[source_url]
-                        for line in conll_info:
-                            outfile.writelines(line)
-        """
 
 class GVDB:
     """

@@ -18,11 +18,13 @@ def deduplicate(cands):
             if c1.q_id==c2.q_id:
                 continue
             if c2.to_include_in_task and same_answer(c1.answer_info, c2.answer_info):
-                if choice('01')=='0': # choose c1
-                    c2.to_include_in_task=False
-                else: # choose c2
-                    c1.to_include_in_task=False
-                    break
+                if c1.get_question_score() > c2.get_question_score():
+                    c2.to_include_in_task = False
+                elif c2.get_question_score() > c1.get_question_score():
+                    c1.to_include_in_task = False
+                else:
+                    c2.to_include_in_task = False # same score -> choose c1
+
     return cands
 
 if __name__=="__main__":
@@ -50,11 +52,10 @@ if __name__=="__main__":
     print(len(all_candidates))
 
     # load tokenization
-    path_cache_tokenization = '%s/tokenization.cache' % args.input_folder
+    path_cache_tokenization = '%s/cache' % args.input_folder
     with open(path_cache_tokenization, 'rb') as infile:
-        doc_id2conll = pickle.load(infile)
+        doc_id2conll, df = pickle.load(infile)
 
-    
 
     # convert trial data
     questions = dict()
@@ -74,16 +75,28 @@ if __name__=="__main__":
         candidate.generate_answer_info(types_and_rows, doc_id2conll, debug=False)
 
     print("now deduplicating")
+    print(sum(candidate.to_include_in_task
+              for candidate in all_candidates))
     all_candidates=deduplicate(all_candidates)
+    print('after deduplicating')
+    print(sum(candidate.to_include_in_task
+              for candidate in all_candidates))
 #    new_candidates=candidates
 
     print("deduplication done. storing")
 
+    num_added = 0
+    maximum = 100000
+    debug = False
     for candidate in all_candidates:
         # update question and answer dictionaries
         if candidate.to_include_in_task:
             questions[candidate.q_id] = candidate.question()
             answers[candidate.q_id] = candidate.answer_info
+
+            if debug:
+                print(candidate.gold_loc_meaning)
+                input('continue?')
 
             # write to file
             output_path = '%s/system_input/%s.conll' % (args.output_folder, candidate.q_id)
@@ -95,7 +108,12 @@ if __name__=="__main__":
 
                         conll_info = doc_id2conll[source_url]
                         for line in conll_info:
-                            outfile.writelines(line)
+                            outfile.write(line)
+
+            # logging
+            num_added += 1
+            if num_added == maximum:
+                break
 
 
     question_out_path = '%s/questions.json' % args.output_folder
