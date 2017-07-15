@@ -11,7 +11,7 @@ The code distribution of this task consists of the following:
   - The task data, consisting of questions and the documents (for the trial data, we also provide the answers)
   - Evaluation scripts and baselines (*visit https://github.com/cltl/LongTailQATask/blob/master/Evaluation/README.md* for details on the evaluation)
 
-### Contact:
+### Contact: ###
 
 Filip Ilievski (f.ilievski@vu.nl)
 
