@@ -6,6 +6,19 @@ import pickle
 import os
 from random import shuffle, choice
 import sys
+from shutil import copyfile
+
+def one_to_three(all_data):
+    divided_data={"1":{}, "2":{}, "3":{}}
+    for k in all_data:
+        subtask=k[0]
+        divided_data[subtask][k]=all_data[k]
+    return divided_data
+
+def get_next_s2_id(qid_location):
+    with open(qid_location, 'r') as qid_file:
+        q_ids=json.load(qid_file)
+        return q_ids["2"]+1
 
 def same_answer(a1, a2):
     return all([a1['numerical_answer']==a2['numerical_answer'], a1['answer_docs'].keys()==a2['answer_docs'].keys()])
@@ -32,6 +45,16 @@ if __name__=="__main__":
     parser.add_argument('-d', dest='input_folder', required=True, help='all .bin files in this folder will be considered')
     parser.add_argument('-o', dest='output_folder', required=True, help='folder output will be stored')
     args = parser.parse_args()
+
+    # enrichment parameters for S2
+    num_zeros=10 # number of questions to draw from S1 but remove the answer docs
+    num_ones=10 # number of questions to copy from s1 to s2
+
+    copy_total=num_zeros+num_ones
+    copied_cnt=0
+
+    qid_location="%s/q_id.json" % args.input_folder
+    next_id=get_next_s2_id(qid_location)
 
     # bash commands
     bash_commands = ['rm -rf %s' % args.output_folder,
@@ -110,11 +133,45 @@ if __name__=="__main__":
                         for line in conll_info:
                             outfile.write(line)
 
+            ### Maybe copy the question to S2 ###
+            if copied_cnt<copy_total and candidate.subtask==1: 
+                s1_qid=candidate.q_id
+                new_candidate=candidate.copy()
+                new_candidate.subtask=2
+                #new_candidate.the_question=new_candidate.the_question.replace('Which', 'How many', 1).replace('event', 'events', 1)
+                new_candidate.q_id='2-%d' % next_id
+                questions[new_candidate.q_id] = new_candidate.question()
+                print("Copying %s to %s..." % (candidate.q_id, new_candidate.q_id))
+                src=output_path
+                dst='%s/system_input/%s.conll' % (args.output_folder, new_candidate.q_id)
+
+                if copied_cnt<num_zeros: # copy but modify the answer to 0
+                    print("... but modifying the answer to 0")
+                    with open(dst, 'w') as outfile:
+                        for a_type, a_row in new_candidate.types_and_rows:
+                            for source_url in a_row['incident_sources']:
+                                if source_url not in doc_id2conll or source_url in new_candidate.answer_incident_uris:
+                                    continue
+                                conll_info = doc_id2conll[source_url]
+                                for line in conll_info:
+                                    outfile.write(line)
+                    new_candidate.answer_info["answer_docs"]={}
+                    new_candidate.answer_info["numerical_answer"]=0
+                    new_candidate.answer_incident_uris=set()
+                    new_candidate.ev_answer=0
+                else:
+                    print("... keeping the answer the same")
+                    copyfile(src, dst)
+                answers[new_candidate.q_id] = new_candidate.answer_info
+
+                next_id+=1
+                copied_cnt+=1
+            ### S2 magic done! ###
+
             # logging
             num_added += 1
             if num_added == maximum:
                 break
-
 
     question_out_path = '%s/questions.json' % args.output_folder
     with open(question_out_path, 'w') as outfile:
@@ -123,3 +180,20 @@ if __name__=="__main__":
     answers_out_path = '%s/answers.json' % args.output_folder
     with open(answers_out_path, 'w') as outfile:
         outfile.write(json.dumps(answers, indent=4, sort_keys=True))
+
+    ### SPLIT INTO THREE SUBTASK JSONS ###
+
+    a=one_to_three(answers)
+    print(len(a["1"]), len(a["2"]), len(a["3"]), len(answers))
+    q=one_to_three(questions)
+
+    ### Store JSONS per subtask ###
+
+    for x in ["1", "2", "3"]:
+        q_outfile='%s/%s_questions.json' % (args.output_folder, x)
+        a_outfile='%s/%s_answers.json' % (args.output_folder, x)
+        with open(q_outfile, 'w') as wq:
+            wq.write(json.dumps(q[x], indent=4, sort_keys=True))
+
+        with open(a_outfile, 'w') as wa:
+            wa.write(json.dumps(a[x], indent=4, sort_keys=True))
