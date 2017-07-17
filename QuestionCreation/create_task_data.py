@@ -1,3 +1,4 @@
+from copy import deepcopy
 import argparse
 import subprocess
 import json
@@ -136,7 +137,7 @@ if __name__=="__main__":
             ### Maybe copy the question to S2 ###
             if copied_cnt<copy_total and candidate.subtask==1: 
                 s1_qid=candidate.q_id
-                new_candidate=candidate.copy()
+                new_candidate=deepcopy(candidate)
                 new_candidate.subtask=2
                 #new_candidate.the_question=new_candidate.the_question.replace('Which', 'How many', 1).replace('event', 'events', 1)
                 new_candidate.q_id='2-%d' % next_id
