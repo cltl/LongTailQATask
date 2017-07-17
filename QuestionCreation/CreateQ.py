@@ -16,6 +16,39 @@ from spacy.en import English
 from datetime import datetime, date
 from collections import defaultdict
 import operator
+from collections import Counter
+
+
+def get_duplicate_sents(doc, threshold, verbose=False):
+    """
+    get sentence identifiers of sentences
+    which occur more than threshold in the text
+
+    :param lxml.etree._Element doc: parsed NAF
+
+    :rtype: set
+    :return: set of sentence identifiers to ignore
+    """
+    sent_ids_to_ignore = set()
+
+    sent_id2sent_tokens = defaultdict(list)
+    for wf_el in doc.iterfind('text/wf'):
+        sent_id = wf_el.get('sent')
+        sent_id2sent_tokens[sent_id].append(wf_el.text)
+
+    sent2sent_ids = defaultdict(set)
+    for sent_id, tokens in sent_id2sent_tokens.items():
+        sent = ' '.join(tokens)
+        sent2sent_ids[sent].add(sent_id)
+
+    for sent, sent_ids in sent2sent_ids.items():
+        freq = len(sent_ids)
+        if freq >= threshold:
+            sent_ids_to_ignore.update(sent_ids)
+            if verbose:
+                print('ignored with freq %s: %s' % (freq, sent))
+
+    return sent_ids_to_ignore
 
 def text2conll_one_file(nlp, doc_id, discourse, text, pre=False):
     """
@@ -26,10 +59,16 @@ def text2conll_one_file(nlp, doc_id, discourse, text, pre=False):
     :param str text: content (either title or context of news article)
     """
     doc = spacy_to_naf.text_to_NAF(text, nlp)
+    sent_ids2ignore = get_duplicate_sents(doc, threshold=3, verbose=True)
     output = []
+    num_chars = 0
 
     for wf_el in doc.xpath('text/wf'):
         sent_id = wf_el.get('sent')
+
+        if sent_id in sent_ids2ignore:
+            continue
+
         token_id = wf_el.get('id')[1:]
         id_ = '{doc_id}.{sent_id}.{token_id}'.format_map(locals())
 
@@ -37,12 +76,11 @@ def text2conll_one_file(nlp, doc_id, discourse, text, pre=False):
             info = [id_, wf_el.get('offset'), wf_el.get('length')]
             output.append('\t'.join(info) + '\n')
         else:
+            num_chars += len(wf_el.text)
             info = [id_, wf_el.text, discourse, '-']
             output.append('\t'.join(info) + '\n')
 
-    return output
-
-
+    return output, num_chars
 
 def pretokenize(df, accepted_years, accepted_char_range, date_range):
     """
@@ -119,18 +157,18 @@ def pretokenize(df, accepted_years, accepted_char_range, date_range):
                     input('continue?')
 
                 # title
-                title_conll = text2conll_one_file(nlp, the_hash, 'TITLE', news_article_obj.title)
+                title_conll, title_chars = text2conll_one_file(nlp, the_hash, 'TITLE', news_article_obj.title)
                 if not title_conll:
                     continue
                 conll.extend(title_conll)
 
                 # body
-                body_conll = text2conll_one_file(nlp, the_hash, 'BODY', news_article_obj.content)
+                body_conll, body_length = text2conll_one_file(nlp, the_hash, 'BODY', news_article_obj.content)
                 if not body_conll:
                     continue
+
                 conll.extend(body_conll)
 
-                body_length = len(news_article_obj.content)
                 rounded = round(body_length, -2) # round to nearest 100
                 distribution[rounded] += 1
 
