@@ -8,6 +8,12 @@ import os
 from random import shuffle, choice
 import sys
 from shutil import copyfile
+import hashlib
+
+def hash_hash(u):
+    hash_obj = hashlib.md5(source_url.encode())
+    the_hash = hash_obj.hexdigest()
+    return the_hash
 
 def one_to_three(all_data):
     divided_data={"1":{}, "2":{}, "3":{}}
@@ -147,11 +153,12 @@ if __name__=="__main__":
                 dst='%s/system_input/%s.conll' % (args.output_folder, new_candidate.q_id)
 
                 if copied_cnt<num_zeros: # copy but modify the answer to 0
+                    all_answer_docs=set(docid for inc in candidate.answer_info["answer_docs"] for docid in candidate.answer_info["answer_docs"][inc])
                     print("... but modifying the answer to 0")
                     with open(dst, 'w') as outfile:
                         for a_type, a_row in new_candidate.types_and_rows:
                             for source_url in a_row['incident_sources']:
-                                if source_url not in doc_id2conll or source_url in new_candidate.answer_incident_uris:
+                                if source_url not in doc_id2conll or hash_hash(source_url) in all_answer_docs:
                                     continue
                                 conll_info = doc_id2conll[source_url]
                                 for line in conll_info:
