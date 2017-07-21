@@ -181,13 +181,13 @@ if __name__=="__main__":
             if num_added == maximum:
                 break
 
-    question_out_path = '%s/questions.json' % args.output_folder
-    with open(question_out_path, 'w') as outfile:
-        outfile.write(json.dumps(questions, indent=4, sort_keys=True))
+    #question_out_path = '%s/questions.json' % args.output_folder
+    #with open(question_out_path, 'w') as outfile:
+    #    outfile.write(json.dumps(questions, indent=4, sort_keys=True))
 
-    answers_out_path = '%s/answers.json' % args.output_folder
-    with open(answers_out_path, 'w') as outfile:
-        outfile.write(json.dumps(answers, indent=4, sort_keys=True))
+    #answers_out_path = '%s/answers.json' % args.output_folder
+    #with open(answers_out_path, 'w') as outfile:
+    #    outfile.write(json.dumps(answers, indent=4, sort_keys=True))
 
     ### SPLIT INTO THREE SUBTASK JSONS ###
 
