@@ -152,10 +152,6 @@ def pretokenize(df, accepted_years, accepted_char_range, date_range):
                 conll.append('\t'.join(info) + '\n')
                 dcts.append(news_article_obj.dct)
 
-                if news_article_obj.dct.year == 2016:
-                    print(source_url)
-                    input('continue?')
-
                 # title
                 title_conll, title_chars = text2conll_one_file(nlp, the_hash, 'TITLE', news_article_obj.title)
                 if not title_conll:
@@ -218,7 +214,7 @@ if __name__=="__main__":
     accepted_char_range = range(300, 4000)
 
     # accepted dct range
-    date_range = (date(2016, 12, 31), date(2017, 4, 20))
+    date_range = (date(2013, 1, 1), date(2016, 12, 31))
 
     event_types = args.event_types.split('_')
     subtask = int(args.subtask)
@@ -260,7 +256,7 @@ if __name__=="__main__":
     path_cache_tokenization = '%s/cache' % args.output_folder
     if not os.path.exists(path_cache_tokenization):
         print('df + tokenization recomputed')
-        doc_id2conll, df = pretokenize(df, ['2017'], accepted_char_range, date_range)
+        doc_id2conll, df = pretokenize(df, ['2013', '2014', '2015', '2016'], accepted_char_range, date_range)
 
         with open(path_cache_tokenization, 'wb') as outfile:
             pickle.dump((doc_id2conll, df), outfile)
@@ -285,7 +281,7 @@ if __name__=="__main__":
     for confusion_tuple in confusion_tuples:
         look_up, parameters2incident_uris = look_up_utils.create_look_up(df,
                                                                          discard_ambiguous_names=True,
-                                                                         allowed_incident_years={2017},
+                                                                         allowed_incident_years={2013, 2014, 2015, 2016},
                                                                          check_name_in_article=True)
 
         last_qid, candidates=createq_utils.lookup_and_merge(look_up,
