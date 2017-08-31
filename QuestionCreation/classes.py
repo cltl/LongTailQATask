@@ -130,7 +130,7 @@ class Question:
                                                              self.sf)):
             if confusion_factor == 'time':
                 time_chunk = 'in %s (%s) ' % (self.sf[index], self.granularity[index])
-                system_input['time'] = (self.sf[index], self.granularity[index])
+                system_input['time'] = {self.granularity[index]: self.sf[index]}
             elif confusion_factor == 'location':
                 location_chunk = 'in %s (%s) ' % (self.gold_loc_meaning, self.granularity[index])
                 gran_level = self.granularity[index]
@@ -140,7 +140,7 @@ class Question:
 
                 if len(all_dbpedia_links) == 1:
                     the_dbpedia_link = all_dbpedia_links.pop()
-                    system_input['location'] = (the_dbpedia_link, gran_level)
+                    system_input['location'] = {gran_level: the_dbpedia_link}
                 else:
                     print('multiple or no dbpedia options for %s: %s' % (self.q_id, all_dbpedia_links))
                     system_input['location'] = (None, None)
@@ -148,7 +148,7 @@ class Question:
 
             elif confusion_factor == 'participant':
                 participant_chunk = 'that involve the name %s (%s) ' % (self.sf[index], self.granularity[index])
-                system_input['participant'] = (self.sf[index], self.granularity[index])
+                system_input['participant'] = {self.granularity[index]: self.sf[index]}
 
         if self.subtask==1:
             the_question = 'Which {self.event_types} event happened {time_chunk}{location_chunk}{participant_chunk}?'.format_map(locals())
