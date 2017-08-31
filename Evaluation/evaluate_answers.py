@@ -17,7 +17,7 @@ def extract_data(data, gold=True):
         if gold:
             docs[q]=set(doc for inc_id in data[q]["answer_docs"] for doc in data[q]["answer_docs"][inc_id])
         else: # system's format is simpler
-            docs[q]=data[q]["answer_docs"]
+            docs[q]=set(data[q]["answer_docs"])
         incidents[q]=data[q]["numerical_answer"]
     return docs, incidents, qs
 
