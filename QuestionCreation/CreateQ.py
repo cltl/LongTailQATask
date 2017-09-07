@@ -17,6 +17,7 @@ from datetime import datetime, date
 from collections import defaultdict
 import operator
 from collections import Counter
+from collections import defaultdict
 
 
 def get_duplicate_sents(doc, threshold, verbose=False):
@@ -62,6 +63,9 @@ def text2conll_one_file(nlp, doc_id, discourse, text, pre=False):
     sent_ids2ignore = get_duplicate_sents(doc, threshold=3, verbose=True)
     output = []
     num_chars = 0
+    prev_sent_id = 1
+    token_id = 0
+    unique_ids = defaultdict(int)
 
     for wf_el in doc.xpath('text/wf'):
         sent_id = wf_el.get('sent')
@@ -69,8 +73,19 @@ def text2conll_one_file(nlp, doc_id, discourse, text, pre=False):
         if sent_id in sent_ids2ignore:
             continue
 
-        token_id = wf_el.get('id')[1:]
-        id_ = '{doc_id}.{sent_id}.{token_id}'.format_map(locals())
+        if prev_sent_id != int(sent_id):
+            token_id = 0
+        elif prev_sent_id == int(sent_id):
+            token_id += 1
+
+        prev_sent_id = int(sent_id)
+
+        if discourse == 'BODY':
+            id_ = '{doc_id}.b{sent_id}.{token_id}'.format_map(locals())
+        if discourse == 'TITLE':
+            id_ = '{doc_id}.t{sent_id}.{token_id}'.format_map(locals())
+
+        unique_ids[id_] += 1
 
         if pre:
             info = [id_, wf_el.get('offset'), wf_el.get('length')]
@@ -79,6 +94,10 @@ def text2conll_one_file(nlp, doc_id, discourse, text, pre=False):
             num_chars += len(wf_el.text)
             info = [id_, wf_el.text, discourse, '-']
             output.append('\t'.join(info) + '\n')
+
+    for id_, freq in unique_ids.items():
+        if freq >= 2:
+            raise AssertionError('id %s occurs %s times' % (id_, freq))
 
     return output, num_chars
 
