@@ -6,6 +6,69 @@ import classes
 import hashlib
 import pickle
 
+
+def return_number(participants_info, event_type, target_name, gran, debug=False):
+    """
+
+    :param list participants_info: list of dictionaries
+    :param str event_type: 'killing' | 'injuring'
+    :param str target_name: first name | last name | full name
+    :param str gran: first | last | full_name
+
+    :rtype: int
+    :return: 0 if not match | 1 if match
+    """
+    answer = 0
+
+    mapping = {'killing': ' Killed',
+               'injuring': ' Injured'}
+
+    wanted = mapping[event_type]
+
+    for part_info in participants_info:
+
+        if all(['Name' in part_info,
+                'Status' in part_info]):
+            full_name = part_info['Name'].strip()
+            if full_name:
+                name_parts = full_name.strip().split()
+                if len(name_parts) == 2:
+                    first, last = name_parts
+
+                    if part_info['Status'] == wanted:
+
+                        if all([gran == 'first',
+                                first == target_name]):
+                            answer += 1
+
+                            if all([answer == 1,
+                                    debug]):
+                                print()
+                                print(part_info)
+                                print(gran, first, target_name)
+
+                        if all([gran == 'last',
+                                last == target_name]):
+                            answer += 1
+
+                            if all([answer == 1,
+                                    debug]):
+                                print()
+                                print(part_info)
+                                print(gran, last, target_name)
+
+                        if all([gran == 'full_name',
+                                full_name == target_name]):
+                            answer += 1
+
+                            if all([answer == 1,
+                                    debug]):
+                                print()
+                                print(part_info)
+                                print(gran, full_name, target_name)
+
+    return answer
+
 def parts_with_only_zero_or_two_parts(participants_info):
     """
     Check if all participants have:
