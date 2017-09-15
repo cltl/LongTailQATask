@@ -18,16 +18,19 @@ illegal_pattern = re.compile('[^\u0020-\uD7FF\u0009\u000A\u000D\uE000-\uFFFD\u10
 def remove_illegal_chars(text):
     return re.sub(illegal_pattern, '', text)
 
+
 def normalize_token_orth(orth):
     if '\n' in orth:
         return 'NEWLINE'
     else:
         return remove_illegal_chars(orth)
 
+
 def get_entity_type(span):
     "Function to get the entity type of an entity span."
     ent_type_set = {tok.ent_type_ for tok in span if tok.ent_type_ != ''}
     return ent_type_set.pop()
+
 
 def entities(doc):
     "Generator that returns Entity objects for a given document."
@@ -35,6 +38,7 @@ def entities(doc):
         yield Entity(start = ent.start,
                      end = ent.end -1,
                      entity_type = get_entity_type(ent))
+
 
 def add_wf_element(text_layer, wf_data):
     """
@@ -46,6 +50,7 @@ def add_wf_element(text_layer, wf_data):
     wf_el.set("length", wf_data.length)
     wf_el.set("offset", wf_data.offset)
     wf_el.text = wf_data.wordform
+
 
 def add_term_element(terms_layer, term_data):
     """
@@ -61,6 +66,7 @@ def add_term_element(terms_layer, term_data):
     for target in term_data.targets:
         target_el = etree.SubElement(span, "target")
         target_el.set("id", target)
+
 
 def add_entity_element(entities_layer, entity_data):
     """
@@ -98,6 +104,7 @@ def chunk_tuples_for_doc(doc):
                            text = remove_illegal_chars(chunk.orth_.replace('\n',' ')),
                            targets = ['t' + str(tok.i) for tok in chunk])
 
+
 def add_chunk_element(chunks_layer, chunk_data):
     """
     Function that adds a chunk element to the chunks layer.
@@ -112,6 +119,7 @@ def add_chunk_element(chunks_layer, chunk_data):
         target_el = etree.SubElement(span, "target")
         target_el.set("id", target)
 
+
 def add_dependency_element(dependency_layer, dep_data):
     """
     Function that adds dependency elements to the deps layer.
@@ -122,6 +130,7 @@ def add_dependency_element(dependency_layer, dep_data):
     dep_el.set("from", dep_data.from_term)
     dep_el.set("to", dep_data.to_term)
     dep_el.set("rfunc", dep_data.rfunc)
+
 
 def dependencies_to_add(token):
     """
@@ -139,7 +148,8 @@ def dependencies_to_add(token):
         token = token.head
     return deps
 
-def naf_from_doc(doc, time=None):
+
+def naf_from_doc(doc, time=None, language='en'):
     """
     Function that takes a document and returns an ElementTree
     object that corresponds to the root of the NAF structure.
@@ -148,24 +158,26 @@ def naf_from_doc(doc, time=None):
     # ---------------------
     # Create NAF root.
     root = etree.Element("NAF")
-
+    root.set('{http://www.w3.org/XML/1998/namespace}lang',language)
+    root.set('version', "v3.naf")
+    
     # Create text and terms layers.
     naf_header = etree.SubElement(root, "nafHeader")
-
+    
     ling_proc = etree.SubElement(naf_header, "linguisticProcessors")
     ling_proc.set("layer", "text")
     lp = etree.SubElement(ling_proc, "lp")
     lp.set("name", "SpaCy")
     if time:
         lp.set("timestamp", time)
-
+    
     ling_proc = etree.SubElement(naf_header, "linguisticProcessors")
     lp = etree.SubElement(ling_proc, "lp")
     lp.set("name", "SpaCy")
     if time:
         lp.set("timestamp", time)
     ling_proc.set("layer", "terms")
-
+    
     text_layer = etree.SubElement(root, "text")
     terms_layer = etree.SubElement(root, "terms")
     entities_layer = etree.SubElement(root, "entities")
@@ -179,45 +191,45 @@ def naf_from_doc(doc, time=None):
         next_entity = next(entity_gen)
     except StopIteration:
         next_entity = Entity(start=None, end=None, entity_type=None)
-
+    
     # - Bookkeeping variables.
     current_term = []    # Use a list for multiword expressions.
     current_term_orth = [] # id.
-
+    
     current_entity = []    # Use a list for multiword entities.
     current_entity_orth = [] # id.
-
+    
     current_token = 0    # Keep track of the token number.
     term_number = 0      # Keep track of the term number.
     entity_number = 0    # Keep track of the entity number.
-
+    
     parsing_entity = False # State change: are we working on a term or not?
-
-
+    
+    
     for sentence_number, sentence in enumerate(doc.sents, start = 1):
         dependencies_for_sentence = []
         for token_number, token in enumerate(sentence, start = current_token):
             # Do we need a state change?
             if token_number == next_entity.start:
                 parsing_entity = True
-
+            
             wid = 'w' + str(token_number)
             tid = 't' + str(term_number)
-
+            
             current_term.append(wid)
             current_term_orth.append(normalize_token_orth(token.orth_))
-
+            
             if parsing_entity:
                 current_entity.append(tid)
                 current_entity_orth.append(normalize_token_orth(token.orth_))
-
+            
             # Create WfElement data:
             wf_data = WfElement(sent = str(sentence_number),
                            wid = wid,
                            length = str(len(token.text)),
                            wordform = normalize_token_orth(token.text),
                            offset = str(token.idx))
-
+            
             # Create TermElement data:
             term_data = TermElement(tid = tid,
                                     lemma = remove_illegal_chars(token.lemma_),
@@ -225,19 +237,19 @@ def naf_from_doc(doc, time=None):
                                     morphofeat = token.tag_,
                                     targets = current_term,
                                     text = current_term_orth)
-
+            
             add_wf_element(text_layer, wf_data)
             add_term_element(terms_layer, term_data)
-
+            
             # Move to the next term
             term_number += 1
             current_term = []
             current_term_orth = []
-
+                
             if parsing_entity and token_number == next_entity.end:
                 # Create new entity ID.
                 eid = 'e' + str(entity_number)
-
+                
                 # Create Entity data:
                 entity_data = EntityElement(eid = eid,
                                             entity_type = next_entity.entity_type,
@@ -245,12 +257,12 @@ def naf_from_doc(doc, time=None):
                                             text = current_entity_orth)
                 # Add data to XML:
                 add_entity_element(entities_layer, entity_data)
-
+                
                 # Move to the next entity:
                 entity_number += 1
                 current_entity = []
                 current_entity_orth = []
-
+                
                 # Move to the next entity
                 parsing_entity = False
                 try:
@@ -268,30 +280,32 @@ def naf_from_doc(doc, time=None):
         for dep_data in dependencies_for_sentence:
             add_dependency_element(dependency_layer, dep_data)
         current_token = token_number + 1
-
+    
     # Add chunk layer after adding all other layers.
     for chunk_data in chunk_tuples_for_doc(doc):
         add_chunk_element(chunks_layer, chunk_data)
     return root
 
+
 def current_time():
     "Function that returns the current time (UTC)"
     return datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SUTC")
 
-def text_to_NAF(text, nlp):
+
+def text_to_NAF(text, nlp, language='en'):
     """
     Function that takes a text and returns an xml object containing the NAF.
     """
     doc = nlp(text)
     time = current_time()
-    return naf_from_doc(doc, time=time)
+    return naf_from_doc(doc, time=time, language=language)
 
-def NAF_to_string(NAF, byte=False, use_comments=False):
+def NAF_to_string(NAF, byte=False):
     """
     Function that takes an XML object containing NAF, and returns it as a string.
     If byte is True, then the output is a bytestring.
     """
-    xml_string = etree.tostring(NAF, pretty_print=True, with_comments=use_comments)
+    xml_string = etree.tostring(NAF, pretty_print=True, xml_declaration=True, encoding='utf-8')
     if byte:
         return xml_string
     else:

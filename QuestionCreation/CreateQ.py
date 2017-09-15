@@ -6,6 +6,7 @@ import look_up_utils
 import createq_utils
 import pickle
 import argparse
+from lxml import etree
 
 import pandas
 import hashlib
@@ -19,6 +20,28 @@ import operator
 from collections import Counter
 from collections import defaultdict
 
+def piek(output_path, doc):
+    """
+    """    
+    raw = ' '.join([token_el.text 
+                    for token_el in doc.iterfind('text/wf')])
+    raw = raw.replace('NEWLINE', '\n')
+    raw_value = raw
+    raw_el = etree.Element('raw')
+    raw_el.text = raw_value
+    doc.append(raw_el)
+    
+    for child_string in ['nafHeader/linguisticProcessors', 'text', 'terms', 'entities', 'deps', 'chunks']:
+        els = doc.findall(child_string)
+        for el in els:
+            el.getparent().remove(el)
+        
+    root = doc.getroottree()
+    with open(output_path, 'wb') as outfile:
+        root.write(outfile,
+                   pretty_print=True,
+                   xml_declaration=True,
+                   encoding='utf-8')
 
 def get_duplicate_sents(doc, threshold, verbose=False):
     """
@@ -51,7 +74,7 @@ def get_duplicate_sents(doc, threshold, verbose=False):
 
     return sent_ids_to_ignore
 
-def text2conll_one_file(nlp, doc_id, discourse, text, pre=False):
+def text2conll_one_file(nlp, incident_uri, doc_id, discourse, text, pre=False):
     """
     use spacy to output text (tokenized) in conll
 
@@ -60,6 +83,8 @@ def text2conll_one_file(nlp, doc_id, discourse, text, pre=False):
     :param str text: content (either title or context of news article)
     """
     doc = spacy_to_naf.text_to_NAF(text, nlp)
+
+    
     sent_ids2ignore = get_duplicate_sents(doc, threshold=3, verbose=True)
     output = []
     num_chars = 0
@@ -172,13 +197,13 @@ def pretokenize(df, accepted_years, accepted_char_range, date_range):
                 dcts.append(news_article_obj.dct)
 
                 # title
-                title_conll, title_chars = text2conll_one_file(nlp, the_hash, 'TITLE', news_article_obj.title)
+                title_conll, title_chars = text2conll_one_file(nlp, incident_uri, the_hash, 'TITLE', news_article_obj.title)
                 if not title_conll:
                     continue
                 conll.extend(title_conll)
 
                 # body
-                body_conll, body_length = text2conll_one_file(nlp, the_hash, 'BODY', news_article_obj.content)
+                body_conll, body_length = text2conll_one_file(nlp, incident_uri, the_hash, 'BODY', news_article_obj.content)
                 if not body_conll:
                     continue
 
@@ -192,6 +217,11 @@ def pretokenize(df, accepted_years, accepted_char_range, date_range):
 
                 # end
                 conll.append('#end document\n')
+
+                # save to naf
+                #naf_output_path = os.path.join(args.output_folder, 'naf', incident_uri + '---' + the_hash + '.naf')
+                #doc = spacy_to_naf.text_to_NAF(news_article_obj.title + '. ' + news_article_obj.content, nlp)
+                #piek(naf_output_path, doc)
 
                 clean_incident_sources[source_url] = row_dct
                 doc_id2conll[source_url] = conll
@@ -233,7 +263,7 @@ if __name__=="__main__":
     accepted_char_range = range(300, 4000)
 
     # accepted dct range
-    date_range = (date(2013, 1, 1), date(2016, 12, 31))
+    date_range = (date(2013, 1, 1), date(2017, 12, 31))
 
     event_types = args.event_types.split('_')
     subtask = int(args.subtask)
@@ -301,7 +331,8 @@ if __name__=="__main__":
         look_up, parameters2incident_uris = look_up_utils.create_look_up(df,
                                                                          discard_ambiguous_names=True,
                                                                          allowed_incident_years={2013, 2014, 2015, 2016},
-                                                                         check_name_in_article=True)
+                                                                         check_name_in_article=True,
+                                                                         only_names_with_two_parts=True)
 
         last_qid, candidates=createq_utils.lookup_and_merge(look_up,
                                                             subtasks2q_id[str(subtask)],

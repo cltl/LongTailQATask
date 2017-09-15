@@ -54,8 +54,8 @@ if __name__=="__main__":
     args = parser.parse_args()
 
     # enrichment parameters for S2
-    num_zeros=10 # number of questions to draw from S1 but remove the answer docs
-    num_ones=10 # number of questions to copy from s1 to s2
+    num_zeros=50 # number of questions to draw from S1 but remove the answer docs
+    num_ones=50 # number of questions to copy from s1 to s2
 
     copy_total=num_zeros+num_ones
     copied_cnt=0
@@ -172,8 +172,18 @@ if __name__=="__main__":
                     copyfile(src, dst)
                 answers[new_candidate.q_id] = new_candidate.answer_info
 
+                # remove old question + answer + system input file
+                del questions[s1_qid]
+                assert s1_qid not in questions, '%s still in questions' % s1_qid
+                del answers[s1_qid]
+                assert s1_qid not in answers,   '%s still in answers' % s1_qid
+                os.remove(src)
+                assert not os.path.exists(src), '%s still exists' % src
+               
+
                 next_id+=1
                 copied_cnt+=1
+
             ### S2 magic done! ###
 
             # logging
