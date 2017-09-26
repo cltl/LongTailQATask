@@ -19,8 +19,6 @@ def load_next_q_ids(all_candidates):
                      }
     for a_candidate in all_candidates:
         subtask, q_id = a_candidate.q_id.split('-')
-    for candidate in all_candidates:
-        subtask, q_id = candidate.q_id.split('-')
         subtask2q_ids[subtask]['existing'].append(int(q_id))
 
     for subtask, subtask_info in subtask2q_ids.items():
