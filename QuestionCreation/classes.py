@@ -271,6 +271,10 @@ class Question:
 
         # validate
         the_question = self.question()
+        
+        if the_question is None:
+            self.to_include_in_task = False
+            return 
 
         self.types_and_rows=type_and_row
 
@@ -287,20 +291,21 @@ class Question:
 
                     add_to_gold = False
 
-                    if all([self.subtask in {1,2},
-                            not self.participant_confusion]):
+                    if all([self.subtask == 3,
+                            self.participant_confusion]):
+
+                        # filter here num_killed based on name for s3 'participant' tasks
+                        part_info = the_question['participant']
+                        part_gran = list(part_info.keys())[0]
+                        target_name = list(part_info.values())[0]
+                        num_killed = look_up_utils.return_number(a_row['participants'], 'killing', target_name, part_gran)
+                        num_injured = look_up_utils.return_number(a_row['participants'], 'injuring', target_name, part_gran)
+                        add_to_gold = True
+                    
+                    else:
                         num_killed = a_row['num_killed']
                         num_injured = a_row['num_injured']
                         add_to_gold = True
-                    elif all([self.subtask == 3,
-                              self.participant_confusion]):
-
-                        # filter here num_killed based on name for s3 'participant' tasks
-                        loc_info = the_question['location']
-                        loc_gran = list(loc_info.keys())[0]
-                        target_name = list(loc_info.values())[0]
-                        num_killed = look_up_utils.return_number(a_row['participants'], 'killing', target_name, loc_gran)
-                        num_injured = look_up_utils.return_number(a_row['participants'], 'injuring', target_name, loc_gran)
 
                     if add_to_gold:
                         all_doc_ids[incident_uri].append(the_hash)
@@ -334,13 +339,11 @@ class Question:
                 self.part_numerical_answer += sum([part_info['num_killed']
                                               for part_info in parts_info.values()])
 
-                ## add participant specific count here
 
             if 'injuring' in self.event_types:
                 self.part_numerical_answer += sum([part_info['num_injured']
                                               for part_info in parts_info.values()])
 
-                ## add participant specific count here
 
             self.answer_info = {'numerical_answer': self.part_numerical_answer,
                                 'answer_docs': all_doc_ids,
