@@ -10,7 +10,6 @@ import sys
 from shutil import copyfile
 import hashlib
 
-
 def load_next_q_ids(all_candidates):
     """
     """
@@ -20,6 +19,8 @@ def load_next_q_ids(all_candidates):
                      }
     for a_candidate in all_candidates:
         subtask, q_id = a_candidate.q_id.split('-')
+    for candidate in all_candidates:
+        subtask, q_id = candidate.q_id.split('-')
         subtask2q_ids[subtask]['existing'].append(int(q_id))
 
     for subtask, subtask_info in subtask2q_ids.items():
@@ -33,7 +34,6 @@ def load_next_q_ids(all_candidates):
 def next_q_id_v2(subtask2q_ids):
     next_id = subtask2q_ids['2']['options'].pop()
     return next_id
-
 
 def hash_hash(u):
     hash_obj = hashlib.md5(source_url.encode())
