@@ -10,6 +10,31 @@ import sys
 from shutil import copyfile
 import hashlib
 
+
+def load_next_q_ids(all_candidates):
+    """
+    """
+    subtask2q_ids = {'1': {'existing': [], 'options': []},
+                     '2': {'existing': [], 'options': []},
+                     '3': {'existing': [], 'options': []},
+                     }
+    for a_candidate in all_candidates:
+        subtask, q_id = a_candidate.q_id.split('-')
+        subtask2q_ids[subtask]['existing'].append(int(q_id))
+
+    for subtask, subtask_info in subtask2q_ids.items():
+        highest_q_id = sorted(subtask_info['existing'])[-1]
+        for potential_q_id in range(1, sorted(subtask_info['existing'])[-1]):
+            if potential_q_id not in subtask_info['existing']:
+                subtask2q_ids[subtask]['options'].append('%s-%s' % (subtask, potential_q_id))
+
+    return subtask2q_ids
+
+def next_q_id_v2(subtask2q_ids):
+    next_id = subtask2q_ids['2']['options'].pop()
+    return next_id
+
+
 def hash_hash(u):
     hash_obj = hashlib.md5(source_url.encode())
     the_hash = hash_obj.hexdigest()
@@ -104,6 +129,10 @@ if __name__=="__main__":
         # create answer (and validate)
         candidate.generate_answer_info(types_and_rows, doc_id2conll, debug=False)
 
+        #print(candidate.question())        
+        #print(candidate.answer_info)
+        #input('continue?')
+
     print("now deduplicating")
     print(sum(candidate.to_include_in_task
               for candidate in all_candidates))
@@ -114,6 +143,9 @@ if __name__=="__main__":
 #    new_candidates=candidates
 
     print("deduplication done. storing")
+
+    # load potential q_ids for zero answer questions
+    subtask2q_ids = load_next_q_ids(all_candidates)
 
     num_added = 0
     maximum = 100000
@@ -146,7 +178,8 @@ if __name__=="__main__":
                 new_candidate=deepcopy(candidate)
                 new_candidate.subtask=2
                 #new_candidate.the_question=new_candidate.the_question.replace('Which', 'How many', 1).replace('event', 'events', 1)
-                new_candidate.q_id='2-%d' % next_id
+                next_id = next_q_id_v2(subtask2q_ids)
+                new_candidate.q_id=next_id
                 questions[new_candidate.q_id] = new_candidate.question()
                 print("Copying %s to %s..." % (candidate.q_id, new_candidate.q_id))
                 src=output_path
@@ -181,7 +214,6 @@ if __name__=="__main__":
                 assert not os.path.exists(src), '%s still exists' % src
                
 
-                next_id+=1
                 copied_cnt+=1
 
             ### S2 magic done! ###

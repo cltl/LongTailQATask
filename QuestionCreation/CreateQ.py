@@ -278,8 +278,8 @@ if __name__=="__main__":
                         ]
     if subtask == 3:
         confusion_tuples = [('location', 'time'),
-                            #('participant', 'time'),
-                            #('location', 'participant')
+                            ('participant', 'time'),
+                            ('location', 'participant')
                             ]
 
     output_path = '%s/%s---%s.bin' % (args.output_folder, args.subtask, args.event_types)
