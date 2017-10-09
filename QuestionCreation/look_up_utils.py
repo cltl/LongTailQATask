@@ -7,6 +7,99 @@ import hashlib
 import pickle
 
 
+def return_number(participants_info, event_type, target_name, gran, debug=False):
+    """
+
+    :param list participants_info: list of dictionaries
+    :param str event_type: 'killing' | 'injuring'
+    :param str target_name: first name | last name | full name
+    :param str gran: first | last | full_name
+
+    :rtype: int
+    :return: 0 if not match | 1 if match
+    """
+    answer = 0
+
+    mapping = {'killing': ' Killed',
+               'injuring': ' Injured'}
+
+    wanted = mapping[event_type]
+
+    for part_info in participants_info:
+
+        if all(['Name' in part_info,
+                'Status' in part_info]):
+            full_name = part_info['Name'].strip()
+            if full_name:
+                name_parts = full_name.strip().split()
+                if len(name_parts) == 2:
+                    first, last = name_parts
+
+                    if part_info['Status'] == wanted:
+
+                        if all([gran == 'first',
+                                first == target_name]):
+                            answer += 1
+
+                            if all([answer == 1,
+                                    debug]):
+                                print()
+                                print(part_info)
+                                print(gran, first, target_name)
+
+                        if all([gran == 'last',
+                                last == target_name]):
+                            answer += 1
+
+                            if all([answer == 1,
+                                    debug]):
+                                print()
+                                print(part_info)
+                                print(gran, last, target_name)
+
+                        if all([gran == 'full_name',
+                                full_name == target_name]):
+                            answer += 1
+
+                            if all([answer == 1,
+                                    debug]):
+                                print()
+                                print(part_info)
+                                print(gran, full_name, target_name)
+
+    return answer
+
+def parts_with_only_zero_or_two_parts(participants_info):
+    """
+    Check if all participants have:
+    1) either no name
+    2) or names with two parts
+    3) but NOT names with one part or 3> parts
+    
+    :param list participants_info: list of dicts with participant info
+    
+    :rtype: bool
+    :return: True if all names have zero parts or two parts
+    False in all other conditions
+    """
+    accept = True
+    for part_info in participants_info:
+        
+        if all(['Name' in part_info,
+                'Status' in part_info]):
+            full_name = part_info['Name'].strip()
+            if full_name:
+                name_parts = full_name.strip().split()
+                
+                if len(name_parts) == 1:
+                    accept = False
+                
+                if len(name_parts) >= 3:
+                    accept = False
+    
+    return accept
+
+
 def get_sf_m_dict(row):
     """
     extract surface form and meaning dict from a row
@@ -104,7 +197,8 @@ def update_sf_m_dict_with_participant(row, part_obj, sf_dict, m_dict):
 def create_look_up(df,
                    discard_ambiguous_names=True,
                    allowed_incident_years={2013, 2014, 2015, 2016, 2017},
-                   check_name_in_article=True):
+                   check_name_in_article=True,
+                   only_names_with_two_parts=True):
     """
     create look_up for:
     1. location: state | city | address
@@ -146,6 +240,12 @@ def create_look_up(df,
     news_article_template =  '../EventRegistries/GunViolenceArchive/the_violent_corpus/{incident_uri}/{the_hash}.json'
 
     for index, row in df.iterrows():
+
+        # possibly filter incident based on name parts length
+        if only_names_with_two_parts:
+            accept = parts_with_only_zero_or_two_parts(row['participants'])
+            if not accept:
+                continue
 
         # load news sources
         news_article_objs = set()

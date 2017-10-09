@@ -2,6 +2,7 @@ import metrics
 import datetime
 import pickle
 import hashlib
+import look_up_utils
 import spacy_to_naf
 from lxml import etree
 from spacy.en import English
@@ -268,6 +269,13 @@ class Question:
         all_doc_ids = defaultdict(list)
         parts_info = dict()
 
+        # validate
+        the_question = self.question()
+        
+        if the_question is None:
+            self.to_include_in_task = False
+            return 
+
         self.types_and_rows=type_and_row
 
         for a_type, a_row in type_and_row:
@@ -280,13 +288,31 @@ class Question:
                     incident_uri = a_row['incident_uri']
                     hash_obj = hashlib.md5(source_url.encode())
                     the_hash = hash_obj.hexdigest()
-                    all_doc_ids[incident_uri].append(the_hash)
 
-                    parts_info[incident_uri] = {'num_killed': a_row['num_killed'],
-                                                'num_injured': a_row['num_injured'] }
+                    add_to_gold = False
 
-        # validate
-        the_question = self.question()
+                    if all([self.subtask == 3,
+                            self.participant_confusion]):
+
+                        # filter here num_killed based on name for s3 'participant' tasks
+                        part_info = the_question['participant']
+                        part_gran = list(part_info.keys())[0]
+                        target_name = list(part_info.values())[0]
+                        num_killed = look_up_utils.return_number(a_row['participants'], 'killing', target_name, part_gran)
+                        num_injured = look_up_utils.return_number(a_row['participants'], 'injuring', target_name, part_gran)
+                        add_to_gold = True
+                    
+                    else:
+                        num_killed = a_row['num_killed']
+                        num_injured = a_row['num_injured']
+                        add_to_gold = True
+
+                    if add_to_gold:
+                        all_doc_ids[incident_uri].append(the_hash)
+                        parts_info[incident_uri] = {'num_killed': num_killed,
+                                                    'num_injured': num_injured }
+
+
 
         self.numerical_answer = len(all_doc_ids)
 
@@ -312,9 +338,12 @@ class Question:
             if 'killing' in self.event_types:
                 self.part_numerical_answer += sum([part_info['num_killed']
                                               for part_info in parts_info.values()])
+
+
             if 'injuring' in self.event_types:
                 self.part_numerical_answer += sum([part_info['num_injured']
                                               for part_info in parts_info.values()])
+
 
             self.answer_info = {'numerical_answer': self.part_numerical_answer,
                                 'answer_docs': all_doc_ids,
