@@ -1,36 +1,41 @@
-# In[8]:
 
-import json
+# coding: utf-8
+
+# In[3]:
+
+
 import utils
 import operator
 # topics: http://www.newsreader-project.eu/files/2013/01/NWR-2014-1.pdf
 
 
-# In[9]:
+# In[27]:
 
 
 base = 'http://news.fii800.lod.labs.vu.nl/news?'
+terms = ['worker', 'employee', 'labourer', 'workman', 'fired', 'discharged', 'dismissed']#, 'pink-slipped', 'layed-off']
 args = {
-    'q' : 'fired worker', # the query terms to look for
+    'q' : ' '.join(terms),#'fired worker', # the query terms to look for
     'in' : 'content', # look in title, content or both (supported values are: "title", "content", "both")
     'from' : '2015-09-01T00:00:00Z', # from->starting datetime point
     'to' : '2015-09-30T00:00:00Z', # ending datetime point
     'source' : '', # source -> which source
-#    'media' : 'News', # media -> media type ("Blog" or "News")
+ #   'media' : 'News', # media -> media type ("Blog" or "News")
     'size' : 1000, # size -> amount of results to return
     'offset' : 0,  # offset ->skip the first offset results (useful for pagination)
-    'match' : 'conjunct'
+    'match' : 'terms'
 }
 
 
-# In[10]:
+# In[28]:
 
 
-all_results = utils.get_all_hits(base, args)
+url=utils.create_url(base, args)
+all_results = utils.extract_hits(url)
 len(all_results)
 
 
-# In[11]:
+# In[29]:
 
 
 # ignore this
@@ -39,15 +44,18 @@ utils.extract_size('http://news.fii800.lod.labs.vu.nl/news?offset=0&to=2015-09-2
 
 # ### Which articles are too long/short or have the exact same content
 
-# In[12]:
+# In[30]:
 
 
 to_remove=set()
-min_len=300
+min_len=100
 max_len=4000
+ls=0
+same=0
 for e1, val1 in all_results.items():
     data1=all_results[e1]['_source']['content']
     if len(data1)>max_len or len(data1)<min_len:# if too long or short
+        ls+=1
         to_remove.add(e1)
         continue
     for e2, val2 in all_results.items():
@@ -55,23 +63,25 @@ for e1, val1 in all_results.items():
             data2=all_results[e2]['_source']['content']
             if data1==data2:
                 to_remove.add(e1)
+                same+=1
                 break
+print(ls, same)
 
 
-# In[13]:
+# In[31]:
 
 
 len(to_remove)
 
 
-# In[14]:
+# In[32]:
 
 
 for k in to_remove:
     del all_results[k]
 
 
-# In[16]:
+# In[34]:
 
 
 print(len(all_results))
@@ -79,7 +89,7 @@ print(len(all_results))
 
 # ### Which articles have similarity higher than a threshold -> create chains
 
-# In[17]:
+# In[35]:
 
 
 import spacy
@@ -94,7 +104,7 @@ for key, value in all_results.items():
 #        print(ent.label_, ent.text)
 
 
-# In[43]:
+# In[52]:
 
 
 c=0
@@ -121,7 +131,7 @@ print(l,o,c)
 
 # ### Merge chains
 
-# In[39]:
+# In[53]:
 
 
 # merge chains
@@ -137,12 +147,17 @@ for index, chain in enumerate(coref):
 
 # ### Inspect chains
 
-# In[42]:
+# In[54]:
 
 
-len(coref)
+cnt=0
 for chain in coref:
-    print(len(chain))
+    if len(chain):
+        print(len(chain))
+        cnt+=1
+cnt
+
+# OLD CHAINS: 
 # 1) Jeremy Clarkson's comeback (2)
 # 2) Taco Bell firing an employee (2)
 # 3) Taylor Swift's bottom (10)
@@ -156,10 +171,10 @@ for chain in coref:
 # 11) Sheriff's deputy shot and killed (4)
 
 
-# In[30]:
+# In[59]:
 
 
-chain=coref[10]
+chain=coref[-4]
 for e in chain:
     data=all_results[e]['_source']['content']
     print("DOCUMENT\n",data)
