@@ -4,6 +4,7 @@
 # In[3]:
 
 
+import json
 import utils
 import operator
 # topics: http://www.newsreader-project.eu/files/2013/01/NWR-2014-1.pdf
@@ -12,7 +13,7 @@ import operator
 # In[27]:
 
 
-base = 'http://news.fii800.lod.labs.vu.nl/news?'
+base = 'http://smnews.fii800.lod.labs.vu.nl/news?'
 terms = ['worker', 'employee', 'labourer', 'workman', 'fired', 'discharged', 'dismissed']#, 'pink-slipped', 'layed-off']
 args = {
     'q' : ' '.join(terms),#'fired worker', # the query terms to look for
@@ -21,7 +22,7 @@ args = {
     'to' : '2015-09-30T00:00:00Z', # ending datetime point
     'source' : '', # source -> which source
  #   'media' : 'News', # media -> media type ("Blog" or "News")
-    'size' : 1000, # size -> amount of results to return
+    'size' : 500, # size -> amount of results to return
     'offset' : 0,  # offset ->skip the first offset results (useful for pagination)
     'match' : 'terms'
 }
@@ -39,7 +40,7 @@ len(all_results)
 
 
 # ignore this
-utils.extract_size('http://news.fii800.lod.labs.vu.nl/news?offset=0&to=2015-09-27T00:00:00Z&media=News&size=1&from=2015-09-20T00:00:00Z&in=content&q=crash')
+utils.extract_size('http://snews.fii800.lod.labs.vu.nl/news?offset=0&to=2015-09-27T00:00:00Z&media=News&size=1&from=2015-09-20T00:00:00Z&in=content&q=crash')
 
 
 # ### Which articles are too long/short or have the exact same content
