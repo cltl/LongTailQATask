@@ -20,6 +20,22 @@ import operator
 from collections import Counter
 from collections import defaultdict
 
+def get_the_incident_years(doc_settings):
+    start_year = 3000
+    end_year = 0
+
+    for repo, repo_info in doc_settings.items():
+
+        if repo_info['date_range'][0].year < start_year:
+            start_year = repo_info['date_range'][0].year
+
+        if repo_info['date_range'][1].year > end_year:
+            end_year = repo_info['date_range'][1].year
+
+    the_accepted_incident_years = {year
+                                   for year in range(start_year, end_year + 1)}
+    return the_accepted_incident_years
+
 def piek(output_path, doc):
     """
     """    
@@ -126,25 +142,31 @@ def text2conll_one_file(nlp, incident_uri, doc_id, discourse, text, pre=False):
 
     return output, num_chars
 
-def pretokenize(df, accepted_years, accepted_char_range, date_range):
+def pretokenize(df, settings):
     """
     pretokenize news articles using spacy
     and convert to conll
 
     :param pandas.core.frame.DataFrame df: gva archive
-    :param list accepted_years: list of accepted years
-    :param range accepted_char_range: how many characters a document is allowed to have
+    :param dict settings: dict with settings about:
+    {'accepted_char_range' : range(300, 4000),$
+     'date_range' : (date(2013, 1, 1), date(2016, 12, 31),$
+     'accepted_years' : ['2013', '2014', '2015', '2016']$
+     }
 
     :rtype: dict
     :return: source_url -> list of strings (conll output)
     """
-    news_article_template = '../EventRegistries/GunViolenceArchive/the_violent_corpus/{incident_uri}/{the_hash}.json'
+    gv_news_article_template = '../EventRegistries/GunViolenceArchive/the_violent_corpus/{incident_uri}/{the_hash}.json'
+    fr_news_article_template = '../EventRegistries/FireRescue1/firerescue_corpus/{incident_uri}/{the_hash}.json'
     doc_id2conll = dict()
     not_found = set()
     nlp = English()
     distribution = defaultdict(int)
     dcts = []
-    start_date, end_date = date_range
+    start_date, end_date = settings['date_range']
+    accepted_years = settings['accepted_years']
+    accepted_char_range = settings['accepted_char_range']
 
 
     num_removed_due_to_length = 0
@@ -154,7 +176,11 @@ def pretokenize(df, accepted_years, accepted_char_range, date_range):
 
     for index, row in df.iterrows():
         to_check = False
-        if any([row['date'].endswith(year)
+        the_date = row['date']
+        if the_date is None:
+            continue 
+
+        if any([the_date.endswith(year)
                 for year in accepted_years]):
 
             to_check = True
@@ -165,6 +191,11 @@ def pretokenize(df, accepted_years, accepted_char_range, date_range):
                 hash_obj = hashlib.md5(source_url.encode())
                 the_hash = hash_obj.hexdigest()
                 incident_uri = row['incident_uri']
+
+                news_article_template = gv_news_article_template
+                if incident_uri.startswith('FR'):
+                    news_article_template = fr_news_article_template
+     
                 path = news_article_template.format_map(locals())
 
                 if source_url in doc_id2conll:
@@ -188,6 +219,7 @@ def pretokenize(df, accepted_years, accepted_char_range, date_range):
                 if not news_article_obj.dct:
                     continue
 
+            
                 if not start_date < news_article_obj.dct < end_date:
                     print(news_article_obj.dct, 'not in accepted date range')
                     continue
@@ -252,24 +284,33 @@ def pretokenize(df, accepted_years, accepted_char_range, date_range):
 if __name__=="__main__":
 
     parser = argparse.ArgumentParser(description='Create data for SemEval-2018 task 5')
-    parser.add_argument('-d', dest='path_gva_df', required=True, help='path to gva frame (../EventRegistries/GunViolenceArchive/frames/all)')
+    parser.add_argument('-d', dest='path_gva_df', help='path to gva frame (../EventRegistries/GunViolenceArchive/frames/all)')
+    parser.add_argument('-f', dest='path_fr_df', help='path to fr frame (../EventRegistries/FireRescue1/firerescue_v3.pickle)')
     parser.add_argument('-e', dest='event_types', required=True, help='event types separated by underscore e.g. killing_injuring')
     parser.add_argument('-s', dest='subtask', required=True, help='1 | 2 | 3')
     parser.add_argument('-o', dest='output_folder', required=True, help='folder where output will be stored')
     args = parser.parse_args()
 
 
-    # accepted character length range for articles
-    accepted_char_range = range(300, 4000)
+    # assertions
+    if all([args.path_gva_df is None,
+            args.path_fr_df is None]):
+        assert False, 'no path to df provided' 
 
-    # accepted dct range
-    date_range = (date(2013, 1, 1), date(2017, 12, 31))
-
-    event_types = args.event_types.split('_')
+    doc_settings = {
+        'gva' : {'accepted_char_range' : range(300, 4000),
+                 'date_range' : (date(2013, 1, 1), date(2016, 12, 31)),
+                 'accepted_years' : ['2013', '2014', '2015', '2016']
+                 },
+         'fr' : {'accepted_char_range' : range(100, 4000),
+                 'date_range' : (date(2005, 1, 1), date(2009, 12, 31)),
+                 'accepted_years' : ['2005', '2006', '2007', '2008', '2009']
+         }
+    }
+    event_types = [args.event_types]
+    
     subtask = int(args.subtask)
     all_candidates = set()
-    df = pandas.read_pickle(args.path_gva_df)
-    df = df.reset_index(drop=True) # reset indices
 
     # load arguments
     confusion_tuples = [('location', 'time'),
@@ -305,7 +346,24 @@ if __name__=="__main__":
     path_cache_tokenization = '%s/cache' % args.output_folder
     if not os.path.exists(path_cache_tokenization):
         print('df + tokenization recomputed')
-        doc_id2conll, df = pretokenize(df, ['2013', '2014', '2015', '2016'], accepted_char_range, date_range)
+
+        dfs = []
+        doc_id2conll = dict()
+
+        for repo, repo_path in [('gva', args.path_gva_df),
+                                ('fr', args.path_fr_df)]:
+            if repo_path:
+                print('reading', repo_path)
+                a_df = pandas.read_pickle(repo_path)
+                a_df = a_df.reset_index(drop=True) # reset indices
+                print('len before pretokenize', len(a_df))
+                a_doc_id2conll, a_df = pretokenize(a_df, doc_settings[repo])
+                print('len after pretokenzie', len(a_df))
+
+                dfs.append(a_df)
+                doc_id2conll.update(a_doc_id2conll)
+        
+        df = pandas.concat(dfs)
 
         with open(path_cache_tokenization, 'wb') as outfile:
             pickle.dump((doc_id2conll, df), outfile)
@@ -327,13 +385,14 @@ if __name__=="__main__":
         min_num_answer_incidents = 1
 
     # create questions
+    the_incident_years = get_the_incident_years(doc_settings)
+
     for confusion_tuple in confusion_tuples:
         look_up, parameters2incident_uris = look_up_utils.create_look_up(df,
                                                                          discard_ambiguous_names=True,
-                                                                         allowed_incident_years={2013, 2014, 2015, 2016},
+                                                                         allowed_incident_years=the_incident_years,
                                                                          check_name_in_article=True,
                                                                          only_names_with_two_parts=True)
-
         last_qid, candidates=createq_utils.lookup_and_merge(look_up,
                                                             subtasks2q_id[str(subtask)],
                                                             parameters2incident_uris,

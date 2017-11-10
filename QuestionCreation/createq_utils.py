@@ -1,9 +1,31 @@
 import metrics
 from classes import Question
 
+def filter_uris(the_uris, event_types):
+    """
+    remove uris from a certain type
+            
+    the_uris = ['FR1', '1', 'FR2', '2']
+    event_types = ["killing"]
+    output -> {'1', '2'}
+                            
+    the_uris = ['FR1', '1, 'FR2', '2']
+    event_types = ["fire_burning"]
+    output -> {'FR1', 'FR2'}
+    """
+    event_type = event_types[0]
+                                                    
+    if event_type in {'killing', 'injuring'}:
+        uris = {uri for uri in the_uris if not uri.startswith('FR')}
+                                                                        
+    elif event_type == 'fire_burning':
+        uris = {uri for uri in the_uris if uri.startswith('FR')}  
+                                                                                        
+    return uris
 
 def extract_gold_confusion_key(confusion_tuple,
-                               meanings):
+                               meanings,
+                               event_types):
     """
     extract gold and confusions keys + incident uris for n questions
 
@@ -42,9 +64,7 @@ def extract_gold_confusion_key(confusion_tuple,
             for knowledge_types_key, incident_uris in meanings.items():
 
                 if loc_meaning in knowledge_types_key:
-                    answer_incident_uris = {uri
-                                            for uri in incident_uris
-                                            if not uri.startswith('FR')} # remove FireRescue1 incidents from gold
+                    answer_incident_uris = filter_uris(incident_uris, event_types)
                     if answer_incident_uris:
                         question_info['gold_keys'].add(knowledge_types_key)
                         question_info['gold_incident_uris'].update(incident_uris)
@@ -65,9 +85,7 @@ def extract_gold_confusion_key(confusion_tuple,
         }
 
         for knowledge_types_key, incident_uris in meanings.items():
-            answer_incident_uris = {uri
-                                    for uri in incident_uris
-                                    if not uri.startswith('FR')}  # remove FireRescue1 incidents from gold
+            answer_incident_uris = filter_uris(incident_uris, event_types)
             if answer_incident_uris:
                 question_info['gold_keys'].add(knowledge_types_key)
                 question_info['gold_incident_uris'].update(incident_uris)
@@ -83,6 +101,10 @@ def event_typing(event_types, df, initial_answer_uris, confusion_uris, debug=Fal
         print(event_types)
 
     for index,row in answer_rows.iterrows():
+        
+        if 'fire_burning' in event_types and row['incident_uri'].startswith('FR'):
+            new_answer_uris.add(row['incident_uri'])        
+
         if 'killing' in event_types and row['num_killed']>0:
             new_answer_uris.add(row['incident_uri'])
             if debug:
@@ -133,20 +155,24 @@ def lookup_and_merge(look_up,
 
     for granularity in (look_up[confusion_tuple]):
         for sf in look_up[confusion_tuple][granularity]:
-
             meanings = look_up[confusion_tuple][granularity][sf]
-            the_gold_confusion_keys = extract_gold_confusion_key(confusion_tuple, meanings)
-
+            the_gold_confusion_keys = extract_gold_confusion_key(confusion_tuple, meanings, event_types)
             for question_info in the_gold_confusion_keys:
 
                 answer_incident_uris = question_info['gold_incident_uris']
                 num_answer_uris = len(question_info['gold_incident_uris'])
+                if debug:
+                    print()
+                    print(granularity, sf)
+                    print(num_answer_uris)
+                    print(meanings) 
+                    
+
                 if num_answer_uris >= min_num_answer_incidents and num_answer_uris<=max_num_answer_incidents:
 
                     if debug:
                         print()
                         print(question_info)
-                        input('continue?')
 
 
                     # obtain confusion uris
@@ -165,11 +191,31 @@ def lookup_and_merge(look_up,
 
                     # create confusion df and answer df
                     set_confusion_uris = question_info['confusion_incident_uris'] | confusion_incident_uris[0] | confusion_incident_uris[1]
-       
+                    
+                    if debug:
+                        print()
+                        print(answer_incident_uris)
+                        print(confusion_incident_uris)
+
                     answer_incident_uris, set_confusion_uris = event_typing(event_types, df, answer_incident_uris, set_confusion_uris, debug=False)
                     num_answer_uris = len(answer_incident_uris)
 
+                    # filter confusion uris on event type
+
+                    # remove fr from confusion uris if event_type in {injuring, killing}:
+                    if event_types[0] in {'killing', 'injuring'}:
+                        set_confusion_uris = filter_uris(set_confusion_uris, event_types)
+
+                    if debug:
+                        print()
+                        print('answer', answer_incident_uris)
+                        print('confusion', set_confusion_uris)
+                        input('continue?')
+
                     if num_answer_uris < min_num_answer_incidents or num_answer_uris > max_num_answer_incidents:
+                        continue
+      
+                    if not set_confusion_uris:
                         continue
  
                     confusion_df = df.query('incident_uri in @set_confusion_uris')
@@ -192,8 +238,6 @@ def lookup_and_merge(look_up,
                         event_types=event_types
                     )
 
-                    if debug:
-                        q_instance.debug()
 
                     q_id += 1
 

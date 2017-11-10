@@ -303,8 +303,12 @@ class Question:
                         add_to_gold = True
                     
                     else:
-                        num_killed = a_row['num_killed']
-                        num_injured = a_row['num_injured']
+                        num_killed = 0
+                        if 'num_killed' in a_row:
+                            num_killed = a_row['num_killed']
+                        num_injured = 0
+                        if 'num_injured' in a_row:
+                            num_injured = a_row['num_injured']
                         add_to_gold = True
 
                     if add_to_gold:

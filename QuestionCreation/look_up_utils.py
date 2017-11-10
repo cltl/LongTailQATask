@@ -237,7 +237,8 @@ def create_look_up(df,
                     if name:
                         participant2freq[name] += 1
 
-    news_article_template =  '../EventRegistries/GunViolenceArchive/the_violent_corpus/{incident_uri}/{the_hash}.json'
+    gv_news_article_template = '../EventRegistries/GunViolenceArchive/the_violent_corpus/{incident_uri}/{the_hash}.json'
+    fr_news_article_template = '../EventRegistries/FireRescue1/firerescue_corpus/{incident_uri}/{the_hash}.json'
 
     for index, row in df.iterrows():
 
@@ -254,7 +255,12 @@ def create_look_up(df,
             the_hash = hash_obj.hexdigest()
             incident_uri = row['incident_uri']
 
+            news_article_template = gv_news_article_template
+            if incident_uri.startswith('FR'):
+                news_article_template = fr_news_article_template
+
             path = news_article_template.format_map(locals())
+
             try:
                 with open(path, 'rb') as infile:
                     news_article_obj = pickle.load(infile)

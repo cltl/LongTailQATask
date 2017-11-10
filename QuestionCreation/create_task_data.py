@@ -21,7 +21,12 @@ def load_next_q_ids(all_candidates):
         subtask, q_id = a_candidate.q_id.split('-')
         subtask2q_ids[subtask]['existing'].append(int(q_id))
 
+
     for subtask, subtask_info in subtask2q_ids.items():
+        
+        if not subtask_info['existing']:
+            continue 
+
         highest_q_id = sorted(subtask_info['existing'])[-1]
         for potential_q_id in range(1, sorted(subtask_info['existing'])[-1]):
             if potential_q_id not in subtask_info['existing']:
@@ -77,8 +82,8 @@ if __name__=="__main__":
     args = parser.parse_args()
 
     # enrichment parameters for S2
-    num_zeros=50 # number of questions to draw from S1 but remove the answer docs
-    num_ones=50 # number of questions to copy from s1 to s2
+    num_zeros=10 # number of questions to draw from S1 but remove the answer docs
+    num_ones=10 # number of questions to copy from s1 to s2
 
     copy_total=num_zeros+num_ones
     copied_cnt=0
