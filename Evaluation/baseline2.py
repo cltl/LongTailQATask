@@ -30,6 +30,7 @@ def get_event_lemmas(event_type):
         lemmas |=set([l.replace('_', ' ') for l in s.lemma_names()])
     return lemmas
 
+# Obtain event types that a lemma refers to
 def get_et_for_lemmas(etypes={'killing', 'injuring'}):
     lemma2et={}
     for etype in etypes:
@@ -39,6 +40,7 @@ def get_et_for_lemmas(etypes={'killing', 'injuring'}):
     return lemma2et
 
 
+# check if the DCT fits the question time
 def time_fits(dct, qtime):
     if qtime is None:
         return True
@@ -73,8 +75,6 @@ def process_question(qdata, conll_data, answer_is_one=False):
     event_lemmas=get_event_lemmas(event_type)
     qdocs=qdata['input_doc_ids']
 
-    
-
     #output=""
     answer_docs=set()
 
@@ -106,7 +106,6 @@ def mention_annotation(conll_data):
     lemma2et=get_et_for_lemmas()
     output_conll=""
     docnum=0
-    print(len(conll_data.items()))
     for docid, docdata in conll_data.items():
         output_conll+= docdata['start_line']
         for line in docdata['content']:
