@@ -5,6 +5,7 @@ import json
 from glob import glob
 from collections import defaultdict
 from collections import Counter
+from datetime import datetime
 
 
 # folder rm and mkdir
@@ -38,10 +39,9 @@ def reset():
             print(e)
 
 # load conll + create q_id2docs
-def load_conll(conll_folder, debug=False):
+def load_conll(debug=False):
     """
-
-    :param str conll_folder: path to folder containing conll files
+    load all docs from all conll from all subtasks
 
     :rtype: tuple
     :return: (subtask2conll, q_id2docs)
@@ -49,10 +49,13 @@ def load_conll(conll_folder, debug=False):
     subtask2conll = dict()
     q_id2docs = defaultdict(set)
 
-    iterable = glob(conll_folder + '/*.conll')
+    iterable = glob('v1/input/**/CONLL/*.conll')
 
     for num_conll, conll_path in enumerate(iterable, 1):
 
+        if all([debug,
+                num_conll % 100 == 0]):
+            print(num_conll, datetime.now())
         with open(conll_path) as infile:
 
             basename = os.path.basename(conll_path)
@@ -89,7 +92,7 @@ def load_conll(conll_folder, debug=False):
 
 
 # create new questions.json + save
-def update_questions_and_answers_json(subtask, q_id2docs):
+def update_questions_and_answers_json(subtask, q_id2docs, add_input_docs_ids=False):
     """
     add key 'input_doc_ids' to json and save it in new folder
 
@@ -102,14 +105,16 @@ def update_questions_and_answers_json(subtask, q_id2docs):
 
     questions = json.load(open(question_json_path))
 
-    for q_id, q_info in questions.items():
-        q_info['input_doc_ids'] = list(q_id2docs[q_id])
+    # needed if you want to add the key 'input_doc_ids' to the questions json
+    if add_input_docs_ids:
+        for q_id, q_info in questions.items():
+            q_info['input_doc_ids'] = list(q_id2docs[q_id])
 
 
     output_question_json_path = 'v2/input/%s/questions.json' % subtask
 
     with open(output_question_json_path, 'w') as outfile:
-        json.dump(questions, outfile)
+        json.dump(questions, outfile, indent=4, sort_keys=True)
 
 
     # mv answers.json
@@ -349,24 +354,22 @@ def to_conll(subtask, subtask2conll, token_id2anno):
 
 
 
-# TODO: adapt readme and cp it to it
-
-
-# call functions
-debug_value=True
-
-# reset directories
-reset()
-
-
-# TODO: number of chains and distribution info
 
 if __name__ == '__main__':
+
+    # call functions
+    debug_value = True
+
+    # reset directories
+    reset()
+
     # main loop
     all_added = set()
 
     anno_path = 'resources/ann_piek_men.json'
     token_id2anno = load_men_annotations(anno_path, debug=debug_value)
+
+    subtask2conll, q_id2docs = load_conll(debug=debug_value)
 
     for subtask in ['s1',
                     's2',
@@ -377,11 +380,7 @@ if __name__ == '__main__':
             print()
             print('subtask', subtask)
 
-        input_dir = 'v1/input/%s/CONLL' % subtask
-
-        subtask2conll, q_id2docs = load_conll(input_dir, debug=debug_value)
-
-        update_questions_and_answers_json(subtask, q_id2docs)
+        update_questions_and_answers_json(subtask, q_id2docs, add_input_docs_ids=False)
 
         added = to_conll(subtask, subtask2conll, token_id2anno)
         all_added.update(added)
