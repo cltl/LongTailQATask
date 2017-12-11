@@ -29,7 +29,8 @@ def reset():
                 'mkdir -p v2/input/s3',
                 'mkdir -p v2/dev_data/s1',
                 'mkdir -p v2/dev_data/s2',
-                'mkdir -p v2/dev_data/s3'
+                'mkdir -p v2/dev_data/s3',
+                'cp v1/readme.txt v2/README.txt'
                 ]
 
     for command in commands:
@@ -92,7 +93,7 @@ def load_conll(debug=False):
 
 
 # create new questions.json + save
-def update_questions_and_answers_json(subtask, q_id2docs, add_input_docs_ids=False):
+def update_questions_and_answers_json(subtask, q_id2docs, total_num_docs, add_input_docs_ids=False):
     """
     add key 'input_doc_ids' to json and save it in new folder
 
@@ -102,14 +103,41 @@ def update_questions_and_answers_json(subtask, q_id2docs, add_input_docs_ids=Fal
 
     """
     question_json_path = 'v1/input/%s/questions.json' % subtask
-
     questions = json.load(open(question_json_path))
 
-    # needed if you want to add the key 'input_doc_ids' to the questions json
-    if add_input_docs_ids:
-        for q_id, q_info in questions.items():
-            q_info['input_doc_ids'] = list(q_id2docs[q_id])
+    answers_json_path = 'v1/dev_data/%s/answers.json' % subtask
+    answers = json.load(open(answers_json_path))
 
+    stats_input = {}
+
+    # needed if you want to add the key 'input_doc_ids' to the questions json
+    for q_id, q_info in answers.items():
+
+        num_answer_docs = sum([len(docs)
+                               for docs in q_info['answer_docs'].values()
+                               ])
+
+        confusion_docs = list(q_id2docs[q_id])
+        num_confusion_docs = len(confusion_docs)
+
+        num_noise_docs = total_num_docs - (num_confusion_docs + num_answer_docs)
+
+        assert (num_answer_docs + num_confusion_docs + num_noise_docs) == total_num_docs, 'total: %s, answer: %s, confusion: %s, noise: %s' % (total_num_docs,
+                                                                                                                                               num_answer_docs,
+                                                                                                                                               num_confusion_docs,
+                                                                                                                                               num_noise_docs)
+
+        q_stats_info = {
+            'answer' : q_info['numerical_answer'],
+            'num_answer_docs' : num_answer_docs,
+            'num_confunsion_docs' : num_confusion_docs,
+            'num_noise_docs' : num_noise_docs
+        }
+
+        stats_input[q_id] = q_stats_info
+
+        if add_input_docs_ids:
+            questions[q_id]['input_doc_ids'] = list(q_id2docs[q_id])
 
     output_question_json_path = 'v2/input/%s/questions.json' % subtask
 
@@ -123,6 +151,8 @@ def update_questions_and_answers_json(subtask, q_id2docs, add_input_docs_ids=Fal
         subprocess.check_output(command, shell=True)
     except subprocess.CalledProcessError as e:
         print(e)
+
+    return stats_input
 
 
 def mwu_token_list(mwu_ids, debug=False):
@@ -352,8 +382,59 @@ def to_conll(subtask, subtask2conll, token_id2anno):
 
     return added
 
+def compute_stats(stats_input, output_path=None, debug=False):
+    """
+    compute stats:
+    a) avg num of gold incidents
+    b) avg num of gold docs
+    c) 1 to n confusion documents
+    d) 1 to n noise documents
+
+    :param dict stats_input: mapping of q_id ->
+    {
+            'answer' : q_info['numerical_answer']
+            'num_answer_docs' : num_answer_docs,
+            'num_confunsion_docs' : num_confusion_docs,
+            'num_noise_docs' : num_noise_docs
+        }
+
+    :rtype: dict
+    :return:
+    """
+    stats = dict()
+
+    for metric_name, input_key in [('gold_incidents', 'answer'),
+                                   ('gold_docs', 'num_answer_docs'),
+                                   ('confusion_docs', 'num_confunsion_docs'),
+                                   ('noise_docs', 'num_noise_docs')
+                                   ]:
+
+        the_sum = sum([q_info[input_key]
+                       for q_info in stats_input.values()])
+        the_avg = the_sum / len(stats_input)
+
+        stats[metric_name] = (the_sum, round(the_avg, 2))
 
 
+    num_confusion_docs_per_gold_document = stats['confusion_docs'][0] / stats['gold_docs'][0]
+    num_noise_docs_per_gold_document = stats['noise_docs'][0] / stats['gold_docs'][0]
+
+    stats['num_confusion_docs_per_gold_document'] = round(num_confusion_docs_per_gold_document, 2)
+    stats['num_noise_docs_per_gold_document'] = round(num_noise_docs_per_gold_document, 2)
+
+    if debug:
+        print(stats)
+
+    if output_path:
+        with open(output_path, 'w') as outfile:
+            json.dump(stats, outfile, indent=4, sort_keys=True)
+
+
+# TODO: add stats txt with
+    # avg num of gold incidents
+    # avg num of gold docs
+    # 1 to n confusion documents
+    # 1 to n noise documents
 
 if __name__ == '__main__':
 
@@ -370,6 +451,7 @@ if __name__ == '__main__':
     token_id2anno = load_men_annotations(anno_path, debug=debug_value)
 
     subtask2conll, q_id2docs = load_conll(debug=debug_value)
+    total_num_docs = len(subtask2conll)
 
     for subtask in ['s1',
                     's2',
@@ -380,9 +462,17 @@ if __name__ == '__main__':
             print()
             print('subtask', subtask)
 
-        update_questions_and_answers_json(subtask, q_id2docs, add_input_docs_ids=False)
+        stats_input = update_questions_and_answers_json(subtask,
+                                                        q_id2docs,
+                                                        total_num_docs,
+                                                        add_input_docs_ids=False)
+
+        #stats_output_path = 'v2/dev_data/%s/stats.json' % subtask
+
+        compute_stats(stats_input, output_path=None, debug=True)
 
         added = to_conll(subtask, subtask2conll, token_id2anno)
+
         all_added.update(added)
 
 
