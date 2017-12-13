@@ -23,9 +23,9 @@ def load_next_q_ids(all_candidates):
 
 
     for subtask, subtask_info in subtask2q_ids.items():
-
+        
         if not subtask_info['existing']:
-            continue
+            continue 
 
         highest_q_id = sorted(subtask_info['existing'])[-1]
         for potential_q_id in range(1, sorted(subtask_info['existing'])[-1]):
@@ -132,7 +132,7 @@ if __name__=="__main__":
         # create answer (and validate)
         candidate.generate_answer_info(types_and_rows, doc_id2conll, debug=False)
 
-        #print(candidate.question())
+        #print(candidate.question())        
         #print(candidate.answer_info)
         #input('continue?')
 
@@ -153,7 +153,6 @@ if __name__=="__main__":
     num_added = 0
     maximum = 100000
     debug = False
-    all_docs=set() # we store all doc ids relevant for questions here
     for candidate in all_candidates:
         # update question and answer dictionaries
         if candidate.to_include_in_task:
@@ -164,15 +163,20 @@ if __name__=="__main__":
                 print(candidate.gold_loc_meaning)
                 input('continue?')
 
-            for a_type, a_row in candidate.types_and_rows:
-                for source_url in a_row['incident_sources']:
-                    if source_url not in doc_id2conll:
-                        continue
-                    else:
-                        all_docs.add(source_url)
+            # write to file
+            output_path = '%s/system_input/%s.conll' % (args.output_folder, candidate.q_id)
+            with open(output_path, 'w') as outfile:
+                for a_type, a_row in candidate.types_and_rows:
+                    for source_url in a_row['incident_sources']:
+                        if source_url not in doc_id2conll:
+                            continue
+
+                        conll_info = doc_id2conll[source_url]
+                        for line in conll_info:
+                            outfile.write(line)
 
             ### Maybe copy the question to S2 ###
-            if copied_cnt<copy_total and candidate.subtask==1:
+            if copied_cnt<copy_total and candidate.subtask==1: 
                 s1_qid=candidate.q_id
                 new_candidate=deepcopy(candidate)
                 new_candidate.subtask=2
@@ -181,22 +185,27 @@ if __name__=="__main__":
                 new_candidate.q_id=next_id
                 questions[new_candidate.q_id] = new_candidate.question()
                 print("Copying %s to %s..." % (candidate.q_id, new_candidate.q_id))
+                src=output_path
+                dst='%s/system_input/%s.conll' % (args.output_folder, new_candidate.q_id)
 
                 if copied_cnt<num_zeros: # copy but modify the answer to 0
                     all_answer_docs=set(docid for inc in candidate.answer_info["answer_docs"] for docid in candidate.answer_info["answer_docs"][inc])
                     print("... but modifying the answer to 0")
-                    for a_type, a_row in new_candidate.types_and_rows:
-                        for source_url in a_row['incident_sources']:
-                            if source_url not in doc_id2conll or hash_hash(source_url) in all_answer_docs:
-                                continue
-                            else:
-                                all_docs.add(source_url)
+                    with open(dst, 'w') as outfile:
+                        for a_type, a_row in new_candidate.types_and_rows:
+                            for source_url in a_row['incident_sources']:
+                                if source_url not in doc_id2conll or hash_hash(source_url) in all_answer_docs:
+                                    continue
+                                conll_info = doc_id2conll[source_url]
+                                for line in conll_info:
+                                    outfile.write(line)
                     new_candidate.answer_info["answer_docs"]={}
                     new_candidate.answer_info["numerical_answer"]=0
                     new_candidate.answer_incident_uris=set()
                     new_candidate.ev_answer=0
                 else:
                     print("... keeping the answer the same")
+                    copyfile(src, dst)
                 answers[new_candidate.q_id] = new_candidate.answer_info
 
                 # remove old question + answer + system input file
@@ -204,6 +213,9 @@ if __name__=="__main__":
                 assert s1_qid not in questions, '%s still in questions' % s1_qid
                 del answers[s1_qid]
                 assert s1_qid not in answers,   '%s still in answers' % s1_qid
+                os.remove(src)
+                assert not os.path.exists(src), '%s still exists' % src
+               
 
                 copied_cnt+=1
 
@@ -221,14 +233,6 @@ if __name__=="__main__":
     #answers_out_path = '%s/answers.json' % args.output_folder
     #with open(answers_out_path, 'w') as outfile:
     #    outfile.write(json.dumps(answers, indent=4, sort_keys=True))
-
-    # write to file
-    output_path = '%s/system_input/docs.conll' % args.output_folder
-    with open(output_path, 'w') as outfile:
-        for doc_id in all_docs:
-            conll_info = doc_id2conll[doc_id]
-            for line in conll_info:
-                outfile.write(line)
 
     ### SPLIT INTO THREE SUBTASK JSONS ###
 
