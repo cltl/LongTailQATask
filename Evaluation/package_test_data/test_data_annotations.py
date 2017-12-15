@@ -3,6 +3,7 @@ import os
 import json
 import pickle
 import operator
+import pandas
 
 from glob import glob
 from collections import defaultdict
@@ -112,6 +113,38 @@ def load_conll(input_dir, cache_path, debug=False):
     return subtask2conll, q_id2docs, token_id2token
 
 
+def load_mappings_mentions2solution(path_excel_file):
+    """
+    load solution proposed by Roxane to map mentions to either
+    1) delete
+    2) map to new event type
+
+    :param str path_to_excel_file: path to excel file
+    (now in resources/InputData_annotation_improvement.xlsx)
+
+    :rtype: tuple
+    :return: (set of mentions of which annotations should be deleted,
+              mapping from mention -> new eventtype)
+    """
+    delete = set()
+    old2new_eventtype = dict()
+
+    df = pandas.read_excel(path_excel_file, sheetname='Sheet3')
+    for index, row in df.iterrows():
+
+        if row['auto'] == 'auto':
+
+            category = row['category']
+            mention = row['mention'][2:-1]
+
+            if category == 'delete':
+                delete.add(mention)
+
+            elif category == 'ETM':
+                new_eventtype = row['new_eventtype'].replace("'", "")
+                old2new_eventtype[mention] = new_eventtype
+
+    return delete, old2new_eventtype
 
 
 # create new questions.json + save
@@ -177,7 +210,7 @@ def update_questions_and_answers_json(subtask, q_id2docs, total_num_docs, add_in
     return stats_input
 
 
-def mwu_token_list(mwu_ids, debug=False):
+def mwu_token_list(mwu_ids, inc_id, token_id2token, debug=False):
     """
     given a list of token ids, return the same token ids
     but with missing token ids added,
@@ -193,7 +226,9 @@ def mwu_token_list(mwu_ids, debug=False):
     :rtype: list
     :return: list of token ids
     """
-    assert len(mwu_ids) >= 2, 'mwu_ids should be a length 2 at least: %s' % mwu_ids
+    assert len(mwu_ids) >= 2, 'incident_id: %s (token: %s), mwu_ids should be a length 2 at least: %s' % (inc_id,
+                                                                                                          token_id2token[mwu_ids[0]],
+                                                                                                          mwu_ids)
 
     new_mwu_ids = []
 
@@ -217,13 +252,68 @@ def mwu_token_list(mwu_ids, debug=False):
 
     return new_mwu_ids
 
+def assert_ann_info(ann_info):
+    """
+    check for an annotation, e.g.
+    {'cardinality': 'UNK', 'eventtype': 'd', 'participants': ['2']}
+
+    1. if no 'participants' -> 'UNK'
+
+    assert:
+    B (ALL)
+    G (UNK)
+    O (UNK)
+    S (not explicit, but always NO participants. I think the label is NULL, but please check!)
+
+    :param dict ann_info: e.g. {'cardinality': 'UNK', 'eventtype': 'd', 'participants': ['2']}
+
+    :rtype: dict
+    :return: ann_info updated
+    """
+
+    # update all missing participant to 'UNK'
+    if 'participants' not in ann_info:
+        ann_info['participants'] = 'UNK'
+
+    event_type = ann_info['eventtype']
+
+    # HACK replace participants info from Areums for the event label ’s’ to UNK
+    if event_type == 's':
+        ann_info['participants'] = 'UNK'
+
+    participants = ann_info['participants']
+
+
+    if event_type == 'b':
+        assert participants == 'ALL', 'participants for b should be ALL: %s' % ann_info
+
+    if event_type == 'g':
+        assert participants == 'UNK', 'participants for g should be UNK: %s' % ann_info
+
+    if event_type == 'o':
+        assert participants == 'UNK', 'participants for o should be UNK: %s' % ann_info
+
+    if event_type == 's':
+        assert participants == 'UNK', 'participants for s should be UNK: %s' % ann_info
+
+
+    return ann_info
+
+
 # load annotations
-def load_men_annotations(user_annotations, token_id2token, debug=False):
+def load_men_annotations(user_annotations,
+                         token_id2token,
+                         delete,
+                         old2new_eventtype,
+                         debug=False):
     """
     load mention annotations
 
     :param dict user_annotations: mapping inc_id -> inc_info
     :param dict token_id2token: mapping token_id -> token
+    :param set delete: mentions of which annotations should be deleted (i.d. ignored)
+    :param dict old2new_eventtype: mapping mention -> new eventtype
+    :param str user: supported: 'areum' | 'ngan'
 
     :rtype: dict
     :return: token_id -> annotation info
@@ -231,25 +321,26 @@ def load_men_annotations(user_annotations, token_id2token, debug=False):
     token_id2anno = dict()
     vocabulary = defaultdict(int)
 
-
     for inc_id, inc_info in user_annotations.items():
-            if debug:
+            if debug >= 2:
                 print(inc_id, len(inc_info))
 
             for token_id, ann_info in inc_info.items():
 
+                ann_info = assert_ann_info(ann_info)
                 event_type = ann_info['eventtype']
+
+                local_token_id2anno = dict()
 
                 if 'mwu' not in ann_info:
                     anno_template = '(%s)'
-                    token_id2anno[token_id] = (inc_id, ann_info, anno_template)
+                    local_token_id2anno[token_id] = (inc_id, ann_info, anno_template)
                     mention = token_id2token[token_id]
-
 
                 else:
 
                     try:
-                        mwu_ids = mwu_token_list(ann_info['mwu'], debug=False)
+                        mwu_ids = mwu_token_list(ann_info['mwu'], inc_id, token_id2token, debug=False)
                     except AssertionError as e:
                         print(e)
                         continue
@@ -267,13 +358,51 @@ def load_men_annotations(user_annotations, token_id2token, debug=False):
                         else:
                             anno_template = '%s'
 
-                        token_id2anno[token_id] = (inc_id, ann_info, anno_template)
+                        local_token_id2anno[token_id] = (inc_id, ann_info, anno_template)
 
                         mention_part = token_id2token[token_id]
                         mention_parts.append(mention_part)
 
                     mention = ' '.join(mention_parts)
 
+
+                # apply strategies 'delete' and 'emt'
+                emt = False
+
+                if mention in delete:
+
+                    if debug >= 2:
+                        print()
+                        print('delete %s' % mention, local_token_id2anno)
+
+                    continue
+
+
+                elif all([mention in old2new_eventtype,
+                          event_type != 'o']):
+
+                    new_event_type = old2new_eventtype[mention]
+                    if event_type != new_event_type:
+
+                        event_type = new_event_type
+                        emt = True
+
+                        if debug >= 2:
+                            print()
+                            print('emt from %s' % mention, local_token_id2anno)
+
+                        for ann_info in local_token_id2anno.values():
+                            ann_info[1]['eventtype'] = event_type
+
+                        if debug >= 2:
+                            print('emt to %s %s' % (mention, event_type), local_token_id2anno)
+
+                if all([emt,
+                        debug >= 2]):
+                    print()
+                    print(inc_id, 'local token_id2anno', local_token_id2anno)
+
+                token_id2anno.update(local_token_id2anno)
                 vocabulary[(mention, event_type)] += 1
 
     return token_id2anno, vocabulary
@@ -485,14 +614,20 @@ def compute_stats(stats_input, output_path=None, debug=False):
 
 if __name__ == '__main__':
 
+    # TODO: 2). Multiword token overlap: allow for a minimal token overlap and not a full token overlap. So: “turned the gun” and “turned the gun on” would be fully equivalent. The current IAA calculation is very strict on this.
+
+
     # call functions
-    debug_value = True
+    debug_value = 0
 
     # reset directories
     reset()
 
     # main loop
     all_added = set()
+
+    # load mentions solutions proposed by Roxane
+    delete, old2new_eventtype = load_mappings_mentions2solution('resources/InputData_annotation_improvement.xlsx')
 
     input_dir = '/home/filten/LongTailAnnotation/test_data2/CONLL'
     cache_path = 'cache/conll.bin'
@@ -514,7 +649,9 @@ if __name__ == '__main__':
 
         token_id2anno, vocabulary = load_men_annotations(user_annotations,
                                                          token_id2token,
-                                                         debug=False)
+                                                         delete,
+                                                         old2new_eventtype,
+                                                         debug=debug_value)
 
         save_vocab_to_file(vocabulary, output_path)
 
