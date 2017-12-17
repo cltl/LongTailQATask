@@ -19,8 +19,11 @@ def filter_uris(the_uris, event_types):
         uris = {uri for uri in the_uris if not uri.startswith('FR')}
                                                                         
     elif event_type == 'fire_burning':
-        uris = {uri for uri in the_uris if uri.startswith('FR')}  
-                                                                                        
+        uris = {uri for uri in the_uris if uri.startswith('FR')}
+
+    elif event_type == 'job_firing':
+        uris = {uri for uri in the_uris if uri.startswith('BU')}
+
     return uris
 
 def extract_gold_confusion_key(confusion_tuple,
@@ -101,20 +104,32 @@ def event_typing(event_types, df, initial_answer_uris, confusion_uris, debug=Fal
         print(event_types)
 
     for index,row in answer_rows.iterrows():
+
+        add = False
         
         if 'fire_burning' in event_types and row['incident_uri'].startswith('FR'):
-            new_answer_uris.add(row['incident_uri'])        
+            new_answer_uris.add(row['incident_uri'])
+            add = True
+
+        if 'job_firing' in event_types and row['incident_uri'].startswith('BU'):
+            new_answer_uris.add(row['incident_uri'])
+            add = True
 
         if 'killing' in event_types and row['num_killed']>0:
             new_answer_uris.add(row['incident_uri'])
+            add = True
+
             if debug:
                 print('killing: %s' % row['incident_uri'])
-        elif 'injuring' in event_types and row['num_injured']>0:
+
+        if 'injuring' in event_types and row['num_injured']>0:
             new_answer_uris.add(row['incident_uri'])
+            add = True
 
             if debug:
                 print('injuring: %s' % row['incident_uri'])
-        else:
+
+        if not add:
             confusion_uris.add(row['incident_uri'])
 
     if debug:
@@ -165,8 +180,40 @@ def lookup_and_merge(look_up,
                     print()
                     print(granularity, sf)
                     print(num_answer_uris)
-                    print(meanings) 
+                    print(meanings)
+                if num_answer_uris == 0:
+                    print()
+                    print('zero answer')
+                    print('q_id', q_id)
+                    print(confusion_tuple)
+                    print(granularity)
+                    print(sf)
+                    print(meanings)
+                    print(question_info['gold_loc_meangin'])
+
+
+                    # TODO: update q_id
+
+                    #q_instance = Question(
+                    #    q_id=q_id,
+                    #    confusion_factors=confusion_tuple,
+                    #    granularity=granularity,
+                    #    sf=sf,
+                    #    meanings=meanings,
+                    #    gold_loc_meaning=question_info['gold_loc_meaning'],
+                    #   ev_answer=len(answer_incident_uris),
+                    #    oa_info=oa,
+                    #    answer_df=answer_df,
+                    #    answer_incident_uris=answer_incident_uris,
+                    #    confusion_df=confusion_df,
+                    #    confusion_incident_uris=set_confusion_uris,
+                    #    subtask=subtask,
+                    #    event_types=event_types
+                    #)
+
+                    input('continue?')
                     
+
 
                 if num_answer_uris >= min_num_answer_incidents and num_answer_uris<=max_num_answer_incidents:
 

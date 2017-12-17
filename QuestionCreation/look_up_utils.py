@@ -21,7 +21,8 @@ def return_number(participants_info, event_type, target_name, gran, debug=False)
     answer = 0
 
     mapping = {'killing': ' Killed',
-               'injuring': ' Injured'}
+               'injuring': ' Injured',
+               'job_firing' : ' unemployed'}
 
     wanted = mapping[event_type]
 
@@ -137,10 +138,16 @@ def get_sf_m_dict(row):
 
     # surface forms time
     incident_date = row['date']
-    dt = datetime.strptime(incident_date, '%B %d, %Y')
-    dt_day = dt.strftime("%d/%m/%Y")
-    dt_month = dt.strftime("%m/%Y")
-    dt_year = dt.strftime("%Y")
+
+    if type(incident_date) == str:
+        dt = datetime.strptime(incident_date, '%B %d, %Y')
+        dt_day = dt.strftime("%d/%m/%Y")
+        dt_month = dt.strftime("%m/%Y")
+        dt_year = dt.strftime("%Y")
+    elif type(incident_date) == dict:
+        dt_day = incident_date['dt_day']
+        dt_month = incident_date['dt_month']
+        dt_year = incident_date['dt_year']
 
     sf_dict['day'] = dt_day
     sf_dict['month'] = dt_month
@@ -239,6 +246,7 @@ def create_look_up(df,
 
     gv_news_article_template = '../EventRegistries/GunViolenceArchive/the_violent_corpus/{incident_uri}/{the_hash}.json'
     fr_news_article_template = '../EventRegistries/FireRescue1/firerescue_corpus/{incident_uri}/{the_hash}.json'
+    bu_news_article_template = '../EventRegistries/BusinessNews/business_corpus/{incident_uri}/{the_hash}.json'
 
     for index, row in df.iterrows():
 
@@ -258,6 +266,8 @@ def create_look_up(df,
             news_article_template = gv_news_article_template
             if incident_uri.startswith('FR'):
                 news_article_template = fr_news_article_template
+            elif incident_uri.startswith('BU'):
+                news_article_template = bu_news_article_template
 
             path = news_article_template.format_map(locals())
 
@@ -270,8 +280,11 @@ def create_look_up(df,
 
         incident_uri = row['incident_uri']
 
-        incident_date = datetime.strptime(row['date'], '%B %d, %Y')
-        incident_year = incident_date.year
+        if type(row['date']) == str:
+            incident_date = datetime.strptime(row['date'], '%B %d, %Y')
+            incident_year = incident_date.year
+        else:
+            incident_year = int(row['date']['dt_year'])
 
         if incident_year not in allowed_incident_years:
             continue
@@ -305,12 +318,18 @@ def create_look_up(df,
                         city_match = False
                         state_match = False
                         for news_article_obj in news_article_objs:
-                            if sf_dict['address'] in news_article_obj.content:
-                                address_match = True
-                            if sf_dict['city'] in news_article_obj.content:
-                                city_match = True
-                            if sf_dict['state'] in news_article_obj.content:
-                                state_match = True
+
+                            if sf_dict['address']:
+                                if sf_dict['address'] in news_article_obj.content:
+                                    address_match = True
+
+                            if sf_dict['city']:
+                                if sf_dict['city'] in news_article_obj.content:
+                                    city_match = True
+
+                            if sf_dict['state']:
+                                if sf_dict['state'] in news_article_obj.content:
+                                    state_match = True
 
                         # for adress -> address needs to be at least in there
                         if 'address' in gran_comb:

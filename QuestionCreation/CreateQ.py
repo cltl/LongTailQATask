@@ -4,6 +4,7 @@ import pandas
 
 import look_up_utils
 import createq_utils
+import utils
 import pickle
 import argparse
 from lxml import etree
@@ -159,6 +160,8 @@ def pretokenize(df, settings):
     """
     gv_news_article_template = '../EventRegistries/GunViolenceArchive/the_violent_corpus/{incident_uri}/{the_hash}.json'
     fr_news_article_template = '../EventRegistries/FireRescue1/firerescue_corpus/{incident_uri}/{the_hash}.json'
+    bu_news_article_template = '../EventRegistries/BusinessNews/business_corpus/{incident_uri}/{the_hash}.json'
+
     doc_id2conll = dict()
     not_found = set()
     nlp = English()
@@ -177,12 +180,15 @@ def pretokenize(df, settings):
     for index, row in df.iterrows():
         to_check = False
         the_date = row['date']
-        if the_date is None:
-            continue 
+        if not the_date:
+            continue
 
-        if any([the_date.endswith(year)
-                for year in accepted_years]):
+        if type(the_date) == str:
+            year = the_date[-4:]
+        elif type(the_date) == dict:
+            year = the_date['dt_year']
 
+        if year in accepted_years:
             to_check = True
             clean_incident_sources = dict()
             for source_url, row_dct in row['incident_sources'].items():
@@ -195,6 +201,8 @@ def pretokenize(df, settings):
                 news_article_template = gv_news_article_template
                 if incident_uri.startswith('FR'):
                     news_article_template = fr_news_article_template
+                if incident_uri.startswith('BU'):
+                    news_article_template = bu_news_article_template
      
                 path = news_article_template.format_map(locals())
 
@@ -286,6 +294,7 @@ if __name__=="__main__":
     parser = argparse.ArgumentParser(description='Create data for SemEval-2018 task 5')
     parser.add_argument('-d', dest='path_gva_df', help='path to gva frame (../EventRegistries/GunViolenceArchive/frames/all)')
     parser.add_argument('-f', dest='path_fr_df', help='path to fr frame (../EventRegistries/FireRescue1/firerescue_v3.pickle)')
+    parser.add_argument('-b', dest='path_bu_df', help='path to bu frame (../EventRegistries/BusinessNews/business.pickle)')
     parser.add_argument('-e', dest='event_types', required=True, help='event types separated by underscore e.g. killing_injuring')
     parser.add_argument('-s', dest='subtask', required=True, help='1 | 2 | 3')
     parser.add_argument('-o', dest='output_folder', required=True, help='folder where output will be stored')
@@ -294,7 +303,8 @@ if __name__=="__main__":
 
     # assertions
     if all([args.path_gva_df is None,
-            args.path_fr_df is None]):
+            args.path_fr_df is None,
+            args.path_bu_df is None]):
         assert False, 'no path to df provided' 
 
     doc_settings = {
@@ -305,7 +315,12 @@ if __name__=="__main__":
          'fr' : {'accepted_char_range' : range(100, 4000),
                  'date_range' : (date(2005, 1, 1), date(2009, 12, 31)),
                  'accepted_years' : ['2005', '2006', '2007', '2008', '2009']
-         }
+         },
+        'bu': {'accepted_char_range': range(100, 4000),
+               'date_range': (date(2009, 1, 1), date(2017, 12, 31)),
+               'accepted_years': ['2009', '2010', '2011', '2012',
+                                  '2013', '2014', '2015']
+               }
     }
     event_types = [args.event_types]
     
@@ -351,7 +366,8 @@ if __name__=="__main__":
         doc_id2conll = dict()
 
         for repo, repo_path in [('gva', args.path_gva_df),
-                                ('fr', args.path_fr_df)]:
+                                ('fr', args.path_fr_df),
+                                ('bu', args.path_bu_df)]:
             if repo_path:
                 print('reading', repo_path)
                 a_df = pandas.read_pickle(repo_path)

@@ -82,7 +82,7 @@ if __name__=="__main__":
     args = parser.parse_args()
 
     # enrichment parameters for S2
-    num_zeros=10 # number of questions to draw from S1 but remove the answer docs
+    num_zeros=0 # number of questions to draw from S1 but remove the answer docs
     num_ones=10 # number of questions to copy from s1 to s2
 
     copy_total=num_zeros+num_ones
