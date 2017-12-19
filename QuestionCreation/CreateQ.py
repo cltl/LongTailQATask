@@ -21,6 +21,39 @@ import operator
 from collections import Counter
 from collections import defaultdict
 
+
+def load_disqualified_docs(path_dis_areum_men,
+                           path_dis_ngan_men,
+                           debug=False):
+    """
+    load set of disqualified documents
+
+    :param str path_dis_areum_men: basename will be dis_areum_men.json
+    :param str path_dis_ngan_men: basename will be dis_ngan_men.json
+    """
+    dis_areum = json.load(open(path_dis_areum_men))
+    dis_ngan = json.load(open(path_dis_ngan_men))
+
+    disqualified_ngan = set()
+    for dis_docs in dis_ngan.values():
+        disqualified_ngan.update(dis_docs)
+
+    disqualified_areum = set()
+    for dis_docs in dis_areum.values():
+        disqualified_areum.update(dis_docs)
+
+    disqualified_docs = disqualified_ngan | disqualified_areum
+    overlap = disqualified_ngan & disqualified_areum
+
+    if debug:
+        print()
+        print('# overlap', len(overlap))
+        print('# disqualified ngan', len(disqualified_ngan))
+        print('# disqualified areum', len(disqualified_areum))
+        print('# disqualified docs', len(disqualified_docs))
+
+    return disqualified_docs
+
 def get_the_incident_years(doc_settings):
     start_year = 3000
     end_year = 0
@@ -143,7 +176,7 @@ def text2conll_one_file(nlp, incident_uri, doc_id, discourse, text, pre=False):
 
     return output, num_chars
 
-def pretokenize(df, settings):
+def pretokenize(df, settings, disqualified_docs):
     """
     pretokenize news articles using spacy
     and convert to conll
@@ -154,6 +187,7 @@ def pretokenize(df, settings):
      'date_range' : (date(2013, 1, 1), date(2016, 12, 31),$
      'accepted_years' : ['2013', '2014', '2015', '2016']$
      }
+     :param set disqualified_docs: set of doc_ids to ignore
 
     :rtype: dict
     :return: source_url -> list of strings (conll output)
@@ -170,6 +204,8 @@ def pretokenize(df, settings):
     start_date, end_date = settings['date_range']
     accepted_years = settings['accepted_years']
     accepted_char_range = settings['accepted_char_range']
+
+    ignored_docs = set()
 
 
     num_removed_due_to_length = 0
@@ -197,6 +233,11 @@ def pretokenize(df, settings):
                 hash_obj = hashlib.md5(source_url.encode())
                 the_hash = hash_obj.hexdigest()
                 incident_uri = row['incident_uri']
+
+                if the_hash in disqualified_docs:
+                    print('ignoring (disqualified in mention annotations)', the_hash)
+                    ignored_docs.add(the_hash)
+                    continue
 
                 news_article_template = gv_news_article_template
                 if incident_uri.startswith('FR'):
@@ -279,6 +320,10 @@ def pretokenize(df, settings):
     print('number of rows in df: %s' % len(df))
     print('documents removed due to length: %s' % num_removed_due_to_length)
     print('dct range: %s %s' % (min(dcts), max(dcts)))
+    print()
+    print('# ignored docs due to being disqualified', len(ignored_docs))
+    missing = disqualified_docs - ignored_docs
+    print('docs not ignored', len(missing))
 
     #total = sum(distribution.values())
     #for key, value in sorted(distribution.items(),
@@ -325,6 +370,12 @@ if __name__=="__main__":
     event_types = [args.event_types]
     
     subtask = int(args.subtask)
+
+    # load disqualified docs
+    disqualified_docs = load_disqualified_docs('../Evaluation/package_test_data/resources/dis_areum_men.json',
+                                               '../Evaluation/package_test_data/resources/dis_ngan_men.json',
+                                               debug=1)
+
     all_candidates = set()
 
     # load arguments
@@ -373,7 +424,9 @@ if __name__=="__main__":
                 a_df = pandas.read_pickle(repo_path)
                 a_df = a_df.reset_index(drop=True) # reset indices
                 print('len before pretokenize', len(a_df))
-                a_doc_id2conll, a_df = pretokenize(a_df, doc_settings[repo])
+                a_doc_id2conll, a_df = pretokenize(a_df,
+                                                   doc_settings[repo],
+                                                   disqualified_docs)
                 print('len after pretokenzie', len(a_df))
 
                 dfs.append(a_df)

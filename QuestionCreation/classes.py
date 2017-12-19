@@ -125,7 +125,8 @@ class Question:
         location_chunk = ''
         participant_chunk = ''
         event_type_dict = {'killing': 'killed',
-                           'injuring': 'injured'}
+                           'injuring': 'injured',
+                           'job_firing' : 'fired'}
 
         for index, (confusion_factor, a_sf) in enumerate(zip(self.confusion_factors,
                                                              self.sf)):
@@ -300,6 +301,7 @@ class Question:
                         target_name = list(part_info.values())[0]
                         num_killed = look_up_utils.return_number(a_row['participants'], 'killing', target_name, part_gran)
                         num_injured = look_up_utils.return_number(a_row['participants'], 'injuring', target_name, part_gran)
+                        num_fired = look_up_utils.return_number(a_row['participants'], 'job_firing', target_name, part_gran)
                         add_to_gold = True
                     
                     else:
@@ -309,13 +311,17 @@ class Question:
                         num_injured = 0
                         if 'num_injured' in a_row:
                             num_injured = a_row['num_injured']
+
+                        num_fired = 0
+                        if 'job_firing' in self.event_types:
+                            num_fired = len(a_row['participants'])
                         add_to_gold = True
 
                     if add_to_gold:
                         all_doc_ids[incident_uri].append(the_hash)
                         parts_info[incident_uri] = {'num_killed': num_killed,
-                                                    'num_injured': num_injured }
-
+                                                    'num_injured': num_injured,
+                                                    'num_fired' : num_fired}
 
 
         self.numerical_answer = len(all_doc_ids)
@@ -348,6 +354,9 @@ class Question:
                 self.part_numerical_answer += sum([part_info['num_injured']
                                               for part_info in parts_info.values()])
 
+            if 'job_firing' in self.event_types:
+                self.part_numerical_answer += sum([part_info['num_fired']
+                                                   for part_info in parts_info.values()])
 
             self.answer_info = {'numerical_answer': self.part_numerical_answer,
                                 'answer_docs': all_doc_ids,
