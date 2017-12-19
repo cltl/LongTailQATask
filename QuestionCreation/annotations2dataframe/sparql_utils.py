@@ -208,3 +208,23 @@ assert not is_it_a_city('http://dbpedia.org/resource/California', debug=False)[0
 assert not is_it_a_state('https://en.wikipedia.org/wiki/Los_Angeles', debug=False)[0]
 assert is_it_a_state('http://dbpedia.org/resource/California', debug=False)[0]
 assert retrieve_state_of_city('https://en.wikipedia.org/wiki/Los_Angeles') == 'http://dbpedia.org/resource/California'
+
+
+location2locations = {
+    'https://en.wikipedia.org/wiki/London' : {
+        'city': 'http://dbpedia.org/resource/London',
+        'state' : '' # England does not have states
+    },
+    'https://en.wikipedia.org/wiki/New_York_(state)' : {
+        'city' : '',
+        'state' : 'http://dbpedia.org/resource/New_York_(state)'
+    },
+    'https://en.wikipedia.org/wiki/Queensland' : {
+        'city' : '',
+        'state': 'http://dbpedia.org/resource/Queensland'
+    },
+    'https://en.wikipedia.org/wiki/New_South_Wales' : {
+        'city' : '',
+        'state' : 'http://dbpedia.org/resource/New_South_Wales'
+    }
+}

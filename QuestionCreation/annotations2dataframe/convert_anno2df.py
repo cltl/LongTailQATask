@@ -151,7 +151,16 @@ for index, row in df.iterrows():
 
         # locations
         location = anno_info['location']
-        locations = sparql_utils.key_locations(location)
+
+        if location in sparql_utils.location2locations:
+            locations = sparql_utils.location2locations[location]
+            if args.debug_value >= 1:
+                print()
+                print('loaded locations from manual dict')
+                print('for', location)
+                print('retrieved', locations)
+        else:
+            locations = sparql_utils.key_locations(location)
         df.set_value(index, 'locations', locations)
 
         if locations['city']:
@@ -221,7 +230,7 @@ elif args.prefix == 'GVA_dummy':
         print('# gva', len(gva_df))
         print('# merged', len(merged_df))
 
-    df.to_pickle(args.path_output_df)
+    merged_df.to_pickle(args.path_output_df)
 
 
 
