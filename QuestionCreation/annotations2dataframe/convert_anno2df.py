@@ -232,6 +232,9 @@ elif args.prefix == 'GVA_dummy':
 
     merged_df.to_pickle(args.path_output_df)
 
+    only_dummy_gva_out = args.path_output_df.replace('all_and_dummy', 'dummy')
+    df.to_pickle(only_dummy_gva_out)
+
 
 
 
