@@ -6,11 +6,10 @@ import operator
 import pandas
 import string
 
-from glob import glob
 from collections import defaultdict
 from collections import Counter
-from datetime import datetime
 
+import mwu
 from iaa import IAA
 
 
@@ -370,6 +369,7 @@ def load_men_annotations(user_annotations,
 
     documents_not_in_test_data = set()
     mw2sent_id = defaultdict(list)
+    all_mwus = []
 
     num_anno_from_dis_docs = 0
 
@@ -406,6 +406,8 @@ def load_men_annotations(user_annotations,
                 anno_template = '(%s)'
                 local_token_id2anno[token_id] = (inc_id, ann_info, anno_template)
 
+                if [token_id] not in all_mwus:
+                    all_mwus.append([token_id])
 
                 if token_id not in token_id2token:
                     a_doc_id = token_id.split('.')[0]
@@ -425,6 +427,9 @@ def load_men_annotations(user_annotations,
                 # uncomment to see sentences that have multiple mwu's
                 #if sent_id in mw2sent_id:
                 #    #print('more than one mwu in sentence: %s' % sent_id)
+
+                if mwu_ids not in all_mwus:
+                    all_mwus.append(mwu_ids)
                 mw2sent_id[sent_id].append(mwu_ids)
 
                 mw_length = len(mwu_ids)
@@ -502,7 +507,7 @@ def load_men_annotations(user_annotations,
     if debug_value:
         print('num anno ignored due to being in disqualified docs', num_anno_from_dis_docs)
 
-    return token_id2anno, vocabulary
+    return token_id2anno, vocabulary, all_mwus
 
 def save_vocab_to_file(vocabulary, output_path):
     """
@@ -714,10 +719,8 @@ def compute_stats(stats_input, output_path=None, debug=False):
 
 if __name__ == '__main__':
 
-    # TODO: 2). Multiword token overlap: allow for a minimal token overlap and not a full token overlap. So: “turned the gun” and “turned the gun on” would be fully equivalent. The current IAA calculation is very strict on this.
-
     # call functions
-    debug_value = 1
+    debug_value = 2
 
     # reset directories
     test_data = '/home/filten/LongTailQATask/QuestionCreation/gva_fr_bu_output'
@@ -754,14 +757,17 @@ if __name__ == '__main__':
         user_annotations = json.load(open(input_path))
         input_annotations[user] = user_annotations
 
-        token_id2anno, vocabulary = load_men_annotations(user_annotations,
-                                                         token_id2token,
-                                                         delete,
-                                                         old2new_eventtype,
-                                                         disqualified_docs,
-                                                         debug=debug_value)
+        token_id2anno, vocabulary, all_mwus = load_men_annotations(user_annotations,
+                                                                   token_id2token,
+                                                                   delete,
+                                                                   old2new_eventtype,
+                                                                   disqualified_docs,
+                                                                   debug=debug_value)
 
         user2token_id2anno[user] = token_id2anno
+
+        with open('cache/%s.mw' % user , 'wb') as outfile:
+            pickle.dump(all_mwus, outfile)
 
         save_vocab_to_file(vocabulary, output_path)
 
@@ -809,6 +815,14 @@ if __name__ == '__main__':
     print('added', len(all_added))
     print('missing', len(missing))
     print(missing)
+
+    if debug_value:
+        print()
+        print('MW loose checking info')
+        mws_areum = pickle.load(open('cache/areum.mw', 'rb'))
+        mws_ngan = pickle.load(open('cache/ngan.mw', 'rb'))
+        mws_areum_not_in_mws_ngan = mwu.get_mw_mismatches(mws_areum, mws_ngan, debug=debug_value)
+        mws_ngan_not_in_mws_areum = mwu.get_mw_mismatches(mws_ngan, mws_areum, debug=debug_value)
 
     # create test data for participants (hence without gold data)
     commands = ['rm -rf test_data_gold',
