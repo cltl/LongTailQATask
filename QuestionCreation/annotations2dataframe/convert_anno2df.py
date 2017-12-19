@@ -97,11 +97,14 @@ elif args.prefix == 'GVA_dummy':
 
 
 # insert information into df
-# TODO: improve locations key for missed cities and states
 
 df['date'] = [None for index, row in df.iterrows()]
 df['locations'] = [None for index, row in df.iterrows()]
 df['participants'] = [[] for index, row in df.iterrows()]
+
+if args.prefix == 'GVA_dummy':
+    df['num_killed'] = [0 for index, row in df.iterrows()]
+    df['num_injured'] = [0 for index, row in df.iterrows()]
 
 num_docs = 0
 
@@ -183,7 +186,8 @@ for index, row in df.iterrows():
             participants = anno_info['participants']
             df.set_value(index, 'participants', participants)
 
-
+            df.set_value(index, 'num_killed', anno_info['num_killed'])
+            df.set_value(index, 'num_injured', anno_info['num_injured'])
 
 if args.debug_value >= 1:
     columns = set(df.columns)
@@ -194,6 +198,9 @@ if args.debug_value >= 1:
               'date',
               'incident_sources',
               'participants'}
+
+    if args.prefix == 'GVA_dummy':
+        needed.update({'num_killed', 'num_injured'})
 
     missing = needed - columns
     assert missing == set(), 'missing columns: %s' % missing
