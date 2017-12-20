@@ -131,6 +131,9 @@ class Question:
         for index, (confusion_factor, a_sf) in enumerate(zip(self.confusion_factors,
                                                              self.sf)):
             if confusion_factor == 'time':
+                if not self.sf[index]:
+                    self.to_include_in_task = False
+                    return None
                 time_chunk = 'in %s (%s) ' % (self.sf[index], self.granularity[index])
                 system_input['time'] = {self.granularity[index]: self.sf[index]}
             elif confusion_factor == 'location':
@@ -144,7 +147,7 @@ class Question:
                     the_dbpedia_link = all_dbpedia_links.pop()
                     system_input['location'] = {gran_level: the_dbpedia_link}
                 else:
-                    print('multiple or no dbpedia options for %s: %s' % (self.q_id, all_dbpedia_links))
+                    #print('multiple or no dbpedia options for %s: %s' % (self.q_id, all_dbpedia_links))
                     system_input['location'] = (None, None)
                     self.to_include_in_task = False
 

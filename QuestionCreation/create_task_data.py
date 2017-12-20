@@ -14,17 +14,35 @@ import pandas as pd
 import operator
 from collections import defaultdict
 
-def load_next_q_ids(all_candidates, num_extra=1000):
+def load_next_q_ids(all_candidates,
+                    discarded_qids,
+                    num_extra=100000,
+                    debug=False):
     """
     """
+    num_ignored_q_ids = 0
+
     subtask2q_ids = {'1': {'existing': [], 'options': []},
                      '2': {'existing': [], 'options': []},
                      '3': {'existing': [], 'options': []},
                      }
+
     for a_candidate in all_candidates:
+
+        if any([a_candidate.q_id in discarded_qids,
+                not a_candidate.to_include_in_task]):
+            num_ignored_q_ids += 1
+            continue
+
         subtask, q_id = a_candidate.q_id.split('-')
         subtask2q_ids[subtask]['existing'].append(int(q_id))
 
+
+    if debug:
+        print()
+        print('# discarded q_ids', len(discarded_qids))
+        for subtask, ids_info in subtask2q_ids.items():
+            print('existing', subtask, len(ids_info['existing']))
 
     for subtask, subtask_info in subtask2q_ids.items():
 
@@ -37,8 +55,12 @@ def load_next_q_ids(all_candidates, num_extra=1000):
                 subtask2q_ids[subtask]['options'].append('%s-%s' % (subtask, potential_q_id))
 
         for potential_q_id in range(highest_q_id + 1, highest_q_id + num_extra):
-                        subtask2q_ids[subtask]['options'].append('%s-%s' % (subtask, potential_q_id))
+            subtask2q_ids[subtask]['options'].append('%s-%s' % (subtask, potential_q_id))
 
+    if debug:
+        print()
+        for subtask, ids_info in subtask2q_ids.items():
+            print('options', subtask, len(ids_info['options']))
     return subtask2q_ids
 
 def next_q_id_v2(subtask2q_ids, subtask):
@@ -67,7 +89,10 @@ def get_next_s2_id(qid_location):
 def same_answer(a1, a2):
     return all([a1['numerical_answer']==a2['numerical_answer'], a1['answer_docs'].keys()==a2['answer_docs'].keys()])
 
-def deduplicate(cands):
+def deduplicate(cands, debug=False):
+
+    discarded_qids = set()
+
     for c1 in cands:
         if not c1.to_include_in_task:
             continue
@@ -77,12 +102,18 @@ def deduplicate(cands):
             if c2.to_include_in_task and same_answer(c1.answer_info, c2.answer_info):
                 if c1.get_question_score() > c2.get_question_score():
                     c2.to_include_in_task = False
+                    discarded_qids.add(c2.q_id)
                 elif c2.get_question_score() > c1.get_question_score():
                     c1.to_include_in_task = False
+                    discarded_qids.add(c1.q_id)
                 else:
                     c2.to_include_in_task = False # same score -> choose c1
+                    discarded_qids.add(c2.q_id)
 
-    return cands
+    if debug:
+        print('# discarded', len(discarded_qids))
+
+    return cands, discarded_qids
 
 def fr_time_key(incident_date):
     """
@@ -114,8 +145,8 @@ def find_in_frames(location, l_gran, time, t_gran, evtype):
         if not row_date or not row_loc:
             continue
         if evtype in {'killing', 'injuring'}: #gva
-            row_date=fr_time_key(row_date)
-
+            if type(row_date) == str:
+                row_date=fr_time_key(row_date)
         if t_gran not in row_date or l_gran not in row_loc:
             continue
 
@@ -213,7 +244,7 @@ def combos_to_remove(all_candidates, to_include):
     return d, to_remove_combos
 
 # load frames
-gva=pd.read_pickle('../EventRegistries/GunViolenceArchive/frames/all')
+gva=pd.read_pickle('../EventRegistries/GunViolenceArchive/frames/all_and_dummy')
 bu=pd.read_pickle('../EventRegistries/BusinessNews/business.pickle')
 fr=pd.read_pickle('../EventRegistries/FireRescue1/firerescue_v3.pickle')
 
@@ -263,11 +294,12 @@ if __name__=="__main__":
 
         types_and_rows = []
         dfs = [('gold', candidate.answer_df),
-               ('confusion', candidate.confusion_df)]
+               #('confusion', candidate.confusion_df)
+               ]
         for a_type, a_df in dfs:
             for index, row in a_df.iterrows():
                 types_and_rows.append((a_type, row))
-        shuffle(types_and_rows)
+        #shuffle(types_and_rows)
 
         # create answer (and validate)
         candidate.generate_answer_info(types_and_rows, doc_id2conll, debug=False)
@@ -279,7 +311,9 @@ if __name__=="__main__":
     print("now deduplicating. Number of questions before deduplication:")
     print(sum(candidate.to_include_in_task
               for candidate in all_candidates))
-    all_candidates=deduplicate(all_candidates)
+
+    all_candidates, discarded_qids = deduplicate(all_candidates, debug=True)
+
     print('Number of questions after deduplicating:')
     print(sum(candidate.to_include_in_task
               for candidate in all_candidates))
@@ -300,6 +334,7 @@ if __name__=="__main__":
                 if gran_counts[c.granularity]-to_remove[c.granularity]>to_include*1.5/len(gran_counts):
                     to_remove[c.granularity]+=1
                     c.to_include_in_task=False
+                    discarded_qids.add(c.q_id)
 
     print('We removed:')
     print(to_remove)
@@ -309,7 +344,10 @@ if __name__=="__main__":
         print(g, gran_counts[g]-to_remove[g])
 
     # load potential q_ids for zero answer questions
-    subtask2q_ids = load_next_q_ids(all_candidates)
+    subtask2q_ids = load_next_q_ids(all_candidates,
+                                    discarded_qids,
+                                    debug=True)
+
     print('is 2 a key in subtask2q_ids', '2' in subtask2q_ids)
 
     print('Creating zero-answer questions')
@@ -319,8 +357,7 @@ if __name__=="__main__":
     zero_added=0
     q_ids=set()
     for granularity, all_qs in to_store.items():
-        for components in all_qs:
-            location=components[0]
+        for (location, time, eventtype) in all_qs:
             if location2q[location]:
                 old_q=location2q[location].pop()
                 new_q=deepcopy(old_q)
@@ -328,7 +365,7 @@ if __name__=="__main__":
                 if not len(subtask2q_ids['2']['options']) and not len(subtask2q_ids['3']['options']):
                     break
 
-                if (zero_added%2==0 or components[2]=='fire_burning') and len(subtask2q_ids['2']['options']):
+                if (zero_added%2==0 or eventtype=='fire_burning') and len(subtask2q_ids['2']['options']):
                     subtask=2
                 elif len(subtask2q_ids['3']['options']):
                     subtask=3
@@ -336,23 +373,34 @@ if __name__=="__main__":
                     continue
                 new_q.subtask=subtask
                 print('zero question in subtask %d' % subtask) 
-                next_id = subtask2q_ids[str(subtask)]['options'].pop()
+                next_id = subtask2q_ids[str(subtask)]['options'].pop(0)
                 # next_id = next_q_id_v2(subtask2q_ids, str(subtask))
                 print('id', next_id)
                 new_q.q_id = next_id
                 q_ids.add(next_id)
                 new_q.answer_info['answer_docs']={}
                 new_q.answer_info['numerical_answer']=0
+
+                if all([new_q.subtask in {1,2},
+                        'part_info' in new_q.answer_info]):
+                    del new_q.answer_info['part_info']
+
+                elif new_q.subtask == 3:
+                    new_q.answer_info['part_info'] = dict()
+
+
                 new_q.answer_incident_uris=set()
                 new_q.ev_answer=0
                 new_q.granularity=granularity
-                new_q.event_types=[components[2]]
-                new_q.sf=(new_q.sf[0], components[1])
-                new_q.answer_df=pd.DataFrame()
-                new_q.confusion_df=pd.DataFrame()
+                new_q.event_types=[eventtype]
+                new_q.sf=(new_q.sf[0], time)
+                #new_q.answer_df=pd.DataFrame()
+                #new_q.confusion_df=pd.DataFrame()
 
-                questions[new_q.q_id] = new_q.question()
+                output = new_q.question(debug=False)
+                questions[new_q.q_id] = output
                 answers[new_q.q_id] = new_q.answer_info
+
                 zero_added+=1
 
     print('%d questions with answer zero added' % zero_added)
@@ -385,10 +433,11 @@ if __name__=="__main__":
                 new_candidate=deepcopy(candidate)
                 new_candidate.subtask=2
                 #new_candidate.the_question=new_candidate.the_question.replace('Which', 'How many', 1).replace('event', 'events', 1)
-                next_id = subtask2q_ids['2']['options'].pop()
+                next_id = subtask2q_ids['2']['options'].pop(0)
                 #next_id = next_q_id_v2(subtask2q_ids, '2')
                 new_candidate.q_id=next_id
                 questions[new_candidate.q_id] = new_candidate.question()
+
                 print("Copying %s to %s..." % (candidate.q_id, new_candidate.q_id))
                 answers[new_candidate.q_id] = new_candidate.answer_info
 
