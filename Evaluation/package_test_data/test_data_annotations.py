@@ -207,6 +207,10 @@ def get_q_stats_info(subtask, test_data, total_num_docs):
             del questions[q_id]
             del answers[q_id]
 
+    for q_id, q_info in questions.items():
+        q_info['event_type'] = q_info['event_types'][0]
+        del q_info['event_types']
+
     questions_out_path = 'test_data/input/%s/questions.json' % subtask
     answers_out_path = 'test_data/dev_data/%s/answers.json' % subtask
 

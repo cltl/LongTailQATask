@@ -49,7 +49,7 @@ if __name__ == '__main__':
             if subtask in {'s1', 's2'}:
                 assert numerical_answer == len(answers[q_id]['answer_docs'])
             elif subtask in {'s3'}:
-                eventtype = questions[q_id]['event_types'][0]
+                eventtype = questions[q_id]['event_type']
                 to_look_for = event_type_dict[eventtype]
 
                 part_info_value = sum([part_info[to_look_for]
@@ -89,12 +89,11 @@ if __name__ == '__main__':
 
         # event types
         iterable_eventtypes = validate_utils.get_dict_iterable(questions,
-                                                               ['event_types'],
+                                                               ['event_type'],
                                                                debug=True)
 
         all_eventtypes = set()
-        for q_id, eventtypes in iterable_eventtypes:
-            the_eventtype = eventtypes[0]
+        for q_id, the_eventtype in iterable_eventtypes:
             assert the_eventtype != '', '%s: item: %s is an empty string' % (q_id, item)
             assert the_eventtype is not None, '%s: item: %s is None' % (q_id, item)
 
@@ -122,7 +121,6 @@ if __name__ == '__main__':
                     assert answer_doc in docid2doc_info
 
 
-        # TODO: remove faulty questions and overwrite existing ones
         print('qs to delete', qs_to_delete)
 
 
