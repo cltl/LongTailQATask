@@ -32,17 +32,11 @@ def reset(test_data):
 
     commands = ['rm -rf test_data && mkdir test_data',
                 'mkdir -p test_data/input/s1',
-                'cp {test_data}/1_questions.json test_data/input/s1/questions.json'.format_map(locals()),
                 'mkdir -p test_data/input/s2',
-                'cp {test_data}/2_questions.json test_data/input/s2/questions.json'.format_map(locals()),
                 'mkdir -p test_data/input/s3',
-                'cp {test_data}/3_questions.json test_data/input/s3/questions.json'.format_map(locals()),
                 'mkdir -p test_data/dev_data/s1',
-                'cp {test_data}/1_answers.json test_data/dev_data/s1/answers.json'.format_map(locals()),
                 'mkdir -p test_data/dev_data/s2',
-                'cp {test_data}/2_answers.json test_data/dev_data/s2/answers.json'.format_map(locals()),
                 'mkdir -p test_data/dev_data/s3',
-                'cp {test_data}/3_answers.json test_data/dev_data/s3/answers.json'.format_map(locals()),
 
                 'cp {test_data}/system_input/docs.conll test_data/input/s1/docs.conll'.format_map(locals()),
                 'cp {test_data}/system_input/docs.conll test_data/input/s2/docs.conll'.format_map(locals()),
@@ -186,15 +180,40 @@ def load_mappings_mentions2solution(path_excel_file):
 
 
 # create new questions.json + save
-def get_q_stats_info(subtask, total_num_docs):
+def get_q_stats_info(subtask, test_data, total_num_docs):
     """
 
     :param str subtask: s1 | s2 | s3
+    :param str test_data: folder where output of question creation is stored
     :param int total_num_docs: number of test data documents
 
+    1) load SUBTASK_questions.json
+    2) load SUBTASK_answers.json
+    3) remove {'3-111371', '3-93518', '3-111370', '3-70', '3-1'}
+    4) save
+    a) test_data/input/SUBTASK/questions.json
+    b) test_data/dev_data/SUBTASK/answers.json
+
     """
-    answers_json_path = 'test_data/dev_data/%s/answers.json' % subtask
+    num_subtask = subtask[1]
+    answers_json_path = '{test_data}/{num_subtask}_answers.json'.format_map(locals())
+    questions_json_path = '{test_data}/{num_subtask}_questions.json'.format_map(locals())
+
+    questions = json.load(open(questions_json_path))
     answers = json.load(open(answers_json_path))
+
+    if subtask == 's3':
+        for q_id in {'3-111371', '3-93518', '3-111370', '3-70', '3-1'}:
+            del questions[q_id]
+            del answers[q_id]
+
+    questions_out_path = 'test_data/input/%s/questions.json' % subtask
+    answers_out_path = 'test_data/dev_data/%s/answers.json' % subtask
+
+    for json_obj, out_path in [(questions, questions_out_path),
+                               (answers, answers_out_path)]:
+        with open(out_path, 'w') as outfile:
+            json.dump(json_obj, outfile, indent=4, sort_keys=True)
 
     stats_input = {}
     event_type2q_ids = defaultdict(set)
@@ -720,7 +739,7 @@ def compute_stats(stats_input, output_path=None, debug=False):
 if __name__ == '__main__':
 
     # call functions
-    debug_value = 2
+    debug_value = 1
 
     # reset directories
     test_data = '/home/filten/LongTailQATask/QuestionCreation/gva_fr_bu_output'
@@ -789,6 +808,7 @@ if __name__ == '__main__':
             print('subtask', subtask)
 
         stats_input = get_q_stats_info(subtask,
+                                       test_data,
                                        total_num_docs)
 
         stats_output_path = 'test_data/dev_data/%s/stats.json' % subtask

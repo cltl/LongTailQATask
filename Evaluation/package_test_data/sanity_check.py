@@ -56,6 +56,7 @@ def show_info(subtask, title=False, body=False):
     q_ids = list(questions.keys())
     q_id_to_inspect = random.choice(q_ids)
 
+    print('q_id', q_id_to_inspect)
     print()
     q = questions[q_id_to_inspect]
     pprint.pprint(q)
@@ -78,4 +79,4 @@ if __name__ == '__main__':
 
     docid2title_and_body = get_docid2title_and_body('test_data_gold/input/s1/docs.conll')
     subtask = 's2'
-    show_info(subtask, title=False, body=True)
+    show_info(subtask, title=True, body=False)
