@@ -14,7 +14,7 @@ from iaa import IAA
 
 
 # folder rm and mkdir
-def reset(test_data):
+def reset(input_folder, output_folder):
     """
     remove folder 'input' if it exists and create this structure:
     test_data
@@ -27,20 +27,21 @@ def reset(test_data):
             s2
             s3
 
-    :param str test_data: path to test_data folder containg both the .json files and the docs.conll files
+    :param str input_folder: path to test_data folder containg both the .json files and the docs.conll files
+    :param str output_folder: output folder
     """
 
-    commands = ['rm -rf test_data && mkdir test_data',
-                'mkdir -p test_data/input/s1',
-                'mkdir -p test_data/input/s2',
-                'mkdir -p test_data/input/s3',
-                'mkdir -p test_data/dev_data/s1',
-                'mkdir -p test_data/dev_data/s2',
-                'mkdir -p test_data/dev_data/s3',
+    commands = ['rm -rf {output_folder} && mkdir {output_folder}'.format_map(locals()),
+                'mkdir -p {output_folder}/input/s1'.format_map(locals()),
+                'mkdir -p {output_folder}/input/s2'.format_map(locals()),
+                'mkdir -p {output_folder}/input/s3'.format_map(locals()),
+                'mkdir -p {output_folder}/dev_data/s1'.format_map(locals()),
+                'mkdir -p {output_folder}/dev_data/s2'.format_map(locals()),
+                'mkdir -p {output_folder}/dev_data/s3'.format_map(locals()),
 
-                'cp {test_data}/system_input/docs.conll test_data/input/s1/docs.conll'.format_map(locals()),
-                'cp {test_data}/system_input/docs.conll test_data/input/s2/docs.conll'.format_map(locals()),
-                'cp {test_data}/system_input/docs.conll test_data/input/s3/docs.conll'.format_map(locals()),
+                'cp {input_folder}/system_input/docs.conll {output_folder}/input/s1/docs.conll'.format_map(locals()),
+                'cp {input_folder}/system_input/docs.conll {output_folder}/input/s2/docs.conll'.format_map(locals()),
+                'cp {input_folder}/system_input/docs.conll {output_folder}/input/s3/docs.conll'.format_map(locals()),
                 ]
 
     for command in commands:
@@ -150,24 +151,27 @@ def load_mappings_mentions2solution(path_excel_file):
     load solution proposed by Roxane to map mentions to either
     1) delete
     2) map to new event type
+    3) manually check
 
     :param str path_to_excel_file: path to excel file
     (now in resources/InputData_annotation_improvement.xlsx)
 
     :rtype: tuple
     :return: (set of mentions of which annotations should be deleted,
-              mapping from mention -> new eventtype)
+              mapping from mention -> new eventtype),
+              mention -> info to manually check
     """
     delete = set()
     old2new_eventtype = dict()
+    manual_check = dict()
 
     df = pandas.read_excel(path_excel_file, sheetname='Sheet3')
     for index, row in df.iterrows():
 
-        if row['auto'] == 'auto':
+        category = row['category']
+        mention = row['mention'][2:-1]
 
-            category = row['category']
-            mention = row['mention'][2:-1]
+        if row['auto'] == 'auto':
 
             if category == 'delete':
                 delete.add(mention)
@@ -176,15 +180,30 @@ def load_mappings_mentions2solution(path_excel_file):
                 new_eventtype = row['new_eventtype'].replace("'", "")
                 old2new_eventtype[mention] = new_eventtype
 
-    return delete, old2new_eventtype
+        elif row['auto'] == 'manual':
+            user = None
+            for a_user in [row['ngan'], row['areum']]:
+                if a_user == 'Ngan':
+                    user = 'ngan'
+                elif a_user == 'Areum':
+                    user = 'areum'
+
+            old_eventtype = row['old_eventtype'][1:-1].replace("'", "")
+            manual_check[mention] = {'eventtype': old_eventtype,
+                                 'user': user,
+                                 'category' : row['category']
+                                 }
+
+    return delete, old2new_eventtype, manual_check
 
 
 # create new questions.json + save
-def get_q_stats_info(subtask, test_data, total_num_docs):
+def get_q_stats_info(input_folder, output_folder, subtask, total_num_docs):
     """
 
+    :param str input_folder: output question creation
+    :param str output_folder: folder where output will be stored
     :param str subtask: s1 | s2 | s3
-    :param str test_data: folder where output of question creation is stored
     :param int total_num_docs: number of test data documents
 
     1) load SUBTASK_questions.json
@@ -196,8 +215,8 @@ def get_q_stats_info(subtask, test_data, total_num_docs):
 
     """
     num_subtask = subtask[1]
-    answers_json_path = '{test_data}/{num_subtask}_answers.json'.format_map(locals())
-    questions_json_path = '{test_data}/{num_subtask}_questions.json'.format_map(locals())
+    answers_json_path = '{input_folder}/{num_subtask}_answers.json'.format_map(locals())
+    questions_json_path = '{input_folder}/{num_subtask}_questions.json'.format_map(locals())
 
     questions = json.load(open(questions_json_path))
     answers = json.load(open(answers_json_path))
@@ -211,8 +230,8 @@ def get_q_stats_info(subtask, test_data, total_num_docs):
         q_info['event_type'] = q_info['event_types'][0]
         del q_info['event_types']
 
-    questions_out_path = 'test_data/input/%s/questions.json' % subtask
-    answers_out_path = 'test_data/dev_data/%s/answers.json' % subtask
+    questions_out_path = '{output_folder}/input/{subtask}/questions.json'.format_map(locals())
+    answers_out_path = '{output_folder}/dev_data/{subtask}/answers.json'.format_map(locals())
 
     for json_obj, out_path in [(questions, questions_out_path),
                                (answers, answers_out_path)]:
@@ -367,6 +386,8 @@ def assert_ann_info(ann_info):
 
 # load annotations
 def load_men_annotations(user_annotations,
+                         user,
+                         manual_check,
                          token_id2token,
                          delete,
                          old2new_eventtype,
@@ -377,12 +398,13 @@ def load_men_annotations(user_annotations,
     load mention annotations
 
     :param dict user_annotations: mapping inc_id -> inc_info
+    :param str user: supported: 'areum' | 'ngan'
+    :param dict manual_check: mapping mention to info to manually check
     :param dict token_id2token: mapping token_id -> token
     :param set delete: mentions of which annotations should be deleted (i.d. ignored)
     :param dict old2new_eventtype: mapping mention -> new eventtype
     :param set disqualified_docs: see output load_disqualified_docs
     :param set disqualified_incidents: default is {'387194'}
-    :param str user: supported: 'areum' | 'ngan'
 
     :rtype: dict
     :return: token_id -> annotation info
@@ -393,6 +415,8 @@ def load_men_annotations(user_annotations,
     documents_not_in_test_data = set()
     mw2sent_id = defaultdict(list)
     all_mwus = []
+    list_of_lists = []
+    headers = ['inc_id', 'doc_id', 'mention', 'eventtype', 'category']
 
     num_anno_from_dis_docs = 0
 
@@ -481,6 +505,16 @@ def load_men_annotations(user_annotations,
                 mention = ' '.join(mention_parts)
 
 
+            if mention in manual_check:
+                man_info = manual_check[mention]
+
+                if all([
+                    man_info['user'] == user,
+                    man_info['eventtype'] == ann_info['eventtype']
+                ]):
+                    one_row = [inc_id, doc_id, mention, man_info['eventtype'], man_info['category']]
+                    list_of_lists.append(one_row)
+
             # check if all token_id are in test documents
             if not all_token_ids_in_test_document:
                 continue
@@ -523,6 +557,11 @@ def load_men_annotations(user_annotations,
 
             token_id2anno.update(local_token_id2anno)
             vocabulary[(mention, event_type)] += 1
+
+
+    man_check_df = pandas.DataFrame(list_of_lists, columns=headers)
+    out_path = 'manual_checking/%s.xlsx' % user
+    man_check_df.to_excel(out_path)
 
     if debug_value:
         print('missing documents', documents_not_in_test_data)
@@ -638,25 +677,131 @@ def lump(inc_id, anno, debug=False):
     return the_integer
 
 
+def to_integer(inc_id, anno, debug=False):
+    """
+    convert an annotation, e.g.
+    {'cardinality': 'UNK', 'eventtype': 'd', 'participants': ['2']}
+
+    to an integer.
+    :param str inc_id: incident identifier
+    :param dict anno: annotation, e.g.
+    {'cardinality': 'UNK', 'eventtype': 'd', 'participants': ['2']}
+
+    note: only eventtype and participants are used
+
+    :rtype: tuple
+    :return: (inc_id.eventtype.particpants,
+              an integer as a string)
+
+    """
+    eventtype2full_label = {
+        'b': 'bag_of_events',
+        'd': 'death',
+        'g': 'generic',
+        'h': 'hitting',
+        'i': 'injuring',
+        'm': 'missing',
+        'o': 'other',
+        's': 'firing_a_gun'
+    }
+
+    for key in {'cardinality',
+                'eventtype'}:
+        assert key in anno, '%s not in anno: %s' % (key, anno)
+
+    event_type = anno['eventtype']
+    cardinality = anno['cardinality']
+    if 'participants' not in anno:
+        participants = 'UNK'
+    else:
+        participants = anno['participants']
+
+    # prefix
+    if event_type == 'g':
+        return ('0', '0')
+    elif event_type == 'o':
+        prefix = '1'
+    elif event_type in {'b', 'd', 'h', 'i', 'm', 's'}:
+        prefix = '2'
+    else:
+        assert False, 'event_type %s not in accepted eventtypes' % event_type
+
+    # event types
+    event_type_ord = str(ord(event_type))
+
+    # participants
+    part_string = ''.join(participants)
+    if type(participants) != list:
+        part_integer = ''.join([str(ord(char))
+                               for char in cardinality])
+    else:
+        part_integer = part_string
+
+    # to integer
+    the_integer = '999'.join([prefix,
+                              inc_id,
+                              event_type_ord,
+                              part_integer
+                              ])
+
+    if debug:
+        print('prefix', prefix)
+        print('event_type', event_type, event_type_ord)
+        print('participants', participants, part_string)
+        print('integer', the_integer)
+
+    full_label = eventtype2full_label[event_type]
+    the_string = '{inc_id}.{full_label}.{part_string}'.format_map(locals())
+
+    for char in the_integer:
+        assert type(int(char)) == int
+
+    return the_string, the_integer
+
 # output conll with and without annotations (same time two files)
-def to_conll(subtask, subtask2conll, user2token_id2anno, iaa_incidents):
+def to_conll(output_folder, subtask, subtask2conll, user2token_id2anno, iaa_incidents, setting):
     """
     write one conll file:
     a) test_data/SUBTASK/docs.conll -> with annotations
 
+    :param str output_folder: output folder
     :param str subtask: s1 | s2 | s3
     :param dict subtask2conll: output of load_conll function
     :param dict user2token_id2anno: mapping of user -> output of load_men_annotations function
     :param set iaa_incidents: set of iaa incident identifiers
-
+    :param str setting: corpses_corpus | semeval
     """
+    assert setting in {'corpses_corpus', 'semeval'}
+
+    eventtype2full_label = {
+        'b': 'bag_of_events',
+        'd': 'death',
+        'g': 'generic',
+        'h': 'hitting',
+        'i': 'injuring',
+        'm': 'missing',
+        'o': 'other',
+        's': 'firing_a_gun'
+    }
     added = set()
     chains = defaultdict(int)
 
-    anno_output_path = 'test_data/dev_data/%s/docs.conll' % subtask
+
+    incidents = set()
+    docs = set()
+    type_freq = defaultdict(int)
+    eventtype2expression_freq = {}
+
+    anno_output_path = '{output_folder}/dev_data/{subtask}/docs.conll'.format_map(locals())
+
     with open(anno_output_path, 'w') as outfile_anno:
 
         for doc_id, conll_info in subtask2conll.items():
+
+
+            has_annotation = False
+            doc_lines = []
+
             for token_id, line in conll_info:
 
                 written_line = False
@@ -672,24 +817,60 @@ def to_conll(subtask, subtask2conll, user2token_id2anno, iaa_incidents):
                         add = True
 
                 if add:
-                    integer = lump(inc_id, ann_info)
 
                     splitted = line.strip().split('\t')
+
+                    incidents.add(inc_id)
+                    docs.add(doc_id)
+
+                    full_label = eventtype2full_label[ann_info['eventtype']]
+                    type_freq[full_label] += 1
+
+                    if setting == 'semeval':
+                        integer = lump(inc_id, ann_info)
+                    elif setting == 'corpses_corpus':
+                        anno_string, integer = to_integer(inc_id, ann_info)
+                        splitted.append(anno_string)
+
                     splitted[3] = anno_template % integer
 
                     added.add(token_id)
                     chains[anno_template % integer] += 1
 
-                    outfile_anno.write('\t'.join(splitted) + '\n')
+                    if full_label not in eventtype2expression_freq:
+                        eventtype2expression_freq[full_label] = defaultdict(int)
+
+                    token = splitted[1]
+                    eventtype2expression_freq[full_label][token] += 1
+
+                    #outfile_anno.write('\t'.join(splitted) + '\n')
+                    doc_lines.append('\t'.join(splitted) + '\n')
+                    has_annotation = True
                     written_line = True
 
                 if not written_line:
-                    outfile_anno.write(line)
+
+                    if all([setting == 'corpses_corpus',
+                            not line.startswith('#')]):
+                        line = line[:-1] + '\t-\n'
+
+                    #outfile_anno.write(line)
+                    doc_lines.append(line)
+
+            if has_annotation:
+                for doc_line in doc_lines:
+                    outfile_anno.write(doc_line)
 
     print('num chains', len(chains))
     print('distr', Counter(chains.values()))
 
-    return added
+
+    stats = {'#_incidents': len(incidents),
+             '#_docs' : len(docs),
+             '#_annotations': len(added),
+             '#_type_freq': type_freq,
+             }
+    return added, stats, eventtype2expression_freq
 
 def compute_stats(stats_input, output_path=None, debug=False):
     """
@@ -740,29 +921,81 @@ def compute_stats(stats_input, output_path=None, debug=False):
             json.dump(stats, outfile, indent=4, sort_keys=True)
 
 
+def stats2latex(stats, eventtype2expr2freq):
+    num_anno = stats['#_annotations']
+    num_incs = stats['#_incidents']
+    num_docs = stats['#_docs']
+    sentence_one = 'The corpses corpus contains {num_anno} annotations, referring to {num_incs} incidents.'.format_map(
+        locals())
+    sentence_two = 'In total, {num_docs} documents contain at least one annotation'.format_map(locals())
+    sentence_three = 'Table \\ref{tab:typefreq} presents the annotation frequency for each event type.'
+
+    df = pandas.DataFrame(sorted(stats['#_type_freq'].items(),
+                                 key=lambda x: x[1],
+                                 reverse=True),
+                          columns=['event type', 'annotation frequency']
+                          )
+
+    list_of_lists = []
+    headers = ['eventtype', 'most common expressions']
+    max_most_common = 5
+
+    for eventtype, expr2freq in eventtype2expr2freq.items():
+
+        most_common = []
+        counter = 0
+        for expr, freq in sorted(expr2freq.items(),
+                                 key=operator.itemgetter(1),
+                                 reverse=True):
+
+            one_expr = '{expr} ({freq})'.format_map(locals())
+            most_common.append(one_expr)
+
+            counter += 1
+            if counter == max_most_common:
+                break
+
+        one_row = [eventtype, ' '.join(most_common)]
+
+        list_of_lists.append(one_row)
+
+    expr_df = pandas.DataFrame(list_of_lists, columns=headers)
+
+    with open('cache/analysis.tex', 'w') as outfile:
+        outfile.write(sentence_one + '\n')
+        outfile.write(sentence_two + '\n')
+        outfile.write(sentence_three + '\n')
+        outfile.write(df.to_latex(index=False))
+        outfile.write(expr_df.to_csv(index=False))
+        outfile.write(expr_df.to_latex(index=False))
+
+
 if __name__ == '__main__':
 
     # call functions
     debug_value = 1
 
     # reset directories
-    test_data = '/home/filten/LongTailQATask/QuestionCreation/gva_fr_bu_output'
-    reset(test_data)
+    input_folder = '/home/filten/LongTailQATask/QuestionCreation/gva_fr_bu_output'
+    output_folder = 'corpses_corpus'
+    setting = 'corpses_corpus' # corpses_corpus | semeval
+
+    reset(input_folder, output_folder)
 
     # load disqualified docs
     disqualified_docs = load_disqualified_docs('resources/dis_areum_men.json',
                                                'resources/dis_ngan_men.json',
                                                debug=debug_value)
 
-
     # main loop
     all_added = set()
 
     # load mentions solutions proposed by Roxane
-    delete, old2new_eventtype = load_mappings_mentions2solution('resources/InputData_annotation_improvement.xlsx')
+    delete, \
+    old2new_eventtype, \
+    manual_check = load_mappings_mentions2solution('resources/InputData_annotation_improvement.xlsx')
 
-
-    input_path = '{test_data}/system_input/docs.conll'.format_map(locals())
+    input_path = '{input_folder}/system_input/docs.conll'.format_map(locals())
     cache_path = 'cache/conll.bin'
     subtask2conll,\
     token_id2token = load_conll(input_path,
@@ -773,6 +1006,7 @@ if __name__ == '__main__':
 
     anno_paths = [('areum', 'resources/ann_areum_men.json', 'output/vocab_areum.txt'),
                   ('ngan', 'resources/ann_ngan_men.json', 'output/vocab_ngan.txt')]
+
     input_annotations = dict()
     user2token_id2anno = dict()
     for user, input_path, output_path in anno_paths:
@@ -781,6 +1015,8 @@ if __name__ == '__main__':
         input_annotations[user] = user_annotations
 
         token_id2anno, vocabulary, all_mwus = load_men_annotations(user_annotations,
+                                                                   user,
+                                                                   manual_check,
                                                                    token_id2token,
                                                                    delete,
                                                                    old2new_eventtype,
@@ -811,23 +1047,31 @@ if __name__ == '__main__':
             print()
             print('subtask', subtask)
 
-        stats_input = get_q_stats_info(subtask,
-                                       test_data,
+        stats_input = get_q_stats_info(input_folder,
+                                       output_folder,
+                                       subtask,
                                        total_num_docs)
 
-        stats_output_path = 'test_data/dev_data/%s/stats.json' % subtask
-
+        stats_output_path = '{output_folder}/dev_data/{subtask}/stats.json'.format_map(locals())
         compute_stats(stats_input, output_path=None, debug=True)
 
         if subtask == 's1':
-            added = to_conll(subtask,
-                             subtask2conll,
-                             user2token_id2anno,
-                             accepted_incidents)
+            added, \
+            anno_stats, \
+            eventtype2expression_freq = to_conll(output_folder,
+                                                 subtask,
+                                                 subtask2conll,
+                                                 user2token_id2anno,
+                                                 accepted_incidents,
+                                                 setting)
+
+            print(anno_stats)
+            stats2latex(anno_stats, eventtype2expression_freq)
+
 
             all_added.update(added)
         else:
-            command = 'cp test_data/dev_data/s1/docs.conll test_data/dev_data/%s/docs.conll' % subtask
+            command = 'cp {output_folder}/dev_data/s1/docs.conll {output_folder}/dev_data/{subtask}/docs.conll'.format_map(locals())
             try:
                 subprocess.check_output(command, shell=True)
             except subprocess.CalledProcessError as e:
@@ -841,19 +1085,20 @@ if __name__ == '__main__':
     print(missing)
 
     if debug_value:
-        print()
-        print('MW loose checking info')
-        mws_areum = pickle.load(open('cache/areum.mw', 'rb'))
-        mws_ngan = pickle.load(open('cache/ngan.mw', 'rb'))
-        mws_areum_not_in_mws_ngan = mwu.get_mw_mismatches(mws_areum, mws_ngan, debug=debug_value)
-        mws_ngan_not_in_mws_areum = mwu.get_mw_mismatches(mws_ngan, mws_areum, debug=debug_value)
+        pass
+        #print()
+        #print('MW loose checking info')
+        #mws_areum = pickle.load(open('cache/areum.mw', 'rb'))
+        #mws_ngan = pickle.load(open('cache/ngan.mw', 'rb'))
+        #mws_areum_not_in_mws_ngan = mwu.get_mw_mismatches(mws_areum, mws_ngan, debug=debug_value)
+        #mws_ngan_not_in_mws_areum = mwu.get_mw_mismatches(mws_ngan, mws_areum, debug=debug_value)
 
     # create test data for participants (hence without gold data)
-    commands = ['rm -rf test_data_gold',
-                'cp -r test_data test_data_gold',
-                'rm -r test_data/dev_data',
-                'cp resources/README.md test_data',
-                'cp resources/README_gold.md test_data_gold']
+    commands = ['rm -rf {output_folder}_gold'.format_map(locals()),
+                'cp -r {output_folder} {output_folder}_gold'.format_map(locals()),
+                'rm -r {output_folder}/dev_data'.format_map(locals()),
+                'cp resources/README.md {output_folder}'.format_map(locals()),
+                'cp resources/README_gold.md {output_folder}_gold'.format_map(locals())]
 
     for command in commands:
         try:
