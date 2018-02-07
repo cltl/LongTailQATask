@@ -6,6 +6,8 @@ import operator
 import pandas
 import string
 
+pandas.set_option('display.max_colwidth', -1)
+
 from collections import defaultdict
 from collections import Counter
 
@@ -794,6 +796,8 @@ def to_conll(output_folder, subtask, subtask2conll, user2token_id2anno, iaa_inci
 
     anno_output_path = '{output_folder}/dev_data/{subtask}/docs.conll'.format_map(locals())
 
+    mention_parts = []
+
     with open(anno_output_path, 'w') as outfile_anno:
 
         for doc_id, conll_info in subtask2conll.items():
@@ -823,8 +827,6 @@ def to_conll(output_folder, subtask, subtask2conll, user2token_id2anno, iaa_inci
                     incidents.add(inc_id)
                     docs.add(doc_id)
 
-                    full_label = eventtype2full_label[ann_info['eventtype']]
-                    type_freq[full_label] += 1
 
                     if setting == 'semeval':
                         integer = lump(inc_id, ann_info)
@@ -834,14 +836,28 @@ def to_conll(output_folder, subtask, subtask2conll, user2token_id2anno, iaa_inci
 
                     splitted[3] = anno_template % integer
 
+                    assert token_id not in added
                     added.add(token_id)
-                    chains[anno_template % integer] += 1
-
-                    if full_label not in eventtype2expression_freq:
-                        eventtype2expression_freq[full_label] = defaultdict(int)
 
                     token = splitted[1]
-                    eventtype2expression_freq[full_label][token] += 1
+
+                    if anno_template.endswith(')'): # meaning that this is the end of an expression
+
+                        chains[integer] += 1
+                        mention_parts.append(token)
+
+                        full_label = eventtype2full_label[ann_info['eventtype']]
+                        type_freq[full_label] += 1
+
+                        mention = ' '.join(mention_parts)
+
+                        if full_label not in eventtype2expression_freq:
+                            eventtype2expression_freq[full_label] = defaultdict(int)
+
+                        eventtype2expression_freq[full_label][mention] += 1
+                        mention_parts = []
+                    else:
+                        mention_parts.append(token)
 
                     #outfile_anno.write('\t'.join(splitted) + '\n')
                     doc_lines.append('\t'.join(splitted) + '\n')
@@ -864,10 +880,15 @@ def to_conll(output_folder, subtask, subtask2conll, user2token_id2anno, iaa_inci
     print('num chains', len(chains))
     print('distr', Counter(chains.values()))
 
+    num_mentions = sum(chains.values())
+
+    print('num expressions', num_mentions)
 
     stats = {'#_incidents': len(incidents),
              '#_docs' : len(docs),
-             '#_annotations': len(added),
+             '#_token_annotations': len(added),
+             '#_mentions' : num_mentions,
+             '#_clusters': len(chains),
              '#_type_freq': type_freq,
              }
     return added, stats, eventtype2expression_freq
@@ -922,13 +943,13 @@ def compute_stats(stats_input, output_path=None, debug=False):
 
 
 def stats2latex(stats, eventtype2expr2freq):
-    num_anno = stats['#_annotations']
+    num_mentions = stats['#_mentions']
     num_incs = stats['#_incidents']
     num_docs = stats['#_docs']
-    sentence_one = 'The corpses corpus contains {num_anno} annotations, referring to {num_incs} incidents.'.format_map(
+    sentence_one = 'The corpses corpus contains {num_mentions} mentions, referring to {num_incs} incidents.'.format_map(
         locals())
-    sentence_two = 'In total, {num_docs} documents contain at least one annotation'.format_map(locals())
-    sentence_three = 'Table \\ref{tab:typefreq} presents the annotation frequency for each event type.'
+    sentence_two = 'In total, {num_docs} documents contain at least one mention'.format_map(locals())
+    sentence_three = 'Table \\ref{tab:typefreq} presents the mention frequency for each event type.'
 
     df = pandas.DataFrame(sorted(stats['#_type_freq'].items(),
                                  key=lambda x: x[1],
@@ -938,26 +959,35 @@ def stats2latex(stats, eventtype2expr2freq):
 
     list_of_lists = []
     headers = ['eventtype', 'most common expressions']
-    max_most_common = 5
+    maximum = 10
 
-    for eventtype, expr2freq in eventtype2expr2freq.items():
+    for eventtype in ['death', 'firing_a_gun',
+                      'hitting', 'bag_of_events',
+                      'injuring', 'other', 'generic', 'missing']:
+        expr2freq = eventtype2expression_freq[eventtype]
 
-        most_common = []
-        counter = 0
-        for expr, freq in sorted(expr2freq.items(),
-                                 key=operator.itemgetter(1),
-                                 reverse=True):
+        for order in [True, False]:
+            counter = 0
+            info = []
+            one_row = []
 
-            one_expr = '{expr} ({freq})'.format_map(locals())
-            most_common.append(one_expr)
+            if not order:
+                eventtype = ''
 
-            counter += 1
-            if counter == max_most_common:
-                break
+            for expr, freq in sorted(expr2freq.items(),
+                                     key=operator.itemgetter(1),
+                                     reverse=order):
 
-        one_row = [eventtype, ' '.join(most_common)]
+                one_expr = '{expr} ({freq})'.format_map(locals())
+                info.append(one_expr)
 
-        list_of_lists.append(one_row)
+                counter += 1
+                if counter == maximum:
+                    break
+
+            one_row = [eventtype, ' '.join(info)]
+
+            list_of_lists.append(one_row)
 
     expr_df = pandas.DataFrame(list_of_lists, columns=headers)
 
@@ -965,9 +995,29 @@ def stats2latex(stats, eventtype2expr2freq):
         outfile.write(sentence_one + '\n')
         outfile.write(sentence_two + '\n')
         outfile.write(sentence_three + '\n')
+
         outfile.write(df.to_latex(index=False))
+
         outfile.write(expr_df.to_csv(index=False))
         outfile.write(expr_df.to_latex(index=False))
+
+        mentions_div_docs = stats['#_mentions'] / stats['#_docs']
+        mentions_div_clustsers = stats['#_mentions'] / stats['#_clusters']
+
+
+
+        one_row = ['GVC',
+                   'this publication',
+                   str(stats['#_docs']),
+                   str(stats['#_mentions']),
+                   str(round(mentions_div_docs, 2)),
+                   str(stats['#_clusters']),
+                   str(round(mentions_div_clustsers, 2)),
+                   'YES'
+                   ]
+
+        one_line = ' & '.join(one_row)
+        outfile.write('\n' + one_line + ' \\\\' + '\n')
 
 
 if __name__ == '__main__':
