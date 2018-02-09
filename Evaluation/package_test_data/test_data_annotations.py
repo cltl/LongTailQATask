@@ -959,14 +959,17 @@ def stats2latex(stats, eventtype2expr2freq):
 
     list_of_lists = []
     headers = ['eventtype', 'most common expressions']
-    maximum = 10
+    maximum = 100
 
     for eventtype in ['death', 'firing_a_gun',
                       'hitting', 'bag_of_events',
                       'injuring', 'other', 'generic', 'missing']:
         expr2freq = eventtype2expression_freq[eventtype]
 
-        for order in [True, False]:
+        for order in [
+                   True,
+                   #False
+                      ]:
             counter = 0
             info = []
             one_row = []
