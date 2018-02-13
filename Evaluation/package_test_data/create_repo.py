@@ -21,6 +21,7 @@ with open(input_path, 'r') as infile:
         if line.startswith('#'):
             system_file.write(line)
             gold_file.write(line)
+            verbose_file.write(line)
 
         else:
             token_id, token, discourse, integer, verbose = line.strip().split('\t')
@@ -42,5 +43,12 @@ with open(input_path, 'r') as infile:
     gold_file.close()
     verbose_file.close()
 
+# assert length of files
+infile = open(input_path)
+num_lines = len(infile.readlines())
+infile.close()
 
-
+for path in [verbose_path, system_input_path, gold_path]:
+    with open(path) as infile:
+        lines = len(infile.readlines())
+        assert lines == num_lines
