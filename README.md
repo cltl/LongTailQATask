@@ -2,7 +2,17 @@
 
 Welcome!
 
-This repository contains the code for the SemEval-2018 task 5 **Counting Events and Participants within Highly Ambiguous Data covering a very long tail**. 
+This repository contains the code for the SemEval-2018 task 5 **Counting Events and Participants within Highly Ambiguous Data covering a very long tail**:
+
+```xml
+@inproceedings{postma2018semeval,
+  title={Semeval-2018 task 5: Counting events and participants in the long tail},
+  author={Postma, Marten and Ilievski, Filip and Vossen, Piek},
+  booktitle={Proceedings of The 12th International Workshop on Semantic Evaluation},
+  pages={70--80},
+  year={2018}
+}
+```
 
 For general information on this task and to join as a participant, please visit our Codalab competition site: https://competitions.codalab.org/competitions/17285.
 
